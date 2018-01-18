@@ -20,6 +20,9 @@
          <RowDefinition Height="282*"/>
          <RowDefinition Height="189*"/>
       </Grid.RowDefinitions>
+      <Grid Row="2" Grid.Column="0">
+         <Image x:Name="Logo" Source="/WpfSQLite;component/Resources/fadacateactrasnparente.png" Grid.Row="0" Grid.Column="0" MaxHeight="190" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
+      </Grid>
       <Grid Grid.Column="1" Grid.Row="1">
          <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
@@ -38,6 +41,7 @@
          </Viewbox>
 
       </Grid>
+
 
 
    </Grid>
