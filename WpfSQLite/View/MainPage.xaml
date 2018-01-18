@@ -31,7 +31,7 @@
          </Grid.RowDefinitions>
 
          <Viewbox Grid.Row="0"  Margin="10,10,10,10">
-            <Button x:Name="start"  Style="{StaticResource MetroButton}"  Content="Start" MaxHeight="20" MinWidth="50"/>
+            <Button x:Name="start"  Style="{StaticResource MetroButton}"  Content="Start" MaxHeight="20" MinWidth="50" Click="Start_OnClick"/>
          </Viewbox>
          <Viewbox Grid.Row="1"  Margin="10,10,10,10">
             <Button x:Name="help" Style="{StaticResource MetroButton}" Content="Help" MaxHeight="20" MinWidth="50" />

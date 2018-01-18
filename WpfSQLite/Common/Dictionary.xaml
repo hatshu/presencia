@@ -23,7 +23,7 @@
    <Style x:Key="GenericPageStyle" TargetType="{x:Type Page}">
       <Setter Property="Background">
          <Setter.Value>
-            <ImageBrush ImageSource="../Resources/bg.png"/>
+            <ImageBrush ImageSource="../Resources/bg.png" />
          </Setter.Value>
       </Setter>
    </Style>

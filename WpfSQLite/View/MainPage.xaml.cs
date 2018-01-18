@@ -24,5 +24,10 @@ namespace WpfSQLite.View
       {
          InitializeComponent();
       }
+
+      private void Start_OnClick(object sender, RoutedEventArgs e)
+      {
+         NavigationService?.Navigate(new Start());
+      }
    }
 }

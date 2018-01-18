@@ -16,13 +16,18 @@ using System.Windows.Shapes;
 namespace WpfSQLite.View
 {
    /// <summary>
-   /// Lógica de interacción para Page1.xaml
+   /// Lógica de interacción para Start.xaml
    /// </summary>
-   public partial class Page1 : Page
+   public partial class Start : Page
    {
-      public Page1()
+      public Start()
       {
          InitializeComponent();
+      }
+
+      private void Back_OnClick(object sender, RoutedEventArgs e)
+      {
+         NavigationService?.GoBack();
       }
    }
 }
