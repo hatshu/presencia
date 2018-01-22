@@ -7,8 +7,8 @@
     <ProjectGuid>{454741FA-74B6-43B8-91CA-0BDC3F4702F2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WpfSQLite</RootNamespace>
-    <AssemblyName>WpfSQLite</AssemblyName>
+    <RootNamespace>Presencia</RootNamespace>
+    <AssemblyName>Presencia</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -56,6 +56,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\UsuarioItem.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -122,7 +123,7 @@
     <Resource Include="Resources\bg.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Model\" />
+    <Resource Include="Resources\fadacatecSmall.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\background.png" />
@@ -135,6 +136,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\catecLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\fondo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

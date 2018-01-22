@@ -2,3 +2,6 @@ syntax: glob
 WpfSQLite/bin/*
 .vs/WpfSQLite/v14/.suo
 WpfSQLite/obj/Debug/*
+WPFSQLite/bin/Debug/*
+WPFSQLite/obj/Debug/*
+.vs/Presencia/v14/.suo

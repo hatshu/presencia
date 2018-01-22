@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace WpfSQLite.ViewModel
+namespace Presencia.ViewModel
 {
    public class DelegateCommand : ICommand
    {
