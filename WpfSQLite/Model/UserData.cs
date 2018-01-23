@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Runtime.CompilerServices;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Presencia.Model
 {
-   public class UsuarioItem: INotifyPropertyChanged
-
+   class UserData :INotifyPropertyChanged
    {
+      
       public string Nombre { get; set; }
+      public int Id { get; set; }
       public DateTime FechaEntrada { get; set; }
       public DateTime FechaSalida { get; set; }
       public DateTime FechaInicio { get; set; }
@@ -30,5 +30,5 @@ namespace Presencia.Model
          PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
       }
    }
-
 }
+

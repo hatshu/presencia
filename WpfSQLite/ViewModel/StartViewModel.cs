@@ -80,7 +80,7 @@ namespace Presencia.ViewModel
          {
             if (SActiveUser!=null && StartDate<=EndDate)
             {
-               UsuarioItem item = new UsuarioItem
+               SearchItem item = new SearchItem
                {
                   Nombre = SActiveUser,
                   FechaInicio = StartDate,
@@ -88,6 +88,7 @@ namespace Presencia.ViewModel
 
                };
                MessageBox.Show("Se ha seleccionado el usuario: " + item.Nombre + " Fecha inicio " + item.FechaInicio.Date + " Fecha fin " + item.FechaFin.Date);
+               //consultaSQL(item);
             }
             else
             {
@@ -102,6 +103,34 @@ namespace Presencia.ViewModel
          return true;
       }
 
+
+      #endregion
+
+      #region Rellenar datos de fechas y usuarios solicitados
+      //todo llamada a la base de datos con estos datos para ver entradas y salidas de esos días
+      private void consultaSQL(SearchItem item)
+      {
+         SqlConnection conn = new SqlConnection(conexionString);
+         string codigopuerta = "1026";
+         try
+         {
+            conn.Open();
+            string Query = "SELECT id_event, dt_Audit, id_function, id_lock  FROM tb_LockAuditTrail WHERE (id_lock=" + codigopuerta + ") AND (dt_Audit >= '" + StartDate + "' AND dt_Audit <= '" + EndDate + " 23:00:00') AND (id_function='17' OR id_function='145' OR id_function='84' OR id_function='85' OR id_function='212' OR id_function='213') ORDER BY dt_Audit";
+            SqlCommand createCommand = new SqlCommand(Query, conn);
+            SqlDataReader dr = createCommand.ExecuteReader();
+            while (dr.Read())
+            {
+
+            }
+            conn.Close();
+         }
+         catch (Exception e)
+         {
+            MessageBox.Show(e.Message);
+            //TODO: volver atras en la navegación si da error
+
+         }
+      }
 
       #endregion
 
