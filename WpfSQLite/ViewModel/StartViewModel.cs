@@ -6,7 +6,9 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using Presencia.Model;
 
 namespace Presencia.ViewModel
 {
@@ -14,11 +16,37 @@ namespace Presencia.ViewModel
    {
       #region Attributes
 
+      //cadena de conexion a la base de datos
       string conexionString = ConfigurationManager.ConnectionStrings["ConexionBaseDeDatos"].ConnectionString;
 
       //FOR COMBOBOX ACCESS WITH MVVM
-
       public ObservableCollection<string> ActiveUsers { get; set; }
+
+      private string _sActiveUser;
+
+      public string SActiveUser
+      {
+         get { return _sActiveUser; }
+         set { _sActiveUser = value; }
+      }
+
+      private DateTime _startDate = DateTime.Today.Date;
+
+      public DateTime StartDate
+      {
+         get { return _startDate; }
+         set { _startDate = value; }
+      }
+
+      private DateTime _endDate = DateTime.Today.Date;
+
+      public DateTime EndDate
+      {
+         get { return _endDate; }
+         set { _endDate = value; }
+      }
+
+      public DelegateCommand SearchCommand { get; set; }
 
 
       #endregion
@@ -28,6 +56,7 @@ namespace Presencia.ViewModel
       public StartViewModel()
       {
          ActiveUsers = new ObservableCollection<string>();
+         SearchCommand = new DelegateCommand(SearchCommand_Execute, SearchCommand_CanExecute);
          cargaCombobox();
       }
 
@@ -43,7 +72,36 @@ namespace Presencia.ViewModel
       }
       #endregion
 
-      #region Button
+      #region SearchCommand Button
+
+      void SearchCommand_Execute(object parameters)
+      {
+         if (SearchCommand_CanExecute(parameters))
+         {
+            if (SActiveUser!=null && StartDate<=EndDate)
+            {
+               UsuarioItem item = new UsuarioItem
+               {
+                  Nombre = SActiveUser,
+                  FechaInicio = StartDate,
+                  FechaFin = EndDate
+
+               };
+               MessageBox.Show("Se ha seleccionado el usuario: " + item.Nombre + " Fecha inicio " + item.FechaInicio.Date + " Fecha fin " + item.FechaFin.Date);
+            }
+            else
+            {
+               MessageBox.Show("Los parámetros de búsqueda no son correctos o algún campo está vacio.");
+            }
+
+         }
+      }
+
+      bool SearchCommand_CanExecute(object parameters)
+      {
+         return true;
+      }
+
 
       #endregion
 
@@ -69,7 +127,7 @@ namespace Presencia.ViewModel
          {
             MessageBox.Show(e.Message);
             //TODO: volver atras en la navegación si da error
-            
+
          }
       }
 

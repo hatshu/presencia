@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,11 +12,13 @@ namespace Presencia.Model
 
    {
       public string Nombre { get; set; }
-      public DateTime fechaEntrada { get; set; }
-      public DateTime fechaSalida { get; set; }
+      public DateTime FechaEntrada { get; set; }
+      public DateTime FechaSalida { get; set; }
+      public DateTime FechaInicio { get; set; }
+      public DateTime FechaFin { get; set; }
       public string Ausencia { get; set; }
-      public DateTime ausenciaEntrada { get; set; }
-      public DateTime ausenciaSalida { get; set; }
+      public DateTime AusenciaEntrada { get; set; }
+      public DateTime AusenciaSalida { get; set; }
       public int TotalHoras { get; set; }
 
 

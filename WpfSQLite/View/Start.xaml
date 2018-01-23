@@ -33,11 +33,11 @@
          <Grid Grid.Row="1" Grid.Column="1">
             <Grid.ColumnDefinitions>
                <ColumnDefinition Width="337*"/>
-               <ColumnDefinition Width="200*"/>
-               <ColumnDefinition Width="338*"/>
                <ColumnDefinition Width="168*"/>
-               <ColumnDefinition Width="478*"/>
-               <ColumnDefinition Width="288*"/>
+               <ColumnDefinition Width="238*"/>
+               <ColumnDefinition Width="164*"/>
+               <ColumnDefinition Width="616*"/>
+               <ColumnDefinition Width="286*"/>
                <ColumnDefinition Width="73*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -47,31 +47,31 @@
                <RowDefinition Height="29*"/>
             </Grid.RowDefinitions>
             <Image x:Name="Logo" Source="/Presencia;component/Resources/catecLogo.png" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" MinHeight="100"  />
-            <Viewbox Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" MaxWidth="120" MinWidth="40" HorizontalAlignment="Right">
+            <Viewbox Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" MaxWidth="120" MinWidth="40" HorizontalAlignment="Right"   >
                <Label Name="Nombre"  Content="Usuario:" Style="{StaticResource whiteLabel}"  />
             </Viewbox>
 
             <!--<ComboBox Name="ComboBox" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" MaxHeight="35"></ComboBox>-->
-            <Viewbox MaxHeight="46" MinHeight="20" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" HorizontalAlignment="Left" >
-               <ComboBox Name="ComboBox"  ItemsSource="{Binding Path=ActiveUsers}"></ComboBox>
+            <Viewbox MaxHeight="45" MinHeight="45" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" HorizontalAlignment="Left"   >
+               <ComboBox Name="ComboBox"  ItemsSource="{Binding Path=ActiveUsers}" FontSize="22" SelectedItem="{Binding Path=SActiveUser , Mode=TwoWay}" ></ComboBox>
             </Viewbox>
             <Viewbox Grid.Row="1" Grid.Column="3" MaxWidth="120" MinWidth="40" HorizontalAlignment="Right" >
                <Label Name="FechaInicio"  Content="Inicio:    " Style="{StaticResource whiteLabel}" />
             </Viewbox>
-            <Viewbox Grid.Row="2" Grid.Column="3" MaxWidth="120" MinWidth="40" HorizontalAlignment="Right" >
+            <Viewbox Grid.Row="2" Grid.Column="3" MaxWidth="120" MinWidth="40" HorizontalAlignment="Right"  >
                <Label Name="FechaFin"  Content="Fin:      " Style="{StaticResource whiteLabel}"/>
             </Viewbox>
-            <Viewbox Grid.Column="4"  Grid.Row="1" HorizontalAlignment="Left"    >
-               <DatePicker Name="DatePickerInicio" BorderThickness="0" Margin=" 3 3 3 3" MaxWidth="200"   MinWidth="100"/>
+            <Viewbox Grid.Column="4"  Grid.Row="1" HorizontalAlignment="Left"  >
+               <DatePicker Name="DatePickerInicio"  SelectedDate="{Binding StartDate, Mode=TwoWay}" BorderThickness="0" Margin=" 3 3 3 3" MaxWidth="200"   MinWidth="100"/>
             </Viewbox>
             <Viewbox Grid.Column="4"  Grid.Row="2" HorizontalAlignment="Left"  >
-               <DatePicker Name="DatePickerFin" BorderThickness="0" Margin=" 3 3 3 3"  MaxWidth="200"   MinWidth="100"/>
+               <DatePicker Name="DatePickerFin" SelectedDate="{Binding EndDate, Mode=TwoWay}" BorderThickness="0" Margin=" 3 3 3 3"  MaxWidth="200"   MinWidth="100"/>
             </Viewbox>
             <Viewbox Grid.Row="1" Grid.Column="5"  >
-               <Button Content="Buscar" Style="{StaticResource MetroButton}" MaxHeight="30" MinWidth="70" Margin="1 1 1 1"></Button>
+               <Button Content="Buscar" Style="{StaticResource MetroButton}" Command="{Binding SearchCommand}" MaxHeight="30" MinWidth="70" Margin="1 1 1 1"></Button>
             </Viewbox>
             <Viewbox Grid.Row="2" Grid.Column="5"  >
-               <Button Content="Limpiar" Style="{StaticResource MetroButton}" MaxHeight="30" MinWidth="70" Margin="1 1 1 1"></Button>
+               <Button Content="Limpiar" Style="{StaticResource MetroButton}"  Command="{Binding CleanCommand}" MaxHeight="30" MinWidth="70" Margin="1 1 1 1"></Button>
             </Viewbox>
 
 
