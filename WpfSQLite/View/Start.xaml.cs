@@ -13,24 +13,35 @@ namespace Presencia.View
    /// </summary>
    public partial class Start : Page
    {
+      string conexionString = ConfigurationManager.ConnectionStrings["ConexionPruebas"].ConnectionString;
+
       public Start()
       {
          InitializeComponent();
          cargaCombobox();
       }
 
-      private static void cargaCombobox()
+      private void cargaCombobox()
       {
-         string conexionString = ConfigurationManager.ConnectionStrings["ConexionPruebas"].ConnectionString;
-         using (SqlConnection conn = new SqlConnection(conexionString))
+         SqlConnection conn = new SqlConnection(conexionString);
+         try
          {
             conn.Open();
-            MessageBox.Show(conn.DataSource);
-            DataTable dt = new DataTable();
-            SqlCommand consultaUsuarios = new SqlCommand("SELECT * FROM tb_Users", conn );
+            string Query = "select * from tb_Users where status='1' and name like '%CTC%' ";
+            SqlCommand createCommand = new SqlCommand(Query,conn);
+            SqlDataReader dr = createCommand.ExecuteReader();
+            while (dr.Read())
+            {
+               string userName = dr.GetString(3);
+               ComboBox.Items.Add(userName);
+            }
             conn.Close();
          }
-         ;
+         catch (Exception e)
+         {
+            MessageBox.Show(e.Message);
+         }
+
       }
 
 
