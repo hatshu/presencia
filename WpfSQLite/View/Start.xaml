@@ -47,21 +47,24 @@
                <RowDefinition Height="29*"/>
             </Grid.RowDefinitions>
             <Image x:Name="Logo" Source="/Presencia;component/Resources/catecLogo.png" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" MinHeight="100"  />
-            <Viewbox Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" MaxWidth="120" MinWidth="40" >
-               <Label Name="Nombre"  Content="Nombre:" Style="{StaticResource whiteLabel}" />
+            <Viewbox Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" MaxWidth="120" MinWidth="40" HorizontalAlignment="Right">
+               <Label Name="Nombre"  Content="Usuario:" Style="{StaticResource whiteLabel}"  />
             </Viewbox>
 
-            <ComboBox Name="ComboBox" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" MaxHeight="35"></ComboBox>
+            <!--<ComboBox Name="ComboBox" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" MaxHeight="35"></ComboBox>-->
+            <Viewbox MaxHeight="46" MinHeight="20" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" HorizontalAlignment="Left" >
+               <ComboBox Name="ComboBox"  ItemsSource="{Binding Path=ActiveUsers}"></ComboBox>
+            </Viewbox>
             <Viewbox Grid.Row="1" Grid.Column="3" MaxWidth="120" MinWidth="40" HorizontalAlignment="Right" >
-               <Label Name="FechaInicio"  Content="Inicio:" Style="{StaticResource whiteLabel}" />
+               <Label Name="FechaInicio"  Content="Inicio:    " Style="{StaticResource whiteLabel}" />
             </Viewbox>
             <Viewbox Grid.Row="2" Grid.Column="3" MaxWidth="120" MinWidth="40" HorizontalAlignment="Right" >
-               <Label Name="FechaFin"  Content="Fin:    " Style="{StaticResource whiteLabel}"/>
+               <Label Name="FechaFin"  Content="Fin:      " Style="{StaticResource whiteLabel}"/>
             </Viewbox>
-            <Viewbox Grid.Column="4"  Grid.Row="1" HorizontalAlignment="Left" Width="399"    >
+            <Viewbox Grid.Column="4"  Grid.Row="1" HorizontalAlignment="Left"    >
                <DatePicker Name="DatePickerInicio" BorderThickness="0" Margin=" 3 3 3 3" MaxWidth="200"   MinWidth="100"/>
             </Viewbox>
-            <Viewbox Grid.Column="4"  Grid.Row="2" HorizontalAlignment="Left" Width="399" >
+            <Viewbox Grid.Column="4"  Grid.Row="2" HorizontalAlignment="Left"  >
                <DatePicker Name="DatePickerFin" BorderThickness="0" Margin=" 3 3 3 3"  MaxWidth="200"   MinWidth="100"/>
             </Viewbox>
             <Viewbox Grid.Row="1" Grid.Column="5"  >

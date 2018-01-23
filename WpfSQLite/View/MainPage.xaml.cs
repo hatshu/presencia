@@ -17,5 +17,10 @@ namespace Presencia.View
       {
          NavigationService?.Navigate(new Start());
       }
+
+      private void Exit_OnClick(object sender, RoutedEventArgs e)
+      {
+         System.Windows.Application.Current.Shutdown();
+      }
    }
 }
