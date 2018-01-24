@@ -48,6 +48,7 @@ namespace Presencia.ViewModel
 
       public DelegateCommand SearchCommand { get; set; }
 
+      List<IdUser> UsersAndId = new List<IdUser>();
 
       #endregion
 
@@ -58,6 +59,7 @@ namespace Presencia.ViewModel
          ActiveUsers = new ObservableCollection<string>();
          SearchCommand = new DelegateCommand(SearchCommand_Execute, SearchCommand_CanExecute);
          cargaCombobox();
+         ObtenerIdUserAndCardCode();
       }
 
       #endregion
@@ -88,7 +90,7 @@ namespace Presencia.ViewModel
 
                };
                MessageBox.Show("Se ha seleccionado el usuario: " + item.Nombre + " Fecha inicio " + item.FechaInicio.Date + " Fecha fin " + item.FechaFin.Date);
-               //consultaSQL(item);
+
             }
             else
             {
@@ -97,6 +99,8 @@ namespace Presencia.ViewModel
 
          }
       }
+
+
 
       bool SearchCommand_CanExecute(object parameters)
       {
@@ -107,30 +111,35 @@ namespace Presencia.ViewModel
       #endregion
 
       #region Rellenar datos de fechas y usuarios solicitados
-      //todo llamada a la base de datos con estos datos para ver entradas y salidas de esos días
-      private void consultaSQL(SearchItem item)
+      //todo obtener lista con nombres, id y cardCode
+
+      void ObtenerIdUserAndCardCode()
       {
          SqlConnection conn = new SqlConnection(conexionString);
-         string codigopuerta = "1026";
          try
          {
             conn.Open();
-            string Query = "SELECT id_event, dt_Audit, id_function, id_lock  FROM tb_LockAuditTrail WHERE (id_lock=" + codigopuerta + ") AND (dt_Audit >= '" + StartDate + "' AND dt_Audit <= '" + EndDate + " 23:00:00') AND (id_function='17' OR id_function='145' OR id_function='84' OR id_function='85' OR id_function='212' OR id_function='213') ORDER BY dt_Audit";
+            string Query = "SELECT id_user, Title, FirstName, Cardcode status FROM tb_Users WHERE (Title='CTC') AND (status='1') ORDER BY FirstName";
             SqlCommand createCommand = new SqlCommand(Query, conn);
             SqlDataReader dr = createCommand.ExecuteReader();
             while (dr.Read())
             {
-
+               var userItem = new IdUser();
+               userItem.Nombre = dr[2].ToString();
+               userItem.Id = dr[0].GetHashCode();
+               userItem.CardCode = dr[3].GetHashCode();
+               UsersAndId.Add(userItem);
             }
             conn.Close();
          }
          catch (Exception e)
          {
             MessageBox.Show(e.Message);
-            //TODO: volver atras en la navegación si da error
-
          }
       }
+
+
+
 
       #endregion
 

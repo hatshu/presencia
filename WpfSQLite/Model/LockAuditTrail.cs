@@ -7,10 +7,19 @@ using System.Threading.Tasks;
 
 namespace Presencia.Model
 {
-   class User : INotifyPropertyChanged
+   class LockAuditTrail : INotifyPropertyChanged
    {
-      public string Nombre { get; set; }
-      public int Id { get; set; }
+
+      public string Id_Event { get; set; }
+      public DateTime Dt_Audit { get; set; }
+      public int InsertOrder { get; set; }
+      public int Id_User { get; set; }
+      public int NCopy { get; set; }
+      public int Id_Function { get; set; }
+      public int InsertionCounter { get; set; }
+
+
+
 
       //Para que se detecte cuando se cambia cada elemento
       public event PropertyChangedEventHandler PropertyChanged;
@@ -20,4 +29,5 @@ namespace Presencia.Model
          PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
       }
    }
+
 }
