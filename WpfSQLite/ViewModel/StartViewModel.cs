@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Input;
 using Presencia.Model;
 
 namespace Presencia.ViewModel
@@ -30,25 +26,13 @@ namespace Presencia.ViewModel
          set { _sActiveUser = value; }
       }
 
-      private DateTime _startDate = DateTime.Today.Date;
+      public DateTime StartDate { get; set; } = DateTime.Today.Date;
 
-      public DateTime StartDate
-      {
-         get { return _startDate; }
-         set { _startDate = value; }
-      }
-
-      private DateTime _endDate = DateTime.Today.Date;
-
-      public DateTime EndDate
-      {
-         get { return _endDate; }
-         set { _endDate = value; }
-      }
+      public DateTime EndDate { get; set; } = DateTime.Today.Date;
 
       public DelegateCommand SearchCommand { get; set; }
 
-      List<IdUser> UsersAndId = new List<IdUser>();
+      public List<IdUser> UsersIdAndCodeCards = new List<IdUser>();
 
       #endregion
 
@@ -65,13 +49,7 @@ namespace Presencia.ViewModel
       #endregion
 
       #region MVVM
-      // Para que se detecte cuando se cambia cada elemento
-      public event PropertyChangedEventHandler PropertyChanged;
 
-      private void NotifyPropertyChanged(string info)
-      {
-         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
-      }
       #endregion
 
       #region SearchCommand Button
@@ -80,7 +58,7 @@ namespace Presencia.ViewModel
       {
          if (SearchCommand_CanExecute(parameters))
          {
-            if (SActiveUser!=null && StartDate<=EndDate)
+            if (SActiveUser!=null && StartDate<=EndDate )
             {
                SearchItem item = new SearchItem
                {
@@ -128,7 +106,7 @@ namespace Presencia.ViewModel
                userItem.Nombre = dr[2].ToString();
                userItem.Id = dr[0].GetHashCode();
                userItem.CardCode = dr[3].GetHashCode();
-               UsersAndId.Add(userItem);
+               UsersIdAndCodeCards.Add(userItem);
             }
             conn.Close();
          }

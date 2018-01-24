@@ -62,7 +62,7 @@
                <Label Name="FechaFin"  Content="Fin:      " Style="{StaticResource whiteLabel}"/>
             </Viewbox>
             <Viewbox Grid.Column="4"  Grid.Row="1" HorizontalAlignment="Left"  >
-               <DatePicker Name="DatePickerInicio"  SelectedDate="{Binding StartDate, Mode=TwoWay}" BorderThickness="0" Margin=" 3 3 3 3" MaxWidth="200"   MinWidth="100"/>
+               <DatePicker Name="DatePickerInicio"  SelectedDate="{Binding StartDate, Mode=TwoWay}"  BorderThickness="0" Margin=" 3 3 3 3" MaxWidth="200"   MinWidth="100"/>
             </Viewbox>
             <Viewbox Grid.Column="4"  Grid.Row="2" HorizontalAlignment="Left"  >
                <DatePicker Name="DatePickerFin" SelectedDate="{Binding EndDate, Mode=TwoWay}" BorderThickness="0" Margin=" 3 3 3 3"  MaxWidth="200"   MinWidth="100"/>
