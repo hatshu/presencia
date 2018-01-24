@@ -32,7 +32,9 @@ namespace Presencia.ViewModel
 
       public DelegateCommand SearchCommand { get; set; }
 
-      public List<IdUser> UsersIdAndCodeCards = new List<IdUser>();
+      public List<IdUser> UsersIdAndCodeCardsList = new List<IdUser>();
+
+      public List<LockAuditTrail> LockAuditTrailList = new List<LockAuditTrail>();
 
       #endregion
 
@@ -48,9 +50,6 @@ namespace Presencia.ViewModel
 
       #endregion
 
-      #region MVVM
-
-      #endregion
 
       #region SearchCommand Button
 
@@ -64,10 +63,11 @@ namespace Presencia.ViewModel
                {
                   Nombre = SActiveUser,
                   FechaInicio = StartDate,
-                  FechaFin = EndDate
+                  FechaFin = EndDate.AddHours(23).AddMinutes(59)
 
                };
                MessageBox.Show("Se ha seleccionado el usuario: " + item.Nombre + " Fecha inicio " + item.FechaInicio.Date + " Fecha fin " + item.FechaFin.Date);
+               consultaEventosSQLdeFechas(item);
 
             }
             else
@@ -78,18 +78,72 @@ namespace Presencia.ViewModel
          }
       }
 
+      private void consultaEventosSQLdeFechas(SearchItem item)
+      {
+       ////TODO:  buscar  item.Nombre en la lista y obeter el id
+       //  foreach (var userData in UsersIdAndCodeCardsList)
+       //  {
+       //     if (userData.Nombre.Equals(item.Nombre))
+       //     {
+       //        //TODO: comprobar si con user_id se puede si no con CardCode NO CALE EL USER_ID
 
+       //        item.Id = userData.CardCode;
+       //        break;
+       //     }
+       //
+       //  }
+
+
+         //TODO: Hacer consulta sql de entradas y salidas de este cardode en las fechas seleccionadas
+         SqlConnection conn = new SqlConnection(conexionString);
+         LockAuditTrailList.Clear();
+         try
+         {
+            conn.Open();
+            string Query =
+               "SELECT id_event, dt_Audit, id_lock, id_user, id_function, NCopy  FROM tb_LockAuditTrail WHERE  (id_lock='1026') AND (dt_Audit >= '" +
+               item.FechaInicio + "' AND dt_Audit <='" + item.FechaFin + "')  ORDER BY dt_Audit";
+            SqlCommand createCommand = new SqlCommand(Query, conn);
+            SqlDataReader dr = createCommand.ExecuteReader();
+            while (dr.Read())
+            {
+               var lockAuditTrail = new LockAuditTrail();
+               lockAuditTrail.Id_User = dr[3].GetHashCode();
+               lockAuditTrail.Id_Event = dr[0].ToString();
+               lockAuditTrail.Dt_Audit = dr[1].ToString();
+               lockAuditTrail.Id_Function = dr[4].GetHashCode();
+               lockAuditTrail.NCopy = dr[5].GetHashCode();
+               LockAuditTrailList.Add(lockAuditTrail);
+            }
+            conn.Close();
+
+            //TODO: buscar la relaccion entre CardCode y el id_event
+            foreach (var itemAuditTrail in LockAuditTrailList)
+            {
+               //Pasamos desde "string con formato hexadecimal" a int
+               var substring = itemAuditTrail.Id_Event.Substring(16, 4);
+               var miNcopyReal = int.Parse(substring);
+               //Calculamos el "Cardcode" ( Cardcode = NCopy "real" / 4 )
+               var miCardCode = miNcopyReal / 4;
+               itemAuditTrail.CardCode = miCardCode;
+            }
+
+         }
+         catch (Exception e)
+         {
+            MessageBox.Show(e.Message);
+         }
+      }
 
       bool SearchCommand_CanExecute(object parameters)
       {
          return true;
       }
 
-
       #endregion
 
-      #region Rellenar datos de fechas y usuarios solicitados
-      //todo obtener lista con nombres, id y cardCode
+      #region Obtener lista con nombres, id y cardCode
+
 
       void ObtenerIdUserAndCardCode()
       {
@@ -106,7 +160,7 @@ namespace Presencia.ViewModel
                userItem.Nombre = dr[2].ToString();
                userItem.Id = dr[0].GetHashCode();
                userItem.CardCode = dr[3].GetHashCode();
-               UsersIdAndCodeCards.Add(userItem);
+               UsersIdAndCodeCardsList.Add(userItem);
             }
             conn.Close();
          }
@@ -122,6 +176,7 @@ namespace Presencia.ViewModel
       #endregion
 
       #region Combobox
+      //TODO: intentar cambiar el contenido del combobox a el nombre de la lista  UsersIdAndCodeCardsList
       private void cargaCombobox()
       {
          SqlConnection conn = new SqlConnection(conexionString);
