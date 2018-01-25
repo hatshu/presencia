@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Windows;
 using Presencia.Model;
 
@@ -32,7 +33,9 @@ namespace Presencia.ViewModel
 
       public DelegateCommand SearchCommand { get; set; }
 
-      public List<IdUser> UsersIdAndCodeCardsList = new List<IdUser>();
+      public List<IdUser> UsersIdAndNameList = new List<IdUser>();
+
+      public List<IdUser> CardCodeAndUserIdList = new List<IdUser>();
 
       public List<LockAuditTrail> LockAuditTrailList = new List<LockAuditTrail>();
 
@@ -66,7 +69,7 @@ namespace Presencia.ViewModel
                   FechaFin = EndDate.AddHours(23).AddMinutes(59)
 
                };
-               MessageBox.Show("Se ha seleccionado el usuario: " + item.Nombre + " Fecha inicio " + item.FechaInicio.Date + " Fecha fin " + item.FechaFin.Date);
+               //MessageBox.Show("Se ha seleccionado el usuario: " + item.Nombre + " Fecha inicio " + item.FechaInicio + " Fecha fin " + item.FechaFin);
                consultaEventosSQLdeFechas(item);
 
             }
@@ -80,21 +83,9 @@ namespace Presencia.ViewModel
 
       private void consultaEventosSQLdeFechas(SearchItem item)
       {
-       ////TODO:  buscar  item.Nombre en la lista y obeter el id
-       //  foreach (var userData in UsersIdAndCodeCardsList)
-       //  {
-       //     if (userData.Nombre.Equals(item.Nombre))
-       //     {
-       //        //TODO: comprobar si con user_id se puede si no con CardCode NO CALE EL USER_ID
-
-       //        item.Id = userData.CardCode;
-       //        break;
-       //     }
-       //
-       //  }
 
 
-         //TODO: Hacer consulta sql de entradas y salidas de este cardode en las fechas seleccionadas
+         //TODO: Hacer consulta sql de entradas y salidas de todos los cardode en las fechas seleccionadas
          SqlConnection conn = new SqlConnection(conexionString);
          LockAuditTrailList.Clear();
          try
@@ -102,7 +93,7 @@ namespace Presencia.ViewModel
             conn.Open();
             string Query =
                "SELECT id_event, dt_Audit, id_lock, id_user, id_function, NCopy  FROM tb_LockAuditTrail WHERE  (id_lock='1026') AND (dt_Audit >= '" +
-               item.FechaInicio + "' AND dt_Audit <='" + item.FechaFin + "')  ORDER BY dt_Audit";
+               item.FechaInicio + "' AND dt_Audit <='" + item.FechaFin + "') AND (id_function='17' OR id_function='145' OR id_function='84' OR id_function='85' OR id_function='212' OR id_function='213') ORDER BY dt_Audit";
             SqlCommand createCommand = new SqlCommand(Query, conn);
             SqlDataReader dr = createCommand.ExecuteReader();
             while (dr.Read())
@@ -121,8 +112,8 @@ namespace Presencia.ViewModel
             foreach (var itemAuditTrail in LockAuditTrailList)
             {
                //Pasamos desde "string con formato hexadecimal" a int
-               var substring = itemAuditTrail.Id_Event.Substring(16, 4);
-               var miNcopyReal = int.Parse(substring);
+               var substring = itemAuditTrail.Id_Event.Substring(15, 5);
+               int miNcopyReal = Convert.ToInt32(substring,16);
                //Calculamos el "Cardcode" ( Cardcode = NCopy "real" / 4 )
                var miCardCode = miNcopyReal / 4;
                itemAuditTrail.CardCode = miCardCode;
@@ -147,11 +138,12 @@ namespace Presencia.ViewModel
 
       void ObtenerIdUserAndCardCode()
       {
+         //OBTENCION DE NOMBRE DE USUARIO E ID USER
          SqlConnection conn = new SqlConnection(conexionString);
          try
          {
             conn.Open();
-            string Query = "SELECT id_user, Title, FirstName, Cardcode status FROM tb_Users WHERE (Title='CTC') AND (status='1') ORDER BY FirstName";
+            string Query = "SELECT id_user, Title, FirstName status FROM tb_Users WHERE (Title='CTC') AND (status='1') ORDER BY FirstName";
             SqlCommand createCommand = new SqlCommand(Query, conn);
             SqlDataReader dr = createCommand.ExecuteReader();
             while (dr.Read())
@@ -159,8 +151,7 @@ namespace Presencia.ViewModel
                var userItem = new IdUser();
                userItem.Nombre = dr[2].ToString();
                userItem.Id = dr[0].GetHashCode();
-               userItem.CardCode = dr[3].GetHashCode();
-               UsersIdAndCodeCardsList.Add(userItem);
+               UsersIdAndNameList.Add(userItem);
             }
             conn.Close();
          }
@@ -168,6 +159,44 @@ namespace Presencia.ViewModel
          {
             MessageBox.Show(e.Message);
          }
+
+         //OBTENCION DEL CARDCODE
+         try
+         {
+            conn.Open();
+            string Query = "SELECT  id_user, Cardcode, NewCount FROM tb_Cards ORDER BY NewCount ASC";
+            SqlCommand createCommand = new SqlCommand(Query, conn);
+            SqlDataReader dr = createCommand.ExecuteReader();
+            while (dr.Read())
+            {
+               var userItem = new IdUser();
+               userItem.Id = dr[0].GetHashCode();
+               userItem.CardCode = dr[1].GetHashCode();
+               if (userItem.Id!=1)
+               {
+                  CardCodeAndUserIdList.Add(userItem);
+               }
+             }
+            conn.Close();
+         }
+         catch (Exception e)
+         {
+            MessageBox.Show(e.Message);
+         }
+
+         //UNIR CARDCODE Y  USER ID
+
+         foreach (var item in UsersIdAndNameList)
+         {
+            foreach (var itemToCompare in CardCodeAndUserIdList)
+            {
+               if ( itemToCompare.Id.Equals(item.Id))
+               {
+                  item.CardCode = itemToCompare.CardCode;
+               }
+            }
+         }
+
       }
 
 
@@ -175,8 +204,8 @@ namespace Presencia.ViewModel
 
       #endregion
 
-      #region Combobox
-      //TODO: intentar cambiar el contenido del combobox a el nombre de la lista  UsersIdAndCodeCardsList
+      #region Carga de Combobox con nombres
+      //TODO: intentar cambiar el contenido del combobox a el nombre de la lista  UsersIdAndNameList
       private void cargaCombobox()
       {
          SqlConnection conn = new SqlConnection(conexionString);
