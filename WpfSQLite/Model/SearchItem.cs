@@ -13,6 +13,7 @@ namespace Presencia.Model
    {
       public string Nombre { get; set; }
       public int Id { get; set; }
+      public int CardCode { get; set; }
       public DateTime FechaInicio { get; set; }
       public DateTime FechaFin { get; set; }
 

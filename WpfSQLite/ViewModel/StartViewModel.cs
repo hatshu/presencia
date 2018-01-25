@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.Globalization;
 using System.Windows;
+using System.Windows.Documents;
 using Presencia.Model;
 
 namespace Presencia.ViewModel
@@ -39,6 +39,8 @@ namespace Presencia.ViewModel
 
       public List<LockAuditTrail> LockAuditTrailList = new List<LockAuditTrail>();
 
+      public ObservableCollection<UserData> UserDataBrutoList;
+
       #endregion
 
       #region Constructor
@@ -46,9 +48,11 @@ namespace Presencia.ViewModel
       public StartViewModel()
       {
          ActiveUsers = new ObservableCollection<string>();
-         SearchCommand = new DelegateCommand(SearchCommand_Execute, SearchCommand_CanExecute);
+         UserDataBrutoList = new ObservableCollection<UserData>();
          cargaCombobox();
          ObtenerIdUserAndCardCode();
+         SearchCommand = new DelegateCommand(SearchCommand_Execute, SearchCommand_CanExecute);
+
       }
 
       #endregion
@@ -65,6 +69,8 @@ namespace Presencia.ViewModel
                SearchItem item = new SearchItem
                {
                   Nombre = SActiveUser,
+                  Id = ObtenerIdUser(),
+                  CardCode = ObtenerCardCodeDeId(ObtenerIdUser()),
                   FechaInicio = StartDate,
                   FechaFin = EndDate.AddHours(23).AddMinutes(59)
 
@@ -81,19 +87,35 @@ namespace Presencia.ViewModel
          }
       }
 
+      private int  ObtenerIdUser()
+      {
+         var id = 0;
+         foreach (var itemUser in UsersIdAndNameList)
+         {
+            if (itemUser.Nombre.Equals(SActiveUser))
+            {
+               id = itemUser.Id;
+               return id;
+            }
+         }
+         return 0;
+      }
+
+
+
       private void consultaEventosSQLdeFechas(SearchItem item)
       {
 
-
-         //TODO: Hacer consulta sql de entradas y salidas de todos los cardode en las fechas seleccionadas
+         //Hacer consulta sql de entradas y salidas de todos los cardode en las fechas seleccionadas
          SqlConnection conn = new SqlConnection(conexionString);
          LockAuditTrailList.Clear();
+         UserDataBrutoList.Clear();
          try
          {
             conn.Open();
             string Query =
                "SELECT id_event, dt_Audit, id_lock, id_user, id_function, NCopy  FROM tb_LockAuditTrail WHERE  (id_lock='1026') AND (dt_Audit >= '" +
-               item.FechaInicio + "' AND dt_Audit <='" + item.FechaFin + "') AND (id_function='17' OR id_function='145' OR id_function='84' OR id_function='85' OR id_function='212' OR id_function='213') ORDER BY dt_Audit";
+               item.FechaInicio + "' AND dt_Audit <='" + item.FechaFin + "') AND (id_function='17' OR id_function='145' OR id_function='84' OR id_function='85' OR id_function='212' OR id_function='213')  ORDER BY dt_Audit";
             SqlCommand createCommand = new SqlCommand(Query, conn);
             SqlDataReader dr = createCommand.ExecuteReader();
             while (dr.Read())
@@ -108,7 +130,7 @@ namespace Presencia.ViewModel
             }
             conn.Close();
 
-            //TODO: buscar la relaccion entre CardCode y el id_event
+            //buscar la relaccion entre CardCode y el id_event
             foreach (var itemAuditTrail in LockAuditTrailList)
             {
                //Pasamos desde "string con formato hexadecimal" a int
@@ -119,11 +141,41 @@ namespace Presencia.ViewModel
                itemAuditTrail.CardCode = miCardCode;
             }
 
+            //creacion de lista con los datos del usuario seleccionado de los dias pertinentes
+            foreach (var itemEvent in LockAuditTrailList)
+            {
+               if (itemEvent.CardCode.Equals(item.CardCode))
+               {
+                  var userDataFind = new UserData();
+                  userDataFind.Nombre = item.Nombre;
+                  userDataFind.Id = item.Id;
+                  userDataFind.CardCode = item.CardCode;
+                  userDataFind.FechaInicio = StartDate;
+                  userDataFind.FechaFin = EndDate;
+                  userDataFind.FechaEvento = itemEvent.Dt_Audit;
+                  UserDataBrutoList.Add(userDataFind);
+               }
+            }
          }
          catch (Exception e)
          {
             MessageBox.Show(e.Message);
          }
+      }
+
+
+      private int ObtenerCardCodeDeId(int id)
+      {
+         var value = 0;
+         foreach (var itemUser in UsersIdAndNameList)
+         {
+            if (itemUser.Id.Equals(id))
+            {
+               return itemUser.CardCode;
+            }
+         }
+
+         return 0;
       }
 
       bool SearchCommand_CanExecute(object parameters)

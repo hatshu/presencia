@@ -9,11 +9,12 @@ namespace Presencia.Model
 {
    class UserData :INotifyPropertyChanged
    {
-      
+
       public string Nombre { get; set; }
       public int Id { get; set; }
-      public DateTime FechaEntrada { get; set; }
-      public DateTime FechaSalida { get; set; }
+      public int CardCode { get; set; }
+      public string FechaEvento { get; set; }
+      public string TipoEvento { get; set; }
       public DateTime FechaInicio { get; set; }
       public DateTime FechaFin { get; set; }
       public string Ausencia { get; set; }
