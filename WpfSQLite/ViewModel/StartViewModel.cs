@@ -11,6 +11,7 @@ namespace Presencia.ViewModel
 {
    class StartViewModel
    {
+
       #region Attributes
 
       //cadena de conexion a la base de datos
@@ -153,6 +154,7 @@ namespace Presencia.ViewModel
                   userDataFind.FechaInicio = StartDate;
                   userDataFind.FechaFin = EndDate;
                   userDataFind.FechaEvento = itemEvent.Dt_Audit;
+                  userDataFind.TipoEvento = conocertipodeevento(itemEvent);
                   UserDataBrutoList.Add(userDataFind);
                }
             }
@@ -161,6 +163,36 @@ namespace Presencia.ViewModel
          {
             MessageBox.Show(e.Message);
          }
+      }
+
+      private string conocertipodeevento(LockAuditTrail itemEvent)
+      {
+         if (itemEvent.Id_Function == 17)
+         {
+            return "ENTRADA";
+         }
+         if (itemEvent.Id_Function == 84)
+         {
+            return "ENTRADA";
+         }
+         if (itemEvent.Id_Function == 85)
+         {
+            return "ENTRADA";
+         }
+         if (itemEvent.Id_Function == 145)
+         {
+            return "SALIDA";
+         }
+         if (itemEvent.Id_Function == 212)
+         {
+            return "SALIDA";
+         }
+         if (itemEvent.Id_Function == 213)
+         {
+            return "SALIDA";
+         }
+
+         return "";
       }
 
 
