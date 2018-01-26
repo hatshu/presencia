@@ -654,6 +654,7 @@
 
    <!--/LABEL-->
    <Style x:Key="ListViewStyle" TargetType="{x:Type ListView}">
+      <Setter Property="BorderThickness" Value="0"></Setter>
       <Setter Property="FontFamily" Value="Verdana"/>
       <Setter Property="FontSize" Value="14"/>
       <Setter Property="Foreground" Value="#ff075e8c"/>

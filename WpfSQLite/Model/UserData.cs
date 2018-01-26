@@ -15,12 +15,12 @@ namespace Presencia.Model
       public int CardCode { get; set; }
       public string FechaEvento { get; set; }
       public string TipoEvento { get; set; }
-      public DateTime FechaInicio { get; set; }
-      public DateTime FechaFin { get; set; }
+      public DateTime Entrada { get; set; }
+      public DateTime Salida { get; set; }
       public string Ausencia { get; set; }
       public DateTime AusenciaEntrada { get; set; }
       public DateTime AusenciaSalida { get; set; }
-      public int TotalHoras { get; set; }
+      public DateTime TotalHoras { get; set; }
 
 
       //Para que se detecte cuando se cambia cada elemento

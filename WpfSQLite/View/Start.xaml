@@ -77,8 +77,17 @@
 
          </Grid>
          <Grid Grid.Row="3" Grid.Column="1">
-            <ListView Name="ListView"  Background="Transparent" Style="{StaticResource ListViewStyle}" ItemsSource="{Binding ud}">
-               
+
+            <ListView Name="ListView"  Background="Transparent" Style="{StaticResource ListViewStyle}" ItemsSource="{Binding ListaFinal}" >
+               <ListView.View>
+                  <GridView >
+                  <GridViewColumn Header="Usuario"  DisplayMemberBinding="{Binding Nombre, Mode=TwoWay}" Width="Auto"></GridViewColumn>
+                     <GridViewColumn Header="Dia"  DisplayMemberBinding="{Binding FechaEvento, Mode=TwoWay}" Width="Auto"></GridViewColumn>
+                     <GridViewColumn Header="Hora Entrada"  DisplayMemberBinding="{Binding Entrada, Mode=TwoWay}" Width="Auto"></GridViewColumn>
+                     <GridViewColumn Header="Hora Salida"  DisplayMemberBinding="{Binding Salida, Mode=TwoWay}" Width="Auto"></GridViewColumn>
+               <GridViewColumn Header="Total Horas"  DisplayMemberBinding="{Binding TotalHoras, StringFormat=HH:mm:ss}"  Width="Auto"></GridViewColumn>
+            </GridView>
+                  </ListView.View>
             </ListView>
          </Grid>
 

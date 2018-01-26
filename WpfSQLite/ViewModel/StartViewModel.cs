@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
 using Presencia.Model;
@@ -42,6 +45,27 @@ namespace Presencia.ViewModel
 
       public ObservableCollection<UserData> UserDataBrutoList;
 
+      public ObservableCollection<UserData> UserDataxDia;
+
+      public List<List<UserData>> UserDataxDiaDefinitivo;
+
+      private ObservableCollection<UserData> _listaFinal = new ObservableCollection<UserData>();
+
+
+      public ObservableCollection<UserData> ListaFinal
+      {
+         get { return _listaFinal; }
+         set
+         {
+            _listaFinal = value;
+            NotifyPropertyChanged("ListaFinal");
+         }
+      }
+
+
+
+
+
       #endregion
 
       #region Constructor
@@ -50,6 +74,8 @@ namespace Presencia.ViewModel
       {
          ActiveUsers = new ObservableCollection<string>();
          UserDataBrutoList = new ObservableCollection<UserData>();
+         UserDataxDia = new ObservableCollection<UserData>();
+         UserDataxDiaDefinitivo = new List<List<UserData>>();
          cargaCombobox();
          ObtenerIdUserAndCardCode();
          SearchCommand = new DelegateCommand(SearchCommand_Execute, SearchCommand_CanExecute);
@@ -58,6 +84,13 @@ namespace Presencia.ViewModel
 
       #endregion
 
+      // Para que se detecte cuando se cambia cada elemento
+      public event PropertyChangedEventHandler PropertyChanged;
+
+      private void NotifyPropertyChanged(string info)
+      {
+         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
+      }
 
       #region SearchCommand Button
 
@@ -76,7 +109,7 @@ namespace Presencia.ViewModel
                   FechaFin = EndDate.AddHours(23).AddMinutes(59)
 
                };
-               //MessageBox.Show("Se ha seleccionado el usuario: " + item.Nombre + " Fecha inicio " + item.FechaInicio + " Fecha fin " + item.FechaFin);
+               //MessageBox.Show("Se ha seleccionado el usuario: " + item.Nombre + " Fecha inicio " + item.Entrada + " Fecha fin " + item.Salida);
                consultaEventosSQLdeFechas(item);
 
             }
@@ -111,6 +144,8 @@ namespace Presencia.ViewModel
          SqlConnection conn = new SqlConnection(conexionString);
          LockAuditTrailList.Clear();
          UserDataBrutoList.Clear();
+         UserDataxDia.Clear();
+         ListaFinal.Clear();
          try
          {
             conn.Open();
@@ -151,13 +186,68 @@ namespace Presencia.ViewModel
                   userDataFind.Nombre = item.Nombre;
                   userDataFind.Id = item.Id;
                   userDataFind.CardCode = item.CardCode;
-                  userDataFind.FechaInicio = StartDate;
-                  userDataFind.FechaFin = EndDate;
+                  userDataFind.Entrada = StartDate;
+                  userDataFind.Salida = EndDate;
                   userDataFind.FechaEvento = itemEvent.Dt_Audit;
                   userDataFind.TipoEvento = conocertipodeevento(itemEvent);
                   UserDataBrutoList.Add(userDataFind);
                }
             }
+
+
+            //Conocer cuantos días se han seleccionado
+            var fechaDias = item.FechaFin - item.FechaInicio;
+            var totalDias = fechaDias.Days;
+
+
+            var list = UserDataBrutoList.GroupBy(d => DateTime.Parse(d.FechaEvento).Date).Select(g => g.ToList()).ToList();
+
+            foreach (var itemData in list)
+            {
+               //TODO: contemplar que hacer si el primero no sea un elemento salida y el último no sea salida
+
+               if (itemData.First().TipoEvento.Equals("ENTRADA"))
+               {
+                  UserDataxDia.Add(itemData.First());
+               }
+               else
+               {
+                  //UserDataxDia.Move(0,1);
+               }
+               if (itemData.Last().TipoEvento.Equals("SALIDA"))
+               {
+                  UserDataxDia.Add(itemData.Last());
+               }
+            }
+
+            UserDataxDiaDefinitivo = UserDataxDia.GroupBy(d => DateTime.Parse(d.FechaEvento).Date).Select(g => g.ToList()).ToList();
+
+            foreach (var itemData in UserDataxDiaDefinitivo)
+            {
+               UserData data = new UserData();
+               var entradaHoraAux = new DateTime();
+               foreach (var subitemData in itemData)
+               {
+                  if (subitemData.TipoEvento.Equals("ENTRADA"))
+                  {
+                     entradaHoraAux= DateTime.Parse(subitemData.FechaEvento);
+                  }
+                  if (subitemData.TipoEvento.Equals("SALIDA"))
+                  {
+                     data.TotalHoras = (DateTime.Parse(subitemData.FechaEvento) - entradaHoraAux.TimeOfDay);
+                     data.Id = subitemData.Id;
+                     data.Entrada = entradaHoraAux;
+                     data.Nombre = subitemData.Nombre;
+                     data.CardCode = subitemData.CardCode;
+                     data.FechaEvento = subitemData.FechaEvento.Substring(0, 10);
+                     data.Salida = DateTime.Parse(subitemData.FechaEvento);
+                     ListaFinal.Add(data);
+                  }
+
+               }
+            }
+
+
          }
          catch (Exception e)
          {
