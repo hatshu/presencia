@@ -653,12 +653,30 @@
 
 
    <!--/LABEL-->
+
+
+   <!--<Style x:Key="GridViewColumnHeaderGripper" TargetType="{x:Type Thumb}">
+      <Setter Property="Height" Value="{Binding Path=ActualHeight,RelativeSource={RelativeSource TemplatedParent}}"/>
+      <Setter Property="Template">
+         <Setter.Value>
+            <ControlTemplate TargetType="{x:Type Thumb}">
+               <Border>
+                  <Rectangle HorizontalAlignment="Center" Width="1" Fill="Black"/>
+               </Border>
+            </ControlTemplate>
+         </Setter.Value>
+      </Setter>
+   </Style>-->
+
    <Style x:Key="ListViewStyle" TargetType="{x:Type ListView}">
-      <Setter Property="BorderThickness" Value="0"></Setter>
+
       <Setter Property="FontFamily" Value="Verdana"/>
       <Setter Property="FontSize" Value="14"/>
-      <Setter Property="Foreground" Value="#ff075e8c"/>
+      <Setter Property="Foreground" Value="Black"/>
       <Setter Property="BorderBrush" Value="Transparent"></Setter>
+      <Setter Property="BorderThickness" Value="1,1,1,1"></Setter>
    </Style>
+
+
 
 </ResourceDictionary>

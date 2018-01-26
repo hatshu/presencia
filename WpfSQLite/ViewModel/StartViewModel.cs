@@ -241,6 +241,9 @@ namespace Presencia.ViewModel
                      data.CardCode = subitemData.CardCode;
                      data.FechaEvento = subitemData.FechaEvento.Substring(0, 10);
                      data.Salida = DateTime.Parse(subitemData.FechaEvento);
+                     data.Ausencia = "No existe ausencia lanzada";
+
+
                      ListaFinal.Add(data);
                   }
 

@@ -83,10 +83,13 @@
                   <GridView >
                   <GridViewColumn Header="Usuario"  DisplayMemberBinding="{Binding Nombre, Mode=TwoWay}" Width="Auto"></GridViewColumn>
                      <GridViewColumn Header="Dia"  DisplayMemberBinding="{Binding FechaEvento, Mode=TwoWay}" Width="Auto"></GridViewColumn>
+                     <GridViewColumn Header="Ausencia"  DisplayMemberBinding="{Binding Ausencia}"  Width="Auto"></GridViewColumn>
+                     <GridViewColumn Header="Inicio Ausencia"  DisplayMemberBinding="{Binding AusenciaEntrada}"  Width="Auto"></GridViewColumn>
+                     <GridViewColumn Header="Fin Ausencia"  DisplayMemberBinding="{Binding AusenciaSalida}"  Width="Auto"></GridViewColumn>
                      <GridViewColumn Header="Hora Entrada"  DisplayMemberBinding="{Binding Entrada, Mode=TwoWay}" Width="Auto"></GridViewColumn>
                      <GridViewColumn Header="Hora Salida"  DisplayMemberBinding="{Binding Salida, Mode=TwoWay}" Width="Auto"></GridViewColumn>
-               <GridViewColumn Header="Total Horas"  DisplayMemberBinding="{Binding TotalHoras, StringFormat=HH:mm:ss}"  Width="Auto"></GridViewColumn>
-            </GridView>
+                     <GridViewColumn Header="Total Horas"  DisplayMemberBinding="{Binding TotalHoras, StringFormat=HH:mm:ss}"  Width="Auto"></GridViewColumn>
+                  </GridView>
                   </ListView.View>
             </ListView>
          </Grid>
