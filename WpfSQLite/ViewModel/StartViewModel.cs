@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using Presencia.Model;
 
@@ -31,6 +32,20 @@ namespace Presencia.ViewModel
          set { _sActiveUser = value; }
       }
 
+      private string _totalHoras;
+
+      public string TotalHoras
+      {
+         get { return _totalHoras; }
+         set
+         {
+            if (_totalHoras == value) return;
+            _totalHoras = value;
+            NotifyPropertyChanged("TotalHoras");
+         }
+
+      }
+
       public DateTime StartDate { get; set; } = DateTime.Today.Date;
 
       public DateTime EndDate { get; set; } = DateTime.Today.Date;
@@ -50,7 +65,6 @@ namespace Presencia.ViewModel
       public List<List<UserData>> UserDataxDiaDefinitivo;
 
       private ObservableCollection<UserData> _listaFinal = new ObservableCollection<UserData>();
-
 
       public ObservableCollection<UserData> ListaFinal
       {
@@ -111,6 +125,7 @@ namespace Presencia.ViewModel
                };
                //MessageBox.Show("Se ha seleccionado el usuario: " + item.Nombre + " Fecha inicio " + item.Entrada + " Fecha fin " + item.Salida);
                consultaEventosSQLdeFechas(item);
+               TotalHoras = calculoTotalHorasDeLista();
 
             }
             else
@@ -136,6 +151,7 @@ namespace Presencia.ViewModel
       }
 
 
+      //SACA LISTA DE ENTRADAS Y SALIDAS
 
       private void consultaEventosSQLdeFechas(SearchItem item)
       {
@@ -256,6 +272,23 @@ namespace Presencia.ViewModel
          {
             MessageBox.Show(e.Message);
          }
+      }
+
+      private string calculoTotalHorasDeLista()
+      {
+         float horas =0, min=0,enminutos =0, enhoras=0;
+         string hora = " ";
+
+         foreach (var itemData in ListaFinal)
+         {
+            horas = itemData.TotalHoras.Hour + horas;
+            min = itemData.TotalHoras.Minute + min;
+         }
+         enminutos = (horas * 60) + min;
+         enhoras = enminutos / 60;
+         hora = enhoras.ToString();
+
+         return hora;
       }
 
       private string conocertipodeevento(LockAuditTrail itemEvent)
@@ -390,7 +423,7 @@ namespace Presencia.ViewModel
          try
          {
             conn.Open();
-            string Query = "select * from tb_Users where status='1' and name like '%CTC%' ";
+            string Query = "select * from tb_Users where status='1' and name like '%CTC%' ORDER BY FirstName";
             SqlCommand createCommand = new SqlCommand(Query, conn);
             SqlDataReader dr = createCommand.ExecuteReader();
             while (dr.Read())
@@ -410,5 +443,8 @@ namespace Presencia.ViewModel
 
 
       #endregion
+
+
+
    }
 }

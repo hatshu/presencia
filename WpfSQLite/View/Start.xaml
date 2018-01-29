@@ -77,21 +77,22 @@
 
          </Grid>
          <Grid Grid.Row="3" Grid.Column="1">
-
-            <ListView Name="ListView"  Background="Transparent" Style="{StaticResource ListViewStyle}" ItemsSource="{Binding ListaFinal}" >
-               <ListView.View>
-                  <GridView >
-                  <GridViewColumn Header="Usuario"  DisplayMemberBinding="{Binding Nombre, Mode=TwoWay}" Width="Auto"></GridViewColumn>
-                     <GridViewColumn Header="Dia"  DisplayMemberBinding="{Binding FechaEvento, Mode=TwoWay}" Width="Auto"></GridViewColumn>
-                     <GridViewColumn Header="Ausencia"  DisplayMemberBinding="{Binding Ausencia}"  Width="Auto"></GridViewColumn>
-                     <GridViewColumn Header="Inicio Ausencia"  DisplayMemberBinding="{Binding AusenciaEntrada}"  Width="Auto"></GridViewColumn>
-                     <GridViewColumn Header="Fin Ausencia"  DisplayMemberBinding="{Binding AusenciaSalida}"  Width="Auto"></GridViewColumn>
-                     <GridViewColumn Header="Hora Entrada"  DisplayMemberBinding="{Binding Entrada, Mode=TwoWay}" Width="Auto"></GridViewColumn>
-                     <GridViewColumn Header="Hora Salida"  DisplayMemberBinding="{Binding Salida, Mode=TwoWay}" Width="Auto"></GridViewColumn>
-                     <GridViewColumn Header="Total Horas"  DisplayMemberBinding="{Binding TotalHoras, StringFormat=HH:mm:ss}"  Width="Auto"></GridViewColumn>
-                  </GridView>
+            <Viewbox MaxWidth="1920" MinWidth="960" VerticalAlignment="Top" >
+               <ListView Name="ListView"  Background="Transparent" Style="{StaticResource ListViewStyle}"   ItemsSource="{Binding ListaFinal}"  >
+                  <ListView.View>
+                     <GridView >
+                        <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Usuario"  DisplayMemberBinding="{Binding Nombre, Mode=TwoWay}" Width="Auto"></GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Dia"  DisplayMemberBinding="{Binding FechaEvento, Mode=TwoWay}" Width="Auto"></GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Ausencia"  DisplayMemberBinding="{Binding Ausencia}"  Width="Auto"></GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Inicio Ausencia"  DisplayMemberBinding="{Binding AusenciaEntrada}"  Width="Auto"></GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Fin Ausencia"  DisplayMemberBinding="{Binding AusenciaSalida}"  Width="Auto"></GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Hora Entrada"  DisplayMemberBinding="{Binding Entrada, Mode=TwoWay}" Width="Auto"></GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Hora Salida"  DisplayMemberBinding="{Binding Salida, Mode=TwoWay}" Width="Auto"></GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Total Horas"  DisplayMemberBinding="{Binding TotalHoras, StringFormat=HH:mm:ss}"  Width="Auto"></GridViewColumn>
+                     </GridView>
                   </ListView.View>
-            </ListView>
+               </ListView>
+            </Viewbox>
          </Grid>
 
       </Grid>
@@ -101,13 +102,21 @@
             <RowDefinition Height="5*"/>
          </Grid.RowDefinitions>
          <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="19*"/>
-            <ColumnDefinition Width="140*"/>
+            <ColumnDefinition Width="12*"/>
+            <ColumnDefinition Width="228*"/>
+            <ColumnDefinition Width="1039*"/>
+            <ColumnDefinition Width="392*"/>
+            <ColumnDefinition Width="249*"/>
          </Grid.ColumnDefinitions>
 
          <Viewbox Grid.Row="0" Grid.Column="1" >
             <Button Name="back" Content="Back" Style="{StaticResource MetroButton}"  MaxHeight="20" MinWidth="50" Click="Back_OnClick"></Button>
+         </Viewbox>
+         <Viewbox Grid.Row="0" Grid.Column="3" >
+            <Label Style="{StaticResource whiteLabel}"  Content="Total de horas:" ></Label>
+         </Viewbox>
+         <Viewbox Grid.Row="0" Grid.Column="4">
+            <Label Name="LabelHorasTotales"  Content="{Binding TotalHoras, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Style="{StaticResource whiteLabel}" HorizontalAlignment="Left"></Label>
          </Viewbox>
       </Grid>
 

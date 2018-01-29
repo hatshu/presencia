@@ -24,7 +24,11 @@ namespace Presencia.View
          StartViewModel = new StartViewModel();
          this.DataContext = StartViewModel;
          //cargaCombobox();
+       
       }
+
+
+      
 
       //private void cargaCombobox()
       //{
@@ -54,5 +58,8 @@ namespace Presencia.View
       {
          NavigationService?.GoBack();
       }
+
+     
+
    }
 }
