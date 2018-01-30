@@ -5,3 +5,6 @@ WpfSQLite/obj/Debug/*
 WPFSQLite/bin/Debug/*
 WPFSQLite/obj/Debug/*
 .vs/Presencia/v14/.suo
+WPFSQLite/ViewModel/INavigationService.cs
+WPFSQLite/ViewModel/NavigationService.cs
+WPFSQLite/ViewModel/ViewModelLocator.cs

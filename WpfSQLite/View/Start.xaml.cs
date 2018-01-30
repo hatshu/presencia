@@ -23,8 +23,9 @@ namespace Presencia.View
          InitializeComponent();
          StartViewModel = new StartViewModel();
          this.DataContext = StartViewModel;
+         
          //cargaCombobox();
-       
+
       }
 
 

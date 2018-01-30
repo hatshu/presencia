@@ -116,7 +116,7 @@
             <Label Style="{StaticResource whiteLabel}"  Content="Total de horas:" ></Label>
          </Viewbox>
          <Viewbox Grid.Row="0" Grid.Column="4">
-            <Label Name="LabelHorasTotales"  Content="{Binding TotalHoras, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Style="{StaticResource whiteLabel}" HorizontalAlignment="Left"></Label>
+            <TextBlock Name="LabelHorasTotales"  Text="{Binding TotalConjuntoHoras[0]}"  HorizontalAlignment="Left"></TextBlock>
          </Viewbox>
       </Grid>
 

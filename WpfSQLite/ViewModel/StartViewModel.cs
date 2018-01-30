@@ -6,9 +6,11 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Threading;
 using Presencia.Model;
 
 namespace Presencia.ViewModel
@@ -30,20 +32,6 @@ namespace Presencia.ViewModel
       {
          get { return _sActiveUser; }
          set { _sActiveUser = value; }
-      }
-
-      private string _totalHoras;
-
-      public string TotalHoras
-      {
-         get { return _totalHoras; }
-         set
-         {
-            if (_totalHoras == value) return;
-            _totalHoras = value;
-            NotifyPropertyChanged("TotalHoras");
-         }
-
       }
 
       public DateTime StartDate { get; set; } = DateTime.Today.Date;
@@ -78,6 +66,19 @@ namespace Presencia.ViewModel
 
 
 
+      private ObservableCollection<string> _totalConjuntoHoras;
+
+      public ObservableCollection<string> TotalConjuntoHoras
+      {
+         get { return _totalConjuntoHoras; }
+         set
+         {
+            _totalConjuntoHoras = value;
+            NotifyPropertyChanged("TotalConjuntoHoras");
+         }
+
+      }
+
 
 
       #endregion
@@ -93,7 +94,7 @@ namespace Presencia.ViewModel
          cargaCombobox();
          ObtenerIdUserAndCardCode();
          SearchCommand = new DelegateCommand(SearchCommand_Execute, SearchCommand_CanExecute);
-
+         TotalConjuntoHoras = new ObservableCollection<string>();
       }
 
       #endregion
@@ -123,10 +124,11 @@ namespace Presencia.ViewModel
                   FechaFin = EndDate.AddHours(23).AddMinutes(59)
 
                };
-               //MessageBox.Show("Se ha seleccionado el usuario: " + item.Nombre + " Fecha inicio " + item.Entrada + " Fecha fin " + item.Salida);
+               //MessageBox.Show("Se ha seleccionado el usuario: " + item.Nombre + " Fecha inicio " + item.FechaInicio + " Fecha fin " + item.FechaFin);
                consultaEventosSQLdeFechas(item);
-               TotalHoras = calculoTotalHorasDeLista();
-
+               TotalConjuntoHoras.Clear();
+               TotalConjuntoHoras.Add(calculoTotalHorasDeLista());
+               UpdateUI();
             }
             else
             {
@@ -444,6 +446,12 @@ namespace Presencia.ViewModel
 
       #endregion
 
+      public void UpdateUI()
+      {
+         //Here update your label, button or any string related object.
+         //Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Background, new ThreadStart(delegate { }));
+         Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new ThreadStart(delegate { }));
+      }
 
 
    }
