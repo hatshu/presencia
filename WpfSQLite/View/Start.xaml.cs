@@ -60,7 +60,5 @@ namespace Presencia.View
          NavigationService?.GoBack();
       }
 
-     
-
    }
 }

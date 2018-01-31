@@ -47,19 +47,28 @@
                <RowDefinition Height="29*"/>
             </Grid.RowDefinitions>
             <Image x:Name="Logo" Source="/Presencia;component/Resources/catecLogo.png" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" MinHeight="100"  />
-            <Viewbox Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" MaxWidth="120" MinWidth="40" HorizontalAlignment="Right"   >
+            <Viewbox Grid.Row="1" Grid.Column="1"  MaxWidth="120" MinWidth="40" HorizontalAlignment="Right"   >
                <Label Name="Nombre"  Content="Usuario:" Style="{StaticResource whiteLabel}"  />
             </Viewbox>
 
             <!--<ComboBox Name="ComboBox" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" MaxHeight="35"></ComboBox>-->
-            <Viewbox MaxHeight="45" MinHeight="45" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" HorizontalAlignment="Left"   >
-               <ComboBox Name="ComboBox"  ItemsSource="{Binding Path=ActiveUsers}" FontSize="22" SelectedItem="{Binding Path=SActiveUser , Mode=TwoWay}" ></ComboBox>
+            <Viewbox MaxHeight="40" MinHeight="20" Grid.Row="1" Grid.Column="2"  HorizontalAlignment="Left"   >
+               <ComboBox Name="ComboBox"  ItemsSource="{Binding Path=ActiveUsers}" SelectedItem="{Binding Path=SActiveUser , Mode=TwoWay}" Margin="3,3,3,3" ></ComboBox>
             </Viewbox>
+            <Viewbox Grid.Row="2" Grid.Column="1"  MaxWidth="120" MinWidth="40" HorizontalAlignment="Right"   >
+               <Label Name="AREA"  Content="Area    :" Style="{StaticResource whiteLabel}"  />
+            </Viewbox>
+
+            <!--<ComboBox Name="ComboBox" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" MaxHeight="35"></ComboBox>-->
+            <Viewbox MaxHeight="40" MinHeight="20" Grid.Row="2" Grid.Column="2"  HorizontalAlignment="Left"   >
+               <ComboBox Name="ComboBoxArea"  ItemsSource="{Binding Path=AreasCatec}"  SelectedItem="{Binding Path=SActiveArea , Mode=TwoWay}"  Margin="3,3,3,3"></ComboBox>
+            </Viewbox>
+
             <Viewbox Grid.Row="1" Grid.Column="3" MaxWidth="120" MinWidth="40" HorizontalAlignment="Right" >
                <Label Name="FechaInicio"  Content="Inicio:    " Style="{StaticResource whiteLabel}" />
             </Viewbox>
             <Viewbox Grid.Row="2" Grid.Column="3" MaxWidth="120" MinWidth="40" HorizontalAlignment="Right"  >
-               <Label Name="FechaFin"  Content="Fin:      " Style="{StaticResource whiteLabel}"/>
+               <Label Name="FechaFin"  Content="Fin:       " Style="{StaticResource whiteLabel}"/>
             </Viewbox>
             <Viewbox Grid.Column="4"  Grid.Row="1" HorizontalAlignment="Left"  >
                <DatePicker Name="DatePickerInicio"  SelectedDate="{Binding StartDate, Mode=TwoWay}"  BorderThickness="0" Margin=" 3 3 3 3" MaxWidth="200"   MinWidth="100"/>
@@ -77,25 +86,28 @@
 
          </Grid>
          <Grid Grid.Row="3" Grid.Column="1">
-            
-<Viewbox VerticalAlignment="Top"  StretchDirection="UpOnly" >
 
-               <ListView Name="ListView"  Background="Transparent" Style="{StaticResource ListViewStyle}"   ItemsSource="{Binding ListaFinal}" ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2"  HorizontalAlignment="Left"  >
-                  <ListView.View>
+
+
+            <!--<ListView Name="ListView"  Background="Transparent"  Style="{StaticResource ListViewStyle}"   ItemsSource="{Binding ListaFinal}" ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2"    >
+
+               <ListView.View>
                      <GridView  >
                         <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Usuario"  DisplayMemberBinding="{Binding Nombre, Mode=TwoWay}" Width="Auto" ></GridViewColumn>
-                     <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Dia"  DisplayMemberBinding="{Binding FechaEvento, Mode=TwoWay,  StringFormat=dd:mm:yy}" Width="190"></GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Dia"  DisplayMemberBinding="{Binding FechaEvento, Mode=TwoWay,  StringFormat=dd:mm:yy}" Width="Auto"></GridViewColumn>
                         <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Ausencia"  DisplayMemberBinding="{Binding Ausencia}"  Width="Auto"></GridViewColumn>
-                     <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Inicio Ausencia"  DisplayMemberBinding="{Binding AusenciaEntrada,  StringFormat=HH:mm}"  Width="200"></GridViewColumn>
-                     <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Fin Ausencia"  DisplayMemberBinding="{Binding AusenciaSalida,  StringFormat=HH:mm}"  Width="200"></GridViewColumn>
-                     <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Hora Entrada"  DisplayMemberBinding="{Binding Entrada, Mode=TwoWay,  StringFormat=HH:mm}" Width="200"></GridViewColumn>
-                     <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Hora Salida"  DisplayMemberBinding="{Binding Salida, Mode=TwoWay,  StringFormat=HH:mm}" Width="200"></GridViewColumn>
-                        <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Total Horas"  DisplayMemberBinding="{Binding TotalHoras, StringFormat=HH:mm}"  Width="130"></GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Inicio Ausencia"  DisplayMemberBinding="{Binding AusenciaEntrada,  StringFormat=HH:mm}"  Width="Auto"></GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Fin Ausencia"  DisplayMemberBinding="{Binding AusenciaSalida,  StringFormat=HH:mm}"  Width="Auto"></GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Hora Entrada"  DisplayMemberBinding="{Binding Entrada, Mode=TwoWay,  StringFormat=HH:mm}" Width="Auto"></GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Hora Salida"  DisplayMemberBinding="{Binding Salida, Mode=TwoWay,  StringFormat=HH:mm}" Width="Auto"></GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Total Horas"  DisplayMemberBinding="{Binding TotalHoras, StringFormat=HH:mm}"  Width="Auto"></GridViewColumn>
                      </GridView>
                   </ListView.View>
-               </ListView>
+               </ListView>-->
+            <DataGrid ItemsSource="{Binding ListaFinal}"  ColumnWidth="*" HeadersVisibility="Column"  Background="Transparent">
 
-            </Viewbox>
+            </DataGrid>
+
          </Grid>
 
       </Grid>

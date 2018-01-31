@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
+using System.Windows.Data;
 
 namespace Presencia
 {
@@ -12,4 +14,5 @@ namespace Presencia
          InitializeComponent();
       }
    }
+
 }
