@@ -24,7 +24,7 @@ namespace Presencia.ViewModel
       string conexionString = ConfigurationManager.ConnectionStrings["ConexionBaseDeDatos"].ConnectionString;
 
       //FOR COMBOBOX ACCESS WITH MVVM
-      public ObservableCollection<string> ActiveUsers { get; set; }
+      //public ObservableCollection<string> ActiveUsers { get; set; }
 
       private string _sActiveUser;
 
@@ -34,13 +34,45 @@ namespace Presencia.ViewModel
          set { _sActiveUser = value; }
       }
 
+      private string _sAreaCentro;
+
+      public string SAreaCentro
+      {
+         get { return _sAreaCentro; }
+         set { _sAreaCentro = value; }
+      }
+
       public DateTime StartDate { get; set; } = DateTime.Today.Date;
 
       public DateTime EndDate { get; set; } = DateTime.Today.Date;
 
       public DelegateCommand SearchCommand { get; set; }
 
-      public List<IdUser> UsersIdAndNameList = new List<IdUser>();
+      private ObservableCollection<IdUser> _usersIdAndNameList { get; set; }
+
+
+      public ObservableCollection<IdUser> UsersIdAndNameList
+      {
+         get { return _usersIdAndNameList; }
+         set
+         {
+            _usersIdAndNameList = value;
+            NotifyPropertyChanged("UsersIdAndNameList");
+         }
+      }
+
+      private ObservableCollection<string> _areasCentro = new ObservableCollection<string>();
+
+      public ObservableCollection<string> AreasCentro
+      {
+         get { return _areasCentro; }
+         set
+         {
+            _areasCentro = value;
+            NotifyPropertyChanged("AreasCentro");
+         }
+
+      }
 
       public List<IdUser> CardCodeAndUserIdList = new List<IdUser>();
 
@@ -87,12 +119,15 @@ namespace Presencia.ViewModel
 
       public StartViewModel()
       {
-         ActiveUsers = new ObservableCollection<string>();
+         //ActiveUsers = new ObservableCollection<string>();
+         UsersIdAndNameList = new ObservableCollection<IdUser>();
          UserDataBrutoList = new ObservableCollection<UserData>();
          UserDataxDia = new ObservableCollection<UserData>();
          UserDataxDiaDefinitivo = new List<List<UserData>>();
-         cargaCombobox();
+         //TODO introducir area y filtrado por area
          ObtenerIdUserAndCardCode();
+         //cargaCombobox();
+
          SearchCommand = new DelegateCommand(SearchCommand_Execute, SearchCommand_CanExecute);
          TotalConjuntoHoras = new ObservableCollection<string>();
       }
@@ -124,7 +159,7 @@ namespace Presencia.ViewModel
                   FechaFin = EndDate.AddHours(23).AddMinutes(59)
 
                };
-               //MessageBox.Show("Se ha seleccionado el usuario: " + item.Nombre + " Fecha inicio " + item.FechaInicio + " Fecha fin " + item.FechaFin);
+               MessageBox.Show("Se ha seleccionado el usuario: " + item.Nombre + "Area: " + SAreaCentro+ " Fecha inicio " + item.FechaInicio + " Fecha fin " + item.FechaFin);
                consultaEventosSQLdeFechas(item);
                TotalConjuntoHoras.Clear();
                TotalConjuntoHoras.Add(calculoTotalHorasDeLista());
@@ -260,9 +295,6 @@ namespace Presencia.ViewModel
                      data.FechaEvento = subitemData.FechaEvento.Substring(0, 10);
                      data.Salida = DateTime.Parse(subitemData.FechaEvento);
                      data.Ausencia = "No lanzada";
-
-
-
                      ListaFinal.Add(data);
                   }
 
@@ -356,7 +388,7 @@ namespace Presencia.ViewModel
          try
          {
             conn.Open();
-            string Query = "SELECT id_user, Title, FirstName status FROM tb_Users WHERE (Title='CTC') AND (status='1') ORDER BY FirstName";
+            string Query = "SELECT id_user, Title, FirstName, LastName status FROM tb_Users WHERE (Title='CTC') AND (status='1') ORDER BY FirstName";
             SqlCommand createCommand = new SqlCommand(Query, conn);
             SqlDataReader dr = createCommand.ExecuteReader();
             while (dr.Read())
@@ -364,6 +396,7 @@ namespace Presencia.ViewModel
                var userItem = new IdUser();
                userItem.Nombre = dr[2].ToString();
                userItem.Id = dr[0].GetHashCode();
+               userItem.Area = dr[3].ToString();
                UsersIdAndNameList.Add(userItem);
             }
             conn.Close();
@@ -410,42 +443,59 @@ namespace Presencia.ViewModel
             }
          }
 
-      }
+         //OBTENCION DE AREAS
 
+         //TODO Obtener areas y filtrado de areas
 
-
-
-      #endregion
-
-      #region Carga de Combobox con nombres
-      //TODO: intentar cambiar el contenido del combobox a el nombre de la lista  UsersIdAndNameList
-      private void cargaCombobox()
-      {
-         SqlConnection conn = new SqlConnection(conexionString);
-
-         try
-         {
-            conn.Open();
-            string Query = "select * from tb_Users where status='1' and name like '%CTC%' ORDER BY FirstName";
-            SqlCommand createCommand = new SqlCommand(Query, conn);
-            SqlDataReader dr = createCommand.ExecuteReader();
-            while (dr.Read())
+       ObservableCollection<string> areasAux = new ObservableCollection<string>();
+            foreach (var item in UsersIdAndNameList)
             {
-               string userName = dr.GetString(3);
-               ActiveUsers.Add(userName);
+               {
+                  areasAux.Add(item.Area);
+               }
             }
-            conn.Close();
-         }
-         catch (Exception e)
-         {
-            MessageBox.Show(e.Message);
-            //TODO: volver atras en la navegación si da error
 
-         }
+
+         AreasCentro = new ObservableCollection<string>(areasAux.Distinct());
+
       }
 
 
+
+
       #endregion
+
+      //#region Carga de Combobox con nombres
+      ////TODO: intentar cambiar el contenido del combobox a el nombre de la lista  UsersIdAndNameList
+      //private void cargaCombobox()
+      //{
+      //   SqlConnection conn = new SqlConnection(conexionString);
+
+      //   try
+      //   {
+      //      conn.Open();
+      //      string Query = "select * from tb_Users where status='1' and name like '%CTC%' ORDER BY FirstName";
+      //      SqlCommand createCommand = new SqlCommand(Query, conn);
+      //      SqlDataReader dr = createCommand.ExecuteReader();
+      //      while (dr.Read())
+      //      {
+      //         string userName = dr.GetString(3);
+      //         ActiveUsers.Add(userName);
+      //      }
+      //      conn.Close();
+      //   }
+      //   catch (Exception e)
+      //   {
+      //      MessageBox.Show(e.Message);
+      //      //TODO: volver atras en la navegación si da error
+
+      //   }
+      //}
+
+
+
+
+      //#endregion
 
       public void UpdateUI()
       {

@@ -729,7 +729,7 @@
    <Style TargetType="{x:Type DataGrid}">
       <Setter Property="Background" Value="#FFF" />
       <Setter Property="AlternationCount" Value="2" />
-      <Setter Property="HeadersVisibility" Value="Column"></Setter>
+      <Setter Property="HeadersVisibility" Value="None"></Setter>
    </Style>
 
    <Style TargetType="{x:Type DataGridRow}">

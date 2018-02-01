@@ -53,7 +53,7 @@
 
             <!--<ComboBox Name="ComboBox" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" MaxHeight="35"></ComboBox>-->
             <Viewbox MaxHeight="40" MinHeight="20" Grid.Row="1" Grid.Column="2"  HorizontalAlignment="Left"   >
-               <ComboBox Name="ComboBox"  ItemsSource="{Binding Path=ActiveUsers}" SelectedItem="{Binding Path=SActiveUser , Mode=TwoWay}" Margin="3,3,3,3" ></ComboBox>
+               <ComboBox Name="ComboBox"  ItemsSource="{Binding Path=UsersIdAndNameList}" DisplayMemberPath="Nombre" SelectedValue="{Binding Path=SActiveUser}" SelectedValuePath="Nombre" Margin="3,3,3,3" ></ComboBox>
             </Viewbox>
             <Viewbox Grid.Row="2" Grid.Column="1"  MaxWidth="120" MinWidth="40" HorizontalAlignment="Right"   >
                <Label Name="AREA"  Content="Area    :" Style="{StaticResource whiteLabel}"  />
@@ -61,7 +61,7 @@
 
             <!--<ComboBox Name="ComboBox" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" MaxHeight="35"></ComboBox>-->
             <Viewbox MaxHeight="40" MinHeight="20" Grid.Row="2" Grid.Column="2"  HorizontalAlignment="Left"   >
-               <ComboBox Name="ComboBoxArea"  ItemsSource="{Binding Path=AreasCatec}"  SelectedItem="{Binding Path=SActiveArea , Mode=TwoWay}"  Margin="3,3,3,3"></ComboBox>
+               <ComboBox Name="ComboBoxArea"  ItemsSource="{Binding Path=AreasCentro}"  SelectedItem="{Binding Path=SAreaSCentro}"  Margin="3,3,3,3"></ComboBox>
             </Viewbox>
 
             <Viewbox Grid.Row="1" Grid.Column="3" MaxWidth="120" MinWidth="40" HorizontalAlignment="Right" >

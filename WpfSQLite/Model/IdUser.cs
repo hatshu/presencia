@@ -12,6 +12,7 @@ namespace Presencia.Model
       public string Nombre { get; set; }
       public int Id { get; set; }
       public int CardCode { get; set; }
+      public string Area { get; set; }
 
       //Para que se detecte cuando se cambia cada elemento
       public event PropertyChangedEventHandler PropertyChanged;
