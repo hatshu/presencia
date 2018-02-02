@@ -46,7 +46,6 @@ namespace Presencia.ViewModel
             _sAreaCentro = value;
             //MessageBox.Show("Area ARRIBA: " + _sAreaCentro);
             NotifyPropertyChanged("SAreaCentro");
-            //TODO filtar por Area el combobox de arriba.
             if (!_sAreaCentro.Equals(""))
             {
                filtrarPorArea(_sAreaCentro);
@@ -62,6 +61,9 @@ namespace Presencia.ViewModel
       public DelegateCommand SearchCommand { get; set; }
 
       public DelegateCommand SelectionChangedArea { get; set; }
+
+      public DelegateCommand LimpiarCommand { get; set; }
+
 
       private ObservableCollection<IdUser> _usersIdAndNameList { get; set; }
 
@@ -112,6 +114,8 @@ namespace Presencia.ViewModel
       public ObservableCollection<UserData> UserDataxDia;
 
       public List<List<UserData>> UserDataxDiaDefinitivo;
+
+      //Se peude quitar el NotifyPropertyChanged y poner normal ya que no se bindea esta lista
 
       private ObservableCollection<UserData> _listaFinal = new ObservableCollection<UserData>();
 
@@ -179,6 +183,7 @@ namespace Presencia.ViewModel
             }
          }
          SearchCommand = new DelegateCommand(SearchCommand_Execute, SearchCommand_CanExecute);
+         LimpiarCommand = new DelegateCommand(LimpiarCommand_Execute, LimpiarCommand_CanExecute);
          SelectionChangedArea = new DelegateCommand(SelectionChangedArea_Execute, SelectionChangedArea_CanExecute);
          TotalConjuntoHoras = new ObservableCollection<string>();
       }
@@ -199,7 +204,7 @@ namespace Presencia.ViewModel
       {
          if (SearchCommand_CanExecute(parameters))
          {
-            if (SActiveUser != null && StartDate <= EndDate)
+            if (SActiveUser != null && StartDate <= EndDate && StartDate<=DateTime.Today.Date && EndDate <=DateTime.Today.Date)
             {
                SearchItem item = new SearchItem
                {
@@ -210,7 +215,7 @@ namespace Presencia.ViewModel
                   FechaFin = EndDate.AddHours(23).AddMinutes(59)
 
                };
-               MessageBox.Show("Se ha seleccionado el usuario: " + item.Nombre + " Fecha inicio " + item.FechaInicio + " Fecha fin " + item.FechaFin);
+               //MessageBox.Show("Se ha seleccionado el usuario: " + item.Nombre + " Fecha inicio " + item.FechaInicio + " Fecha fin " + item.FechaFin);
                consultaEventosSQLdeFechas(item);
                TotalConjuntoHoras.Clear();
                TotalConjuntoHoras.Add(calculoTotalHorasDeLista());
@@ -239,13 +244,14 @@ namespace Presencia.ViewModel
       }
 
       #endregion
+
       #region SelectionChangedArea
 
       void SelectionChangedArea_Execute(object parameters)
       {
          if (!SAreaCentro.Equals(""))
          {
-            MessageBox.Show("area: " + SAreaCentro);
+            //MessageBox.Show("area: " + SAreaCentro);
 
          }
 
@@ -256,6 +262,26 @@ namespace Presencia.ViewModel
       }
 
       #endregion
+
+      #region LimpiarCommand
+
+      void LimpiarCommand_Execute(object parameters)
+      {
+         StartDate = DateTime.Today.Date;
+         EndDate = DateTime.Today.Date;
+         ElementoListaResumen.Clear();
+         SActiveUser = String.Empty;
+         SAreaCentro = String.Empty;
+
+      }
+      bool LimpiarCommand_CanExecute(object parameters)
+      {
+         return true;
+      }
+
+      #endregion
+
+
       private int ObtenerIdUser()
       {
          var id = 0;
@@ -269,6 +295,20 @@ namespace Presencia.ViewModel
          }
          return 0;
       }
+
+      private int ObtenerCardCodeDeId(int id)
+      {
+         var value = 0;
+         foreach (var itemUser in UsersIdAndNameList)
+         {
+            if (itemUser.Id.Equals(id))
+            {
+               return itemUser.CardCode;
+            }
+         }
+         return 0;
+      }
+
 
       //FILTRAR POR AREAS EL COMBOBOX
 
@@ -486,18 +526,6 @@ namespace Presencia.ViewModel
       }
 
 
-      private int ObtenerCardCodeDeId(int id)
-      {
-         var value = 0;
-         foreach (var itemUser in UsersIdAndNameList)
-         {
-            if (itemUser.Id.Equals(id))
-            {
-               return itemUser.CardCode;
-            }
-         }
-         return 0;
-      }
 
 
 

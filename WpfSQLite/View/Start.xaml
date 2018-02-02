@@ -90,7 +90,7 @@
                <Button Content="Buscar" Style="{StaticResource MetroButton}" Command="{Binding SearchCommand}" MaxHeight="30" MinWidth="70" Margin="1 1 1 1"></Button>
             </Viewbox>
             <Viewbox Grid.Row="2" Grid.Column="5"  >
-               <Button Content="Limpiar" Style="{StaticResource MetroButton}"  Command="{Binding CleanCommand}" MaxHeight="30" MinWidth="70" Margin="1 1 1 1"></Button>
+               <Button Content="Limpiar" Style="{StaticResource MetroButton}"  Command="{Binding LimpiarCommand}" MaxHeight="30" MinWidth="70" Margin="1 1 1 1"></Button>
             </Viewbox>
 
 
