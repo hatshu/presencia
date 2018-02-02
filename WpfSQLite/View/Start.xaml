@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       mc:Ignorable="d"
       Style="{StaticResource GenericPageStyle}"
       d:DesignWidth="{Binding Source={x:Static SystemParameters.FullPrimaryScreenWidth}}"
@@ -53,7 +54,9 @@
 
             <!--<ComboBox Name="ComboBox" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" MaxHeight="35"></ComboBox>-->
             <Viewbox MaxHeight="40" MinHeight="20" Grid.Row="1" Grid.Column="2"  HorizontalAlignment="Left"   >
-               <ComboBox Name="ComboBox"  ItemsSource="{Binding Path=UsersIdAndNameList}" DisplayMemberPath="Nombre" SelectedValue="{Binding Path=SActiveUser}" SelectedValuePath="Nombre" Margin="3,3,3,3" ></ComboBox>
+               <ComboBox Name="ComboBox"  ItemsSource="{Binding Path=ListaFiltradaporArea}" DisplayMemberPath="Nombre" SelectedValue="{Binding Path=SActiveUser}" SelectedValuePath="Nombre" Margin="3,3,3,3" ></ComboBox>
+               <!--<ComboBox Name="ComboBox"  ItemsSource="{Binding Path=UsersIdAndNameList}" DisplayMemberPath="Nombre" SelectedValue="{Binding Path=SActiveUser}" SelectedValuePath="Nombre" Margin="3,3,3,3" ></ComboBox>-->
+
             </Viewbox>
             <Viewbox Grid.Row="2" Grid.Column="1"  MaxWidth="120" MinWidth="40" HorizontalAlignment="Right"   >
                <Label Name="AREA"  Content="Area    :" Style="{StaticResource whiteLabel}"  />
@@ -61,7 +64,14 @@
 
             <!--<ComboBox Name="ComboBox" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" MaxHeight="35"></ComboBox>-->
             <Viewbox MaxHeight="40" MinHeight="20" Grid.Row="2" Grid.Column="2"  HorizontalAlignment="Left"   >
-               <ComboBox Name="ComboBoxArea"  ItemsSource="{Binding Path=AreasCentro}"  SelectedItem="{Binding Path=SAreaSCentro}"  Margin="3,3,3,3"></ComboBox>
+               <ComboBox Name="ComboBoxArea"  ItemsSource="{Binding Path=AreasCentro,UpdateSourceTrigger=PropertyChanged}" SelectedValue="{Binding Path=SAreaCentro}" SelectedIndex="0"  Margin="3,3,3,3">
+                  <i:Interaction.Triggers>
+                     <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding SelectionChangedArea}"
+                                               CommandParameter="{Binding SAreaCentro}" />
+                     </i:EventTrigger>
+                  </i:Interaction.Triggers>
+               </ComboBox>
             </Viewbox>
 
             <Viewbox Grid.Row="1" Grid.Column="3" MaxWidth="120" MinWidth="40" HorizontalAlignment="Right" >

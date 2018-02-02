@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -12,7 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Threading;
 using Presencia.Model;
-
+using System.Windows.Interactivity;
 namespace Presencia.ViewModel
 {
    class StartViewModel
@@ -36,10 +37,21 @@ namespace Presencia.ViewModel
 
       private string _sAreaCentro;
 
-      public string SAreaCentro
+      public   string SAreaCentro
       {
          get { return _sAreaCentro; }
-         set { _sAreaCentro = value; }
+         set
+         {
+            _sAreaCentro = value;
+            //MessageBox.Show("Area ARRIBA: " + _sAreaCentro);
+            NotifyPropertyChanged("SAreaCentro");
+            //TODO filtar por Area el combobox de arriba.
+            if (!_sAreaCentro.Equals(""))
+            {
+               filtrarPorArea(_sAreaCentro);
+
+            }
+         }
       }
 
       public DateTime StartDate { get; set; } = DateTime.Today.Date;
@@ -47,6 +59,8 @@ namespace Presencia.ViewModel
       public DateTime EndDate { get; set; } = DateTime.Today.Date;
 
       public DelegateCommand SearchCommand { get; set; }
+
+      public DelegateCommand SelectionChangedArea { get; set; }
 
       private ObservableCollection<IdUser> _usersIdAndNameList { get; set; }
 
@@ -61,6 +75,19 @@ namespace Presencia.ViewModel
          }
       }
 
+      private ObservableCollection<IdUser> _listaFiltradaporArea { get; set; }
+
+
+      public ObservableCollection<IdUser> ListaFiltradaporArea
+      {
+         get { return _listaFiltradaporArea; }
+         set
+         {
+            _listaFiltradaporArea = value;
+            NotifyPropertyChanged("ListaFiltradaporArea");
+         }
+      }
+
       private ObservableCollection<string> _areasCentro = new ObservableCollection<string>();
 
       public ObservableCollection<string> AreasCentro
@@ -70,6 +97,7 @@ namespace Presencia.ViewModel
          {
             _areasCentro = value;
             NotifyPropertyChanged("AreasCentro");
+
          }
 
       }
@@ -121,14 +149,17 @@ namespace Presencia.ViewModel
       {
          //ActiveUsers = new ObservableCollection<string>();
          UsersIdAndNameList = new ObservableCollection<IdUser>();
+         ListaFiltradaporArea = new ObservableCollection<IdUser>();
          UserDataBrutoList = new ObservableCollection<UserData>();
          UserDataxDia = new ObservableCollection<UserData>();
+         SAreaCentro = "";
          UserDataxDiaDefinitivo = new List<List<UserData>>();
          //TODO introducir area y filtrado por area
          ObtenerIdUserAndCardCode();
          //cargaCombobox();
 
          SearchCommand = new DelegateCommand(SearchCommand_Execute, SearchCommand_CanExecute);
+         SelectionChangedArea = new DelegateCommand(SelectionChangedArea_Execute, SelectionChangedArea_CanExecute);
          TotalConjuntoHoras = new ObservableCollection<string>();
       }
 
@@ -148,7 +179,7 @@ namespace Presencia.ViewModel
       {
          if (SearchCommand_CanExecute(parameters))
          {
-            if (SActiveUser!=null && StartDate<=EndDate )
+            if (SActiveUser != null && StartDate <= EndDate)
             {
                SearchItem item = new SearchItem
                {
@@ -159,7 +190,7 @@ namespace Presencia.ViewModel
                   FechaFin = EndDate.AddHours(23).AddMinutes(59)
 
                };
-               MessageBox.Show("Se ha seleccionado el usuario: " + item.Nombre + "Area: " + SAreaCentro+ " Fecha inicio " + item.FechaInicio + " Fecha fin " + item.FechaFin);
+               MessageBox.Show("Se ha seleccionado el usuario: " + item.Nombre + " Fecha inicio " + item.FechaInicio + " Fecha fin " + item.FechaFin);
                consultaEventosSQLdeFechas(item);
                TotalConjuntoHoras.Clear();
                TotalConjuntoHoras.Add(calculoTotalHorasDeLista());
@@ -167,13 +198,45 @@ namespace Presencia.ViewModel
             }
             else
             {
-               MessageBox.Show("Los parámetros de búsqueda no son correctos o algún campo está vacio.");
+               if (SActiveUser == null)
+               {
+                  MessageBox.Show("El campo usuario está vacio");
+
+               }
+               else
+               {
+                  MessageBox.Show("Las fechas seleccionadas no son correctas");
+
+               }
             }
 
          }
       }
 
-      private int  ObtenerIdUser()
+      bool SearchCommand_CanExecute(object parameters)
+      {
+         return true;
+      }
+
+      #endregion
+      #region SelectionChangedArea
+
+      void SelectionChangedArea_Execute(object parameters)
+      {
+         if (!SAreaCentro.Equals(""))
+         {
+            MessageBox.Show("area: " + SAreaCentro);
+
+         }
+
+      }
+      bool SelectionChangedArea_CanExecute(object parameters)
+      {
+         return true;
+      }
+
+      #endregion
+      private int ObtenerIdUser()
       {
          var id = 0;
          foreach (var itemUser in UsersIdAndNameList)
@@ -185,6 +248,28 @@ namespace Presencia.ViewModel
             }
          }
          return 0;
+      }
+
+      //FILTRAR POR AREAS EL COMBOBOX
+
+      private void filtrarPorArea(string Area)
+      {
+         if (Area.Equals(""))
+         {
+            ListaFiltradaporArea = UsersIdAndNameList;
+         }
+         else
+         {
+            ListaFiltradaporArea.Clear();
+            var AuxListaFiltradaporArea = UsersIdAndNameList.Where(a => a.Area == Area);
+            foreach (var AuxItem in AuxListaFiltradaporArea)
+            {
+               ListaFiltradaporArea.Add(AuxItem);
+            }
+         }
+
+
+
       }
 
 
@@ -224,7 +309,7 @@ namespace Presencia.ViewModel
             {
                //Pasamos desde "string con formato hexadecimal" a int
                var substring = itemAuditTrail.Id_Event.Substring(15, 5);
-               int miNcopyReal = Convert.ToInt32(substring,16);
+               int miNcopyReal = Convert.ToInt32(substring, 16);
                //Calculamos el "Cardcode" ( Cardcode = NCopy "real" / 4 )
                var miCardCode = miNcopyReal / 4;
                itemAuditTrail.CardCode = miCardCode;
@@ -235,14 +320,16 @@ namespace Presencia.ViewModel
             {
                if (itemEvent.CardCode.Equals(item.CardCode))
                {
-                  var userDataFind = new UserData();
-                  userDataFind.Nombre = item.Nombre;
-                  userDataFind.Id = item.Id;
-                  userDataFind.CardCode = item.CardCode;
-                  userDataFind.Entrada = StartDate;
-                  userDataFind.Salida = EndDate;
-                  userDataFind.FechaEvento = itemEvent.Dt_Audit;
-                  userDataFind.TipoEvento = conocertipodeevento(itemEvent);
+                  var userDataFind = new UserData
+                  {
+                     Nombre = item.Nombre,
+                     Id = item.Id,
+                     CardCode = item.CardCode,
+                     Entrada = StartDate,
+                     Salida = EndDate,
+                     FechaEvento = itemEvent.Dt_Audit,
+                     TipoEvento = conocertipodeevento(itemEvent)
+                  };
                   UserDataBrutoList.Add(userDataFind);
                }
             }
@@ -283,7 +370,7 @@ namespace Presencia.ViewModel
                {
                   if (subitemData.TipoEvento.Equals("ENTRADA"))
                   {
-                     entradaHoraAux= DateTime.Parse(subitemData.FechaEvento);
+                     entradaHoraAux = DateTime.Parse(subitemData.FechaEvento);
                   }
                   if (subitemData.TipoEvento.Equals("SALIDA"))
                   {
@@ -311,7 +398,7 @@ namespace Presencia.ViewModel
 
       private string calculoTotalHorasDeLista()
       {
-         float horas =0, min=0,enminutos =0, enhoras=0;
+         float horas = 0, min = 0, enminutos = 0, enhoras = 0;
          string hora = " ";
 
          foreach (var itemData in ListaFinal)
@@ -371,12 +458,8 @@ namespace Presencia.ViewModel
          return 0;
       }
 
-      bool SearchCommand_CanExecute(object parameters)
-      {
-         return true;
-      }
 
-      #endregion
+
 
       #region Obtener lista con nombres, id y cardCode
 
@@ -418,11 +501,11 @@ namespace Presencia.ViewModel
                var userItem = new IdUser();
                userItem.Id = dr[0].GetHashCode();
                userItem.CardCode = dr[1].GetHashCode();
-               if (userItem.Id!=1)
+               if (userItem.Id != 1)
                {
                   CardCodeAndUserIdList.Add(userItem);
                }
-             }
+            }
             conn.Close();
          }
          catch (Exception e)
@@ -436,7 +519,7 @@ namespace Presencia.ViewModel
          {
             foreach (var itemToCompare in CardCodeAndUserIdList)
             {
-               if ( itemToCompare.Id.Equals(item.Id))
+               if (itemToCompare.Id.Equals(item.Id))
                {
                   item.CardCode = itemToCompare.CardCode;
                }
@@ -447,13 +530,13 @@ namespace Presencia.ViewModel
 
          //TODO Obtener areas y filtrado de areas
 
-       ObservableCollection<string> areasAux = new ObservableCollection<string>();
-            foreach (var item in UsersIdAndNameList)
+         ObservableCollection<string> areasAux = new ObservableCollection<string>();
+         foreach (var item in UsersIdAndNameList)
+         {
             {
-               {
-                  areasAux.Add(item.Area);
-               }
+               areasAux.Add(item.Area);
             }
+         }
 
 
          AreasCentro = new ObservableCollection<string>(areasAux.Distinct());
