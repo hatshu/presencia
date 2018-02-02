@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Windows;
@@ -37,7 +38,7 @@ namespace Presencia.ViewModel
 
       private string _sAreaCentro;
 
-      public   string SAreaCentro
+      public string SAreaCentro
       {
          get { return _sAreaCentro; }
          set
@@ -124,6 +125,17 @@ namespace Presencia.ViewModel
          }
       }
 
+      private ObservableCollection<ElementoListaResumen> _elementoListaResumen = new ObservableCollection<ElementoListaResumen>();
+
+      public ObservableCollection<ElementoListaResumen> ElementoListaResumen
+      {
+         get { return _elementoListaResumen; }
+         set
+         {
+            _elementoListaResumen = value;
+            NotifyPropertyChanged("ElementoListaResumen");
+         }
+      }
 
 
       private ObservableCollection<string> _totalConjuntoHoras;
@@ -150,6 +162,7 @@ namespace Presencia.ViewModel
          //ActiveUsers = new ObservableCollection<string>();
          UsersIdAndNameList = new ObservableCollection<IdUser>();
          ListaFiltradaporArea = new ObservableCollection<IdUser>();
+
          UserDataBrutoList = new ObservableCollection<UserData>();
          UserDataxDia = new ObservableCollection<UserData>();
          SAreaCentro = "";
@@ -157,7 +170,14 @@ namespace Presencia.ViewModel
          //TODO introducir area y filtrado por area
          ObtenerIdUserAndCardCode();
          //cargaCombobox();
-
+         foreach (var item in UsersIdAndNameList)
+         {
+            //ListaFiltradaporArea = UsersIdAndNameList;
+            if (ListaFiltradaporArea.IndexOf(item) < 0)
+            {
+               ListaFiltradaporArea.Add(item);
+            }
+         }
          SearchCommand = new DelegateCommand(SearchCommand_Execute, SearchCommand_CanExecute);
          SelectionChangedArea = new DelegateCommand(SelectionChangedArea_Execute, SelectionChangedArea_CanExecute);
          TotalConjuntoHoras = new ObservableCollection<string>();
@@ -254,22 +274,12 @@ namespace Presencia.ViewModel
 
       private void filtrarPorArea(string Area)
       {
-         if (Area.Equals(""))
+         ListaFiltradaporArea.Clear();
+         var AuxListaFiltradaporArea = UsersIdAndNameList.Where(a => a.Area == Area);
+         foreach (var AuxItem in AuxListaFiltradaporArea)
          {
-            ListaFiltradaporArea = UsersIdAndNameList;
+            ListaFiltradaporArea.Add(AuxItem);
          }
-         else
-         {
-            ListaFiltradaporArea.Clear();
-            var AuxListaFiltradaporArea = UsersIdAndNameList.Where(a => a.Area == Area);
-            foreach (var AuxItem in AuxListaFiltradaporArea)
-            {
-               ListaFiltradaporArea.Add(AuxItem);
-            }
-         }
-
-
-
       }
 
 
@@ -388,11 +398,42 @@ namespace Presencia.ViewModel
                }
             }
 
+            //Pasar de ListaFinal a ElementoListaResumen
+            obteberElementoListaResumenFinal();
+
 
          }
          catch (Exception e)
          {
             MessageBox.Show(e.Message);
+         }
+      }
+
+      private void obteberElementoListaResumenFinal()
+      {
+         foreach (var itemData in ListaFinal)
+         {
+            ElementoListaResumen elementoLista = new ElementoListaResumen();
+            elementoLista.Nombre = itemData.Nombre;
+            elementoLista.FechaEvento = itemData.FechaEvento;
+            elementoLista.Ausencia = itemData.Ausencia;
+            elementoLista.AusenciaEntrada = itemData.AusenciaEntrada.Hour.ToString() + ":" +
+                                            itemData.AusenciaEntrada.Minute.ToString() + ":" +
+                                            itemData.AusenciaEntrada.Second.ToString();
+            elementoLista.AusenciaSalida = itemData.AusenciaSalida.Hour.ToString() + ":" +
+                                            itemData.AusenciaSalida.Minute.ToString() + ":" +
+                                            itemData.AusenciaSalida.Second.ToString();
+            elementoLista.Entrada = itemData.Entrada.Hour.ToString() + ":" +
+                                    itemData.Entrada.Minute.ToString() + ":" +
+                                    itemData.Entrada.Second.ToString();
+            elementoLista.Salida = itemData.Salida.Hour.ToString() + ":" +
+                                    itemData.Salida.Minute.ToString() + ":" +
+                                    itemData.Salida.Second.ToString();
+            elementoLista.TotalHoras = itemData.TotalHoras.Hour.ToString() + ":" +
+                                       itemData.TotalHoras.Minute.ToString() + ":" +
+                                       itemData.TotalHoras.Second.ToString();
+
+           ElementoListaResumen.Add(elementoLista);
          }
       }
 
@@ -408,7 +449,7 @@ namespace Presencia.ViewModel
          }
          enminutos = (horas * 60) + min;
          enhoras = enminutos / 60;
-         hora = enhoras.ToString();
+         hora = enhoras.ToString(CultureInfo.InvariantCulture);
 
          return hora;
       }
