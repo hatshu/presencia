@@ -11,7 +11,7 @@ namespace Presencia.Model
    {
 
       public string Nombre { get; set; }
-      public string FechaEvento { get; set; }
+      public string Dia { get; set; }
       public string Entrada { get; set; }
       public string Salida { get; set; }
       public string Ausencia { get; set; }

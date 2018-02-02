@@ -415,7 +415,7 @@ namespace Presencia.ViewModel
          {
             ElementoListaResumen elementoLista = new ElementoListaResumen();
             elementoLista.Nombre = itemData.Nombre;
-            elementoLista.FechaEvento = itemData.FechaEvento;
+            elementoLista.Dia = itemData.FechaEvento;
             elementoLista.Ausencia = itemData.Ausencia;
             elementoLista.AusenciaEntrada = itemData.AusenciaEntrada.Hour.ToString() + ":" +
                                             itemData.AusenciaEntrada.Minute.ToString() + ":" +

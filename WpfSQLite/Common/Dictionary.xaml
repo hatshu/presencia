@@ -679,8 +679,8 @@
          </Setter.Value>
       </Setter>
    </Style>-->
-   
-   
+
+
 <!--LISTVIEW-->
    <Style x:Key="ListViewStyle" TargetType="{x:Type ListView}">
 
@@ -729,10 +729,15 @@
    <Style TargetType="{x:Type DataGrid}">
       <Setter Property="Background" Value="#FFF" />
       <Setter Property="AlternationCount" Value="2" />
-      <Setter Property="HeadersVisibility" Value="None"></Setter>
+      <Setter Property="HeadersVisibility" Value="Column"></Setter>
+      <Setter Property="Background" Value="Transparent"></Setter>
+
    </Style>
 
    <Style TargetType="{x:Type DataGridRow}">
+      <Setter Property="FontSize" Value="19"></Setter>
+      <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+
       <Style.Triggers>
          <Trigger Property="ItemsControl.AlternationIndex" Value="0">
             <Setter Property="Background" Value="#CCC"></Setter>
