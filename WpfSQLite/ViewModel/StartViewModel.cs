@@ -214,7 +214,7 @@ namespace Presencia.ViewModel
                consultaEventosSQLdeFechas(item);
                TotalConjuntoHoras.Clear();
                TotalConjuntoHoras.Add(calculoTotalHorasDeLista());
-               UpdateUI();
+               //UpdateUI();
             }
             else
             {
@@ -294,6 +294,7 @@ namespace Presencia.ViewModel
          UserDataBrutoList.Clear();
          UserDataxDia.Clear();
          ListaFinal.Clear();
+         ElementoListaResumen.Clear();
          try
          {
             conn.Open();
@@ -417,10 +418,10 @@ namespace Presencia.ViewModel
             elementoLista.Nombre = itemData.Nombre;
             elementoLista.Dia = itemData.FechaEvento;
             elementoLista.Ausencia = itemData.Ausencia;
-            elementoLista.AusenciaEntrada = itemData.AusenciaEntrada.Hour.ToString() + ":" +
+            elementoLista.Aus_Entrada = itemData.AusenciaEntrada.Hour.ToString() + ":" +
                                             itemData.AusenciaEntrada.Minute.ToString() + ":" +
                                             itemData.AusenciaEntrada.Second.ToString();
-            elementoLista.AusenciaSalida = itemData.AusenciaSalida.Hour.ToString() + ":" +
+            elementoLista.Aus_Salida = itemData.AusenciaSalida.Hour.ToString() + ":" +
                                             itemData.AusenciaSalida.Minute.ToString() + ":" +
                                             itemData.AusenciaSalida.Second.ToString();
             elementoLista.Entrada = itemData.Entrada.Hour.ToString() + ":" +
@@ -429,11 +430,11 @@ namespace Presencia.ViewModel
             elementoLista.Salida = itemData.Salida.Hour.ToString() + ":" +
                                     itemData.Salida.Minute.ToString() + ":" +
                                     itemData.Salida.Second.ToString();
-            elementoLista.TotalHoras = itemData.TotalHoras.Hour.ToString() + ":" +
+            elementoLista.HorasEnCentro = itemData.TotalHoras.Hour.ToString() + ":" +
                                        itemData.TotalHoras.Minute.ToString() + ":" +
                                        itemData.TotalHoras.Second.ToString();
 
-           ElementoListaResumen.Add(elementoLista);
+            ElementoListaResumen.Add(elementoLista);
          }
       }
 
@@ -495,14 +496,13 @@ namespace Presencia.ViewModel
                return itemUser.CardCode;
             }
          }
-
          return 0;
       }
 
 
 
 
-      #region Obtener lista con nombres, id y cardCode
+      #region Obtener lista con nombres, id, cardCode y areas
 
 
       void ObtenerIdUserAndCardCode()
@@ -589,44 +589,14 @@ namespace Presencia.ViewModel
 
       #endregion
 
-      //#region Carga de Combobox con nombres
-      ////TODO: intentar cambiar el contenido del combobox a el nombre de la lista  UsersIdAndNameList
-      //private void cargaCombobox()
+
+
+      //public void UpdateUI()
       //{
-      //   SqlConnection conn = new SqlConnection(conexionString);
-
-      //   try
-      //   {
-      //      conn.Open();
-      //      string Query = "select * from tb_Users where status='1' and name like '%CTC%' ORDER BY FirstName";
-      //      SqlCommand createCommand = new SqlCommand(Query, conn);
-      //      SqlDataReader dr = createCommand.ExecuteReader();
-      //      while (dr.Read())
-      //      {
-      //         string userName = dr.GetString(3);
-      //         ActiveUsers.Add(userName);
-      //      }
-      //      conn.Close();
-      //   }
-      //   catch (Exception e)
-      //   {
-      //      MessageBox.Show(e.Message);
-      //      //TODO: volver atras en la navegación si da error
-
-      //   }
+      //   //Here update your label, button or any string related object.
+      //   //Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Background, new ThreadStart(delegate { }));
+      //   Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new ThreadStart(delegate { }));
       //}
-
-
-
-
-      //#endregion
-
-      public void UpdateUI()
-      {
-         //Here update your label, button or any string related object.
-         //Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Background, new ThreadStart(delegate { }));
-         Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new ThreadStart(delegate { }));
-      }
 
 
    }

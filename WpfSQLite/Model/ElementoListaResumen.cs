@@ -15,9 +15,9 @@ namespace Presencia.Model
       public string Entrada { get; set; }
       public string Salida { get; set; }
       public string Ausencia { get; set; }
-      public string AusenciaEntrada { get; set; }
-      public string AusenciaSalida { get; set; }
-      public string TotalHoras { get; set; }
+      public string Aus_Entrada { get; set; }
+      public string Aus_Salida { get; set; }
+      public string HorasEnCentro { get; set; }
 
 
       //Para que se detecte cuando se cambia cada elemento
