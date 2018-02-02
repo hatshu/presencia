@@ -15,7 +15,7 @@
    <Style x:Key="GenericPageStyleInit" TargetType="{x:Type Page}">
       <Setter Property="Background">
          <Setter.Value>
-            <ImageBrush ImageSource="../Resources/fondo.png"/>
+            <ImageBrush ImageSource="../Resources/Mainbg.png"/>
          </Setter.Value>
       </Setter>
    </Style>

@@ -231,7 +231,6 @@ namespace Presencia.ViewModel
                else
                {
                   MessageBox.Show("Las fechas seleccionadas no son correctas");
-
                }
             }
 

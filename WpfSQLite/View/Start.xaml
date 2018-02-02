@@ -53,7 +53,7 @@
             </Viewbox>
 
             <!--<ComboBox Name="ComboBox" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" MaxHeight="35"></ComboBox>-->
-            <Viewbox MaxHeight="40" MinHeight="20" Grid.Row="1" Grid.Column="2"  HorizontalAlignment="Left"   >
+            <Viewbox MaxHeight="55" MinHeight="20" Grid.Row="1" Grid.Column="2"  HorizontalAlignment="Left"   >
                <ComboBox Name="ComboBox"  ItemsSource="{Binding Path=ListaFiltradaporArea}" DisplayMemberPath="Nombre" SelectedValue="{Binding Path=SActiveUser}" SelectedValuePath="Nombre" Margin="3,3,3,3" ></ComboBox>
                <!--<ComboBox Name="ComboBox"  ItemsSource="{Binding Path=UsersIdAndNameList}" DisplayMemberPath="Nombre" SelectedValue="{Binding Path=SActiveUser}" SelectedValuePath="Nombre" Margin="3,3,3,3" ></ComboBox>-->
 
@@ -63,7 +63,7 @@
             </Viewbox>
 
             <!--<ComboBox Name="ComboBox" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" MaxHeight="35"></ComboBox>-->
-            <Viewbox MaxHeight="40" MinHeight="20" Grid.Row="2" Grid.Column="2"  HorizontalAlignment="Left"   >
+            <Viewbox MaxHeight="55" MinHeight="20" Grid.Row="2" Grid.Column="2"  HorizontalAlignment="Left"   >
                <ComboBox Name="ComboBoxArea"  ItemsSource="{Binding Path=AreasCentro,UpdateSourceTrigger=PropertyChanged}" SelectedValue="{Binding Path=SAreaCentro}" SelectedIndex="0"  Margin="3,3,3,3">
                   <i:Interaction.Triggers>
                      <i:EventTrigger EventName="SelectionChanged">

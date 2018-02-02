@@ -22,5 +22,10 @@ namespace Presencia.View
       {
          System.Windows.Application.Current.Shutdown();
       }
+
+      private void help_Click(object sender, RoutedEventArgs e)
+      {
+
+      }
    }
 }
