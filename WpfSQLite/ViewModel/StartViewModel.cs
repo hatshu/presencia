@@ -294,8 +294,21 @@ namespace Presencia.ViewModel
                "ATENCION", button);
             if (result == MessageBoxResult.OK)
             {
-               File.Delete(file);
-               wb.SaveAs(file);
+               try
+               {
+
+
+                     File.Delete(file);
+                     wb.SaveAs(file);
+                  MessageBox.Show("El fichero " + file + " a sido regenerado con exito.");
+
+               }
+               catch (Exception e)
+               {
+                  //check here why it failed and ask user to retry if the file is in use.
+                  MessageBox.Show(e.Message);
+               }
+
             }
             else
             {
@@ -306,6 +319,7 @@ namespace Presencia.ViewModel
          else
          {
             wb.SaveAs(file);
+            MessageBox.Show("El fichero " + file + " a sido generado con exito.");
          }
 
       }
