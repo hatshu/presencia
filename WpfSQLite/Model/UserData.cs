@@ -21,6 +21,7 @@ namespace Presencia.Model
       public DateTime AusenciaEntrada { get; set; }
       public DateTime AusenciaSalida { get; set; }
       public DateTime TotalHoras { get; set; }
+      public string Comentarios { get; set; }
 
 
       //Para que se detecte cuando se cambia cada elemento

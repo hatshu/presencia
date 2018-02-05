@@ -67,7 +67,7 @@ namespace Presencia.ViewModel
 
       public DelegateCommand SelectionChangedArea { get; set; }
 
-      public DelegateCommand LimpiarCommand { get; set; }
+      public DelegateCommand ExportarCommand { get; set; }
 
 
       private ObservableCollection<IdUser> _usersIdAndNameList { get; set; }
@@ -188,7 +188,7 @@ namespace Presencia.ViewModel
             }
          }
          SearchCommand = new DelegateCommand(SearchCommand_Execute, SearchCommand_CanExecute);
-         LimpiarCommand = new DelegateCommand(LimpiarCommand_Execute, LimpiarCommand_CanExecute);
+         ExportarCommand = new DelegateCommand(ExportarCommand_Execute, ExportarCommand_CanExecute);
          SelectionChangedArea = new DelegateCommand(SelectionChangedArea_Execute, SelectionChangedArea_CanExecute);
          TotalConjuntoHoras = new ObservableCollection<string>();
       }
@@ -267,9 +267,9 @@ namespace Presencia.ViewModel
 
       #endregion
 
-      #region LimpiarCommand
+      #region ExportarCommand
 
-      void LimpiarCommand_Execute(object parameters)
+      void ExportarCommand_Execute(object parameters)
       {
          //ElementoListaResumen.Clear();
 
@@ -360,7 +360,7 @@ namespace Presencia.ViewModel
 
       }
 
-      bool LimpiarCommand_CanExecute(object parameters)
+      bool ExportarCommand_CanExecute(object parameters)
       {
          return true;
       }
@@ -489,7 +489,8 @@ namespace Presencia.ViewModel
                }
                else
                {
-                  //UserDataxDia.Move(0,1);
+                  //todo si el primer elemento no es entrada
+
                }
                if (itemData.Last().TipoEvento.Equals("SALIDA"))
                {
@@ -498,7 +499,7 @@ namespace Presencia.ViewModel
             }
 
             UserDataxDiaDefinitivo = UserDataxDia.GroupBy(d => DateTime.Parse(d.FechaEvento).Date).Select(g => g.ToList()).ToList();
-
+            //TODO: incluir caso de que el usuario no fiche al salir
             foreach (var itemData in UserDataxDiaDefinitivo)
             {
                UserData data = new UserData();
@@ -509,11 +510,24 @@ namespace Presencia.ViewModel
                   {
                      entradaHoraAux = DateTime.Parse(subitemData.FechaEvento);
                   }
+                  else
+                  {
+
+                  }
                   if (subitemData.TipoEvento.Equals("SALIDA"))
                   {
                      data.TotalHoras = (DateTime.Parse(subitemData.FechaEvento) - entradaHoraAux.TimeOfDay);
                      data.Id = subitemData.Id;
-                     data.Entrada = entradaHoraAux;
+                     if (!entradaHoraAux.ToShortDateString().Equals("01/01/0001"))
+                     {
+                        data.Entrada = entradaHoraAux;
+                     }
+                     else
+                     {
+                        data.TotalHoras = entradaHoraAux;
+                        data.Comentarios = "Error fichando al entrar";
+
+                     }
                      data.Nombre = subitemData.Nombre;
                      data.CardCode = subitemData.CardCode;
                      data.FechaEvento = subitemData.FechaEvento.Substring(0, 10);
@@ -559,6 +573,7 @@ namespace Presencia.ViewModel
             elementoLista.HorasEnCentro = itemData.TotalHoras.Hour.ToString() + ":" +
                                        itemData.TotalHoras.Minute.ToString() + ":" +
                                        itemData.TotalHoras.Second.ToString();
+            elementoLista.Comentarios = itemData.Comentarios;
 
             ElementoListaResumen.Add(elementoLista);
          }
