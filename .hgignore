@@ -8,3 +8,5 @@ WPFSQLite/obj/Debug/*
 WPFSQLite/ViewModel/INavigationService.cs
 WPFSQLite/ViewModel/NavigationService.cs
 WPFSQLite/ViewModel/ViewModelLocator.cs
+WPFSQLite/obj/Release/*
+WPFSQLite/bin/Release/*

@@ -15,6 +15,9 @@ using System.Windows.Documents;
 using System.Windows.Threading;
 using Presencia.Model;
 using System.Windows.Interactivity;
+using ClosedXML.Excel;
+using DocumentFormat.OpenXml;
+using System.IO;
 namespace Presencia.ViewModel
 {
    class StartViewModel
@@ -266,13 +269,79 @@ namespace Presencia.ViewModel
 
       void LimpiarCommand_Execute(object parameters)
       {
-         StartDate = DateTime.Today.Date;
-         EndDate = DateTime.Today.Date;
-         ElementoListaResumen.Clear();
-         SActiveUser = String.Empty;
-         SAreaCentro = String.Empty;
+         //ElementoListaResumen.Clear();
+
+         DataSet ds = new DataSet();
+         ds=CrearDataSet();
+
+         var Nombre = ElementoListaResumen[0].Nombre;
+         var Fecha = DateTime.Now.ToShortDateString();
+         Fecha = Fecha.Replace("/", "_");
+         var wb = new XLWorkbook();
+
+         for (int i = 0; i < ds.Tables.Count; i++)
+         {
+            wb.Worksheets.Add(ds.Tables[i], ds.Tables[i].TableName);
+         }
+         wb.Cell(calculoTotalHorasDeLista());
+         wb.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+         wb.Style.Font.Bold = true;
+         var file = Nombre + "_" + Fecha + ".xlsx";
+         if (File.Exists(file))
+         {
+            MessageBoxButton button = MessageBoxButton.OKCancel;
+            var result = MessageBox.Show("El archivo ya existe, pulse ACEPTAR para sobreescribirlo o CANCELAR la operación",
+               "ATENCION", button);
+            if (result == MessageBoxResult.OK)
+            {
+               File.Delete(file);
+               wb.SaveAs(file);
+            }
+            else
+            {
+               return;
+            }
+
+         }
+         else
+         {
+            wb.SaveAs(file);
+         }
 
       }
+
+      private DataSet CrearDataSet()
+      {
+         DataSet ds = new DataSet();
+         DataTable dt = new DataTable();
+         dt.Columns.Add("Usuario");
+         dt.Columns.Add("Dia");
+         dt.Columns.Add("Entrada");
+         dt.Columns.Add("Salida");
+         dt.Columns.Add("Ausencia");
+         dt.Columns.Add("Entrada Ausencia");
+         dt.Columns.Add("Salida Ausencia");
+         dt.Columns.Add("Horas en el centro");
+
+         var registro = from r in ElementoListaResumen
+            select new { r.Nombre, r.Dia, r.Entrada, r.Salida, r.Ausencia, r.Aus_Entrada, r.Aus_Salida, r.HorasEnCentro };
+         foreach (var itemRegistro in registro)
+         {
+            dt.Rows.Add(itemRegistro.Nombre,itemRegistro.Dia,itemRegistro.Entrada,itemRegistro.Salida,itemRegistro.Ausencia,itemRegistro.Aus_Entrada, itemRegistro.Aus_Salida, itemRegistro.HorasEnCentro );
+         }
+         ds.Namespace = SActiveUser;
+         ds.Tables.Add(dt);
+         //create a new row from table
+         var dataRow = dt.NewRow();
+         dataRow[6]="Horas en centro";
+         dataRow[7] = TotalConjuntoHoras[0].ToString();
+         dt.Rows.Add(dataRow);
+
+
+         return (ds);
+
+      }
+
       bool LimpiarCommand_CanExecute(object parameters)
       {
          return true;
