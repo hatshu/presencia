@@ -18,6 +18,8 @@ using System.Windows.Interactivity;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml;
 using System.IO;
+using DocumentFormat.OpenXml.Spreadsheet;
+
 namespace Presencia.ViewModel
 {
    class StartViewModel
@@ -275,7 +277,7 @@ namespace Presencia.ViewModel
          ds=CrearDataSet();
 
          var Nombre = ElementoListaResumen[0].Nombre;
-         var Fecha = DateTime.Now.ToShortDateString();
+         var Fecha = StartDate.Date.ToShortDateString()+"_Al_"+EndDate.Date.ToShortDateString();
          Fecha = Fecha.Replace("/", "_");
          var wb = new XLWorkbook();
 
@@ -283,6 +285,8 @@ namespace Presencia.ViewModel
          {
             wb.Worksheets.Add(ds.Tables[i], ds.Tables[i].TableName);
          }
+         var ws = wb.Worksheet(1);
+         ws.Name = SActiveUser;
          wb.Cell(calculoTotalHorasDeLista());
          wb.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
          wb.Style.Font.Bold = true;
