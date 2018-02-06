@@ -506,35 +506,48 @@ namespace Presencia.ViewModel
                var entradaHoraAux = new DateTime();
                foreach (var subitemData in itemData)
                {
-                  if (subitemData.TipoEvento.Equals("ENTRADA"))
+                  if (itemData.Count==1  &&  !subitemData.FechaEvento.Substring(0,10).Equals(DateTime.Today.ToShortDateString().Substring(0,10)))
                   {
-                     entradaHoraAux = DateTime.Parse(subitemData.FechaEvento);
-                  }
-                  else
-                  {
-
-                  }
-                  if (subitemData.TipoEvento.Equals("SALIDA"))
-                  {
-                     data.TotalHoras = (DateTime.Parse(subitemData.FechaEvento) - entradaHoraAux.TimeOfDay);
-                     data.Id = subitemData.Id;
-                     if (!entradaHoraAux.ToShortDateString().Equals("01/01/0001"))
-                     {
-                        data.Entrada = entradaHoraAux;
-                     }
-                     else
-                     {
-                        data.TotalHoras = entradaHoraAux;
-                        data.Comentarios = "Error fichando al entrar";
-
-                     }
+                     data.TotalHoras = entradaHoraAux;
+                     data.Comentarios = "Error al pasar la tarjeta";
                      data.Nombre = subitemData.Nombre;
                      data.CardCode = subitemData.CardCode;
                      data.FechaEvento = subitemData.FechaEvento.Substring(0, 10);
                      data.Salida = DateTime.Parse(subitemData.FechaEvento);
+                     data.Entrada = DateTime.Parse(subitemData.FechaEvento);
                      data.Ausencia = "No lanzada";
                      ListaFinal.Add(data);
                   }
+                  else
+                  {
+                     if (subitemData.TipoEvento.Equals("ENTRADA")  && !subitemData.FechaEvento.Equals(DateTime.Today.ToShortDateString()))
+                     {
+                        entradaHoraAux = DateTime.Parse(subitemData.FechaEvento);
+                     }
+                     
+                     if (subitemData.TipoEvento.Equals("SALIDA"))
+                     {
+                        data.TotalHoras = (DateTime.Parse(subitemData.FechaEvento) - entradaHoraAux.TimeOfDay);
+                        data.Id = subitemData.Id;
+                        if (!entradaHoraAux.ToShortDateString().Equals("01/01/0001"))
+                        {
+                           data.Entrada = entradaHoraAux;
+                        }
+                        else
+                        {
+                           data.TotalHoras = entradaHoraAux;
+                           data.Comentarios = "Error fichando al entrar";
+
+                        }
+                        data.Nombre = subitemData.Nombre;
+                        data.CardCode = subitemData.CardCode;
+                        data.FechaEvento = subitemData.FechaEvento.Substring(0, 10);
+                        data.Salida = DateTime.Parse(subitemData.FechaEvento);
+                        data.Ausencia = "No lanzada";
+                        ListaFinal.Add(data);
+                     }
+                  }
+                 
 
                }
             }
