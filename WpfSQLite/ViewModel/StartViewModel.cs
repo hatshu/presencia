@@ -18,7 +18,9 @@ using System.Windows.Interactivity;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml;
 using System.IO;
+using DocumentFormat.OpenXml.Office2013.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Presencia.ViewModel
 {
@@ -28,7 +30,9 @@ namespace Presencia.ViewModel
       #region Attributes
 
       //cadena de conexion a la base de datos
-      string conexionString = ConfigurationManager.ConnectionStrings["ConexionBaseDeDatos"].ConnectionString;
+      string conexionStringSalto = ConfigurationManager.ConnectionStrings["ConexionBaseDeDatosSalto"].ConnectionString;
+
+      string conexionStringIdinet = ConfigurationManager.ConnectionStrings["ConexionBaseDeDatosIdinet"].ConnectionString;
 
       //FOR COMBOBOX ACCESS WITH MVVM
       //public ObservableCollection<string> ActiveUsers { get; set; }
@@ -93,6 +97,19 @@ namespace Presencia.ViewModel
          {
             _listaFiltradaporArea = value;
             NotifyPropertyChanged("ListaFiltradaporArea");
+         }
+      }
+
+      private ObservableCollection<Ausencia> _listaUsuarioIDIdinet { get; set; }
+
+
+      public ObservableCollection<Ausencia> ListaAusenciasIDIdinet
+      {
+         get { return _listaUsuarioIDIdinet; }
+         set
+         {
+            _listaUsuarioIDIdinet = value;
+            NotifyPropertyChanged("ListaAusenciasIDIdinet");
          }
       }
 
@@ -171,13 +188,14 @@ namespace Presencia.ViewModel
          //ActiveUsers = new ObservableCollection<string>();
          UsersIdAndNameList = new ObservableCollection<IdUser>();
          ListaFiltradaporArea = new ObservableCollection<IdUser>();
-
+         ListaAusenciasIDIdinet = new ObservableCollection<Ausencia>();
          UserDataBrutoList = new ObservableCollection<UserData>();
          UserDataxDia = new ObservableCollection<UserData>();
          SAreaCentro = "";
          UserDataxDiaDefinitivo = new List<List<UserData>>();
-         //TODO introducir area y filtrado por area
+
          ObtenerIdUserAndCardCode();
+         //TODO: por aqui
          //cargaCombobox();
          foreach (var item in UsersIdAndNameList)
          {
@@ -195,6 +213,8 @@ namespace Presencia.ViewModel
 
       #endregion
 
+      #region MVVM PropetyChange
+
       // Para que se detecte cuando se cambia cada elemento
       public event PropertyChangedEventHandler PropertyChanged;
 
@@ -202,6 +222,8 @@ namespace Presencia.ViewModel
       {
          PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
       }
+
+      #endregion
 
       #region SearchCommand Button
 
@@ -221,6 +243,10 @@ namespace Presencia.ViewModel
 
                };
                //MessageBox.Show("Se ha seleccionado el usuario: " + item.Nombre + " Fecha inicio " + item.FechaInicio + " Fecha fin " + item.FechaFin);
+               //TODO: aqui meter sacar listado de aausencias de esta persona?
+               var idpersona = ObteneridIdinetDesdeNombreUsuario(SActiveUser);
+               obtenerListadoDeAusencias(idpersona);
+
                consultaEventosSQLdeFechas(item);
                TotalConjuntoHoras.Clear();
                TotalConjuntoHoras.Add(calculoTotalHorasDeLista());
@@ -367,6 +393,9 @@ namespace Presencia.ViewModel
 
       #endregion
 
+      #region SALTO
+
+      #region Functions for obtain ID and CardCode DE SALTO
 
       private int ObtenerIdUser()
       {
@@ -395,6 +424,9 @@ namespace Presencia.ViewModel
          return 0;
       }
 
+      #endregion
+
+      #region Filtro de Areas DE SALTO
 
       //FILTRAR POR AREAS EL COMBOBOX
 
@@ -408,14 +440,67 @@ namespace Presencia.ViewModel
          }
       }
 
+      #endregion
 
+      #region Horas Totales y conocer Tipos de Eventos DE SALTO
+
+      private string calculoTotalHorasDeLista()
+      {
+         float horas = 0, min = 0, enminutos = 0, enhoras = 0;
+         string hora = " ";
+
+         foreach (var itemData in ListaFinal)
+         {
+            horas = itemData.TotalHoras.Hour + horas;
+            min = itemData.TotalHoras.Minute + min;
+         }
+         enminutos = (horas * 60) + min;
+         enhoras = enminutos / 60;
+         hora = enhoras.ToString(CultureInfo.InvariantCulture);
+
+         return hora;
+      }
+
+      private string conocertipodeevento(LockAuditTrail itemEvent)
+      {
+         if (itemEvent.Id_Function == 17)
+         {
+            return "ENTRADA";
+         }
+         if (itemEvent.Id_Function == 84)
+         {
+            return "ENTRADA";
+         }
+         if (itemEvent.Id_Function == 85)
+         {
+            return "ENTRADA";
+         }
+         if (itemEvent.Id_Function == 145)
+         {
+            return "SALIDA";
+         }
+         if (itemEvent.Id_Function == 212)
+         {
+            return "SALIDA";
+         }
+         if (itemEvent.Id_Function == 213)
+         {
+            return "SALIDA";
+         }
+
+         return "";
+      }
+
+
+      #endregion DE SALTO
+
+      #region Obtener Entradas y salidas DE BASE DE DATOS SALTO
       //SACA LISTA DE ENTRADAS Y SALIDAS
-
       private void consultaEventosSQLdeFechas(SearchItem item)
       {
 
          //Hacer consulta sql de entradas y salidas de todos los cardode en las fechas seleccionadas
-         SqlConnection conn = new SqlConnection(conexionString);
+         SqlConnection connSalto = new SqlConnection(conexionStringSalto);
          LockAuditTrailList.Clear();
          UserDataBrutoList.Clear();
          UserDataxDia.Clear();
@@ -423,11 +508,11 @@ namespace Presencia.ViewModel
          ElementoListaResumen.Clear();
          try
          {
-            conn.Open();
+            connSalto.Open();
             string Query =
                "SELECT id_event, dt_Audit, id_lock, id_user, id_function, NCopy  FROM tb_LockAuditTrail WHERE  (id_lock='1026') AND (dt_Audit >= '" +
                item.FechaInicio + "' AND dt_Audit <='" + item.FechaFin + "') AND (id_function='17' OR id_function='145' OR id_function='84' OR id_function='85' OR id_function='212' OR id_function='213')  ORDER BY dt_Audit";
-            SqlCommand createCommand = new SqlCommand(Query, conn);
+            SqlCommand createCommand = new SqlCommand(Query, connSalto);
             SqlDataReader dr = createCommand.ExecuteReader();
             while (dr.Read())
             {
@@ -439,7 +524,7 @@ namespace Presencia.ViewModel
                lockAuditTrail.NCopy = dr[5].GetHashCode();
                LockAuditTrailList.Add(lockAuditTrail);
             }
-            conn.Close();
+            connSalto.Close();
 
             //buscar la relaccion entre CardCode y el id_event
             foreach (var itemAuditTrail in LockAuditTrailList)
@@ -499,14 +584,13 @@ namespace Presencia.ViewModel
             }
 
             UserDataxDiaDefinitivo = UserDataxDia.GroupBy(d => DateTime.Parse(d.FechaEvento).Date).Select(g => g.ToList()).ToList();
-            //TODO: incluir caso de que el usuario no fiche al salir
             foreach (var itemData in UserDataxDiaDefinitivo)
             {
                UserData data = new UserData();
                var entradaHoraAux = new DateTime();
                foreach (var subitemData in itemData)
                {
-                  if (itemData.Count==1  &&  !subitemData.FechaEvento.Substring(0,10).Equals(DateTime.Today.ToShortDateString().Substring(0,10)))
+                  if (itemData.Count == 1 && !subitemData.FechaEvento.Substring(0, 10).Equals(DateTime.Today.ToShortDateString().Substring(0, 10)))
                   {
                      data.TotalHoras = entradaHoraAux;
                      data.Comentarios = "Error al pasar la tarjeta";
@@ -520,11 +604,11 @@ namespace Presencia.ViewModel
                   }
                   else
                   {
-                     if (subitemData.TipoEvento.Equals("ENTRADA")  && !subitemData.FechaEvento.Equals(DateTime.Today.ToShortDateString()))
+                     if (subitemData.TipoEvento.Equals("ENTRADA") && !subitemData.FechaEvento.Equals(DateTime.Today.ToShortDateString()))
                      {
                         entradaHoraAux = DateTime.Parse(subitemData.FechaEvento);
                      }
-                     
+
                      if (subitemData.TipoEvento.Equals("SALIDA"))
                      {
                         data.TotalHoras = (DateTime.Parse(subitemData.FechaEvento) - entradaHoraAux.TimeOfDay);
@@ -547,10 +631,12 @@ namespace Presencia.ViewModel
                         ListaFinal.Add(data);
                      }
                   }
-                 
+
 
                }
             }
+            //Conexion con idinet
+
 
             //Pasar de ListaFinal a ElementoListaResumen
             obteberElementoListaResumenFinal();
@@ -572,85 +658,34 @@ namespace Presencia.ViewModel
             elementoLista.Dia = itemData.FechaEvento;
             elementoLista.Ausencia = itemData.Ausencia;
             elementoLista.Aus_Entrada = itemData.AusenciaEntrada.Hour.ToString() + ":" +
-                                            itemData.AusenciaEntrada.Minute.ToString() + ":" +
-                                            itemData.AusenciaEntrada.Second.ToString();
+                                        itemData.AusenciaEntrada.Minute.ToString() + ":" +
+                                        itemData.AusenciaEntrada.Second.ToString();
             elementoLista.Aus_Salida = itemData.AusenciaSalida.Hour.ToString() + ":" +
-                                            itemData.AusenciaSalida.Minute.ToString() + ":" +
-                                            itemData.AusenciaSalida.Second.ToString();
+                                       itemData.AusenciaSalida.Minute.ToString() + ":" +
+                                       itemData.AusenciaSalida.Second.ToString();
             elementoLista.Entrada = itemData.Entrada.Hour.ToString() + ":" +
                                     itemData.Entrada.Minute.ToString() + ":" +
                                     itemData.Entrada.Second.ToString();
             elementoLista.Salida = itemData.Salida.Hour.ToString() + ":" +
-                                    itemData.Salida.Minute.ToString() + ":" +
-                                    itemData.Salida.Second.ToString();
+                                   itemData.Salida.Minute.ToString() + ":" +
+                                   itemData.Salida.Second.ToString();
             elementoLista.HorasEnCentro = itemData.TotalHoras.Hour.ToString() + ":" +
-                                       itemData.TotalHoras.Minute.ToString() + ":" +
-                                       itemData.TotalHoras.Second.ToString();
+                                          itemData.TotalHoras.Minute.ToString() + ":" +
+                                          itemData.TotalHoras.Second.ToString();
             elementoLista.Comentarios = itemData.Comentarios;
 
             ElementoListaResumen.Add(elementoLista);
          }
       }
+      #endregion
 
-      private string calculoTotalHorasDeLista()
-      {
-         float horas = 0, min = 0, enminutos = 0, enhoras = 0;
-         string hora = " ";
-
-         foreach (var itemData in ListaFinal)
-         {
-            horas = itemData.TotalHoras.Hour + horas;
-            min = itemData.TotalHoras.Minute + min;
-         }
-         enminutos = (horas * 60) + min;
-         enhoras = enminutos / 60;
-         hora = enhoras.ToString(CultureInfo.InvariantCulture);
-
-         return hora;
-      }
-
-      private string conocertipodeevento(LockAuditTrail itemEvent)
-      {
-         if (itemEvent.Id_Function == 17)
-         {
-            return "ENTRADA";
-         }
-         if (itemEvent.Id_Function == 84)
-         {
-            return "ENTRADA";
-         }
-         if (itemEvent.Id_Function == 85)
-         {
-            return "ENTRADA";
-         }
-         if (itemEvent.Id_Function == 145)
-         {
-            return "SALIDA";
-         }
-         if (itemEvent.Id_Function == 212)
-         {
-            return "SALIDA";
-         }
-         if (itemEvent.Id_Function == 213)
-         {
-            return "SALIDA";
-         }
-
-         return "";
-      }
-
-
-
-
-
-
-      #region Obtener lista con nombres, id, cardCode y areas
+      #region Obtener lista con nombres, id, cardCode y areas DE SALTO
 
 
       void ObtenerIdUserAndCardCode()
       {
          //OBTENCION DE NOMBRE DE USUARIO E ID USER
-         SqlConnection conn = new SqlConnection(conexionString);
+         SqlConnection conn = new SqlConnection(conexionStringSalto);
          try
          {
             conn.Open();
@@ -663,7 +698,9 @@ namespace Presencia.ViewModel
                userItem.Nombre = dr[2].ToString();
                userItem.Id = dr[0].GetHashCode();
                userItem.Area = dr[3].ToString();
+               userItem.IdIdinet = ObteneridIdinetDesdeNombreUsuario(userItem.Nombre);
                UsersIdAndNameList.Add(userItem);
+
             }
             conn.Close();
          }
@@ -711,7 +748,6 @@ namespace Presencia.ViewModel
 
          //OBTENCION DE AREAS
 
-         //TODO Obtener areas y filtrado de areas
 
          ObservableCollection<string> areasAux = new ObservableCollection<string>();
          foreach (var item in UsersIdAndNameList)
@@ -731,7 +767,73 @@ namespace Presencia.ViewModel
 
       #endregion
 
+      #endregion
 
+      #region  IDINET
+
+      private int ObteneridIdinetDesdeNombreUsuario(string nombre)
+      {
+         SqlConnection connectionIdinet = new SqlConnection(conexionStringIdinet);
+         var result = 0;
+         try
+         {
+
+            connectionIdinet.Open();
+            string Query =
+               "SELECT UsuarioDominio, tp_ID FROM FUT_Personal Where UsuarioDominio LIKE '%"+nombre+"'";
+            SqlCommand createCommand = new SqlCommand(Query, connectionIdinet);
+            SqlDataReader dr = createCommand.ExecuteReader();
+            while (dr.Read())
+            {
+               result = dr[1].GetHashCode();
+            }
+            connectionIdinet.Close();
+
+         }
+         catch (Exception e)
+         {
+            MessageBox.Show(e.Message);
+         }
+         return result;
+      }
+      //TODO: asuncias
+      private void obtenerListadoDeAusencias(int idIdinet)
+      {
+
+         SqlConnection connectionIdinet = new SqlConnection(conexionStringIdinet);
+         try
+         {
+            ListaAusenciasIDIdinet.Clear();
+            connectionIdinet.Open();
+            string Query =
+               "SELECT[tp_ID],[Comienzo],[Fin],[Tipo],[IdPersona],[Descripcion] FROM FUT_Calendario WHERE IdPersona ='"+idIdinet+"' AND Comienzo >='"+StartDate + "' AND Fin  <='" + EndDate + "' ";
+         SqlCommand createCommand = new SqlCommand(Query, connectionIdinet);
+            SqlDataReader dr = createCommand.ExecuteReader();
+            while (dr.Read())
+            {
+               Ausencia ausencia  =  new Ausencia();
+               ausencia.Tipo = dr[3].ToString();
+               ausencia.FechaInicio = dr[1].ToString();
+               ausencia.FechaFin = dr[2].ToString();
+               ListaAusenciasIDIdinet.Add(ausencia);
+            }
+            connectionIdinet.Close();
+
+            //TODO: tratamiento de esa lista de ausencias para meterla en la lista de elementos a mostrar. Tambien habrá de desglosar las ausencias de inicio y dia diferente en varios dias y comprobar que el proceso no ha sido cancelado
+
+
+
+         }
+         catch (Exception e)
+         {
+            MessageBox.Show(e.Message);
+         }
+
+
+
+      }
+
+      #endregion
 
       //public void UpdateUI()
       //{
