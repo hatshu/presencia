@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Presencia.Model
 {
-   class Ausencia: INotifyPropertyChanged
+   class Ausencia
    {
       public int proceso { get; set; }
       public string usuario { get; set; }
@@ -17,13 +17,8 @@ namespace Presencia.Model
       public string FechaFin { get; set; }
       public bool cancelado { get; set; }
       public string Comentarios { get; set; }
-      //Para que se detecte cuando se cambia cada elemento
-      public event PropertyChangedEventHandler PropertyChanged;
 
-      private void NotifyPropertyChanged(string info)
-      {
-         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
-      }
+      
    }
 
 }

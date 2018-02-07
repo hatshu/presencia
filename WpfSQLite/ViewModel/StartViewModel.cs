@@ -22,6 +22,7 @@ using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.Office2013.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Item = DocumentFormat.OpenXml.Office.CustomUI.Item;
 
 namespace Presencia.ViewModel
 {
@@ -30,6 +31,7 @@ namespace Presencia.ViewModel
 
       #region Attributes
 
+      private int totalDeDias = 0;
       //cadena de conexion a la base de datos
       string conexionStringSalto = ConfigurationManager.ConnectionStrings["ConexionBaseDeDatosSalto"].ConnectionString;
 
@@ -101,18 +103,9 @@ namespace Presencia.ViewModel
          }
       }
 
-      private ObservableCollection<Ausencia> _listaUsuarioIDIdinet { get; set; }
 
+      public List<Ausencia> ListaAusenciasIDIdinet { get; set; }
 
-      public ObservableCollection<Ausencia> ListaAusenciasIDIdinet
-      {
-         get { return _listaUsuarioIDIdinet; }
-         set
-         {
-            _listaUsuarioIDIdinet = value;
-            NotifyPropertyChanged("ListaAusenciasIDIdinet");
-         }
-      }
 
       private ObservableCollection<string> _areasCentro = new ObservableCollection<string>();
 
@@ -189,7 +182,7 @@ namespace Presencia.ViewModel
          //ActiveUsers = new ObservableCollection<string>();
          UsersIdAndNameList = new ObservableCollection<IdUser>();
          ListaFiltradaporArea = new ObservableCollection<IdUser>();
-         ListaAusenciasIDIdinet = new ObservableCollection<Ausencia>();
+         ListaAusenciasIDIdinet = new List<Ausencia>();
          UserDataBrutoList = new ObservableCollection<UserData>();
          UserDataxDia = new ObservableCollection<UserData>();
          SAreaCentro = "";
@@ -232,7 +225,7 @@ namespace Presencia.ViewModel
       {
          if (SearchCommand_CanExecute(parameters))
          {
-            if (SActiveUser != null && StartDate <= EndDate && StartDate<=DateTime.Today.Date && EndDate <=DateTime.Today.Date)
+            if (SActiveUser != null && StartDate <= EndDate && StartDate <= DateTime.Today.Date && EndDate <= DateTime.Today.Date)
             {
                SearchItem item = new SearchItem
                {
@@ -301,10 +294,10 @@ namespace Presencia.ViewModel
          //ElementoListaResumen.Clear();
 
          DataSet ds = new DataSet();
-         ds=CrearDataSet();
+         ds = CrearDataSet();
 
          var Nombre = ElementoListaResumen[0].Nombre;
-         var Fecha = StartDate.Date.ToShortDateString()+"_Al_"+EndDate.Date.ToShortDateString();
+         var Fecha = StartDate.Date.ToShortDateString() + "_Al_" + EndDate.Date.ToShortDateString();
          Fecha = Fecha.Replace("/", "_");
          var wb = new XLWorkbook();
 
@@ -329,8 +322,8 @@ namespace Presencia.ViewModel
                {
 
 
-                     File.Delete(file);
-                     wb.SaveAs(file);
+                  File.Delete(file);
+                  wb.SaveAs(file);
                   MessageBox.Show("El fichero " + file + " a sido regenerado con exito.");
 
                }
@@ -369,16 +362,16 @@ namespace Presencia.ViewModel
          dt.Columns.Add("Horas en el centro");
 
          var registro = from r in ElementoListaResumen
-            select new { r.Nombre, r.Dia, r.Entrada, r.Salida, r.Ausencia, r.Aus_Entrada, r.Aus_Salida, r.HorasEnCentro };
+                        select new { r.Nombre, r.Dia, r.Entrada, r.Salida, r.Ausencia, r.Aus_Entrada, r.Aus_Salida, r.HorasEnCentro };
          foreach (var itemRegistro in registro)
          {
-            dt.Rows.Add(itemRegistro.Nombre,itemRegistro.Dia,itemRegistro.Entrada,itemRegistro.Salida,itemRegistro.Ausencia,itemRegistro.Aus_Entrada, itemRegistro.Aus_Salida, itemRegistro.HorasEnCentro );
+            dt.Rows.Add(itemRegistro.Nombre, itemRegistro.Dia, itemRegistro.Entrada, itemRegistro.Salida, itemRegistro.Ausencia, itemRegistro.Aus_Entrada, itemRegistro.Aus_Salida, itemRegistro.HorasEnCentro);
          }
          ds.Namespace = SActiveUser;
          ds.Tables.Add(dt);
          //create a new row from table
          var dataRow = dt.NewRow();
-         dataRow[6]="Horas en centro";
+         dataRow[6] = "Horas en centro";
          dataRow[7] = TotalConjuntoHoras[0].ToString();
          dt.Rows.Add(dataRow);
 
@@ -559,8 +552,8 @@ namespace Presencia.ViewModel
 
 
             //Conocer cuantos días se han seleccionado
-            var fechaDias = item.FechaFin - item.FechaInicio;
-            var totalDias = fechaDias.Days;
+            //var fechaDias = item.FechaFin - item.FechaInicio;
+            //totalDeDias = fechaDias.Days;
 
 
             var list = UserDataBrutoList.GroupBy(d => DateTime.Parse(d.FechaEvento).Date).Select(g => g.ToList()).ToList();
@@ -781,7 +774,7 @@ namespace Presencia.ViewModel
 
             connectionIdinet.Open();
             string Query =
-               "SELECT UsuarioDominio, tp_ID FROM FUT_Personal Where UsuarioDominio LIKE '%"+nombre+"'";
+               "SELECT UsuarioDominio, tp_ID FROM FUT_Personal Where UsuarioDominio LIKE '%" + nombre + "'";
             SqlCommand createCommand = new SqlCommand(Query, connectionIdinet);
             SqlDataReader dr = createCommand.ExecuteReader();
             while (dr.Read())
@@ -807,15 +800,16 @@ namespace Presencia.ViewModel
             ListaAusenciasIDIdinet.Clear();
             connectionIdinet.Open();
             string Query =
-               "SELECT[IdProceso],[Comienzo],[Fin],[Tipo],[IdPersona],[Descripcion] FROM FUT_Calendario WHERE IdPersona ='"+idIdinet+"' AND Fin >='"+StartDate + "' AND Fin  <='" + EndDate + "' ";
-         SqlCommand createCommand = new SqlCommand(Query, connectionIdinet);
+               "SELECT[IdProceso],[Comienzo],[Fin],[Tipo],[IdPersona],[Descripcion] FROM FUT_Calendario WHERE IdPersona ='" + idIdinet + "' AND Fin >='" + StartDate + "' AND Fin  <='" + EndDate + "' ";
+            SqlCommand createCommand = new SqlCommand(Query, connectionIdinet);
             SqlDataReader dr = createCommand.ExecuteReader();
             while (dr.Read())
             {
-               Ausencia ausencia  =  new Ausencia();
+               Ausencia ausencia = new Ausencia();
                ausencia.proceso = dr[0].GetHashCode();
                ausencia.Tipo = dr[3].ToString();
                ausencia.FechaInicio = dr[1].ToString();
+               ausencia.Dia = dr[1].ToString();
                ausencia.FechaFin = dr[2].ToString();
                //COMPROBAR PROCESO NO ES CANCELADO
                ausencia.cancelado = comprobarProceso(dr[0].GetHashCode());
@@ -828,26 +822,85 @@ namespace Presencia.ViewModel
             connectionIdinet.Close();
 
             //TODO: tratamiento de esa lista de ausencias para meterla en la lista de elementos a mostrar. Tambien habrá de desglosar las ausencias de inicio y dia diferente en varios dias
-
+            desglosarFechasdeAusenciasVariosDias();
+            //addAusenciasAListadeElementosAmostrar();
          }
          catch (Exception e)
          {
-            MessageBox.Show(e.Message);
+            //MessageBox.Show(e.Message);
          }
 
 
 
       }
 
+      private void desglosarFechasdeAusenciasVariosDias()
+      {
+         int diasDiferencia;
+         int totalDeDias=calculardiasDeDiferencia(StartDate.ToShortDateString().Substring(0,10),EndDate.ToShortDateString().Substring(0,10));
+
+         foreach (var itemAusencia in ListaAusenciasIDIdinet)
+         {
+            if (itemAusencia.FechaInicio.Substring(0,10) != itemAusencia.FechaFin.Substring(0,10))
+            {
+               if (DateTime.Parse(itemAusencia.FechaInicio) < StartDate)
+               {
+                  itemAusencia.FechaInicio = StartDate.ToString(CultureInfo.CurrentCulture);
+               }
+               diasDiferencia = calculardiasDeDiferencia(itemAusencia.FechaInicio, itemAusencia.FechaFin);
+               if (diasDiferencia > totalDeDias)
+               {
+                  diasDiferencia = totalDeDias;
+               }
+               for (int i = 0; i < diasDiferencia; i++)
+               {
+                  var itemAux = new Ausencia();
+                  itemAux.Dia = itemAusencia.FechaInicio;
+                  itemAux.Dia = DateTime.Parse(itemAux.Dia).AddDays(i).ToShortDateString();
+                  itemAux.Comentarios = i.ToString();
+                  itemAux.Tipo = itemAusencia.Tipo;
+                  itemAux.FechaInicio = itemAusencia.FechaInicio;
+                  itemAux.FechaFin = itemAusencia.FechaFin;
+                  if (i!=0)
+                  {
+                     ListaAusenciasIDIdinet.Add(itemAux);
+                  }
+
+               }
+            }
+
+         }
+      }
+
+      private int calculardiasDeDiferencia(string itemFechaInicio, string itemFechaFin)
+      {
+         DateTime fechaInicio = DateTime.Parse(itemFechaInicio);
+         DateTime fechaFin = DateTime.Parse(itemFechaFin);
+         TimeSpan diferenciadias;
+         diferenciadias = fechaFin - fechaInicio;
+         return diferenciadias.Days;
+      }
+
+      private void addAusenciasAListadeElementosAmostrar()
+      {
+         //foreach (var itemAusencias in ListaAusenciasIDIdinet)
+         //{
+         //   foreach (var itemListaResumen in ElementoListaResumen)
+         //   {
+
+         //   }
+         //}
+      }
+
       private bool comprobarProceso(int numProceso)
       {
          SqlConnection connectionIdinet = new SqlConnection(conexionStringIdinet);
-         string estado=string.Empty;
+         string estado = string.Empty;
          try
          {
             connectionIdinet.Open();
             string Query =
-               "SELECT Tp_ID, Estado FROM FUT_Procesos WHERE Tp_ID = " + numProceso+"";
+               "SELECT Tp_ID, Estado FROM FUT_Procesos WHERE Tp_ID = " + numProceso + "";
             SqlCommand createCommand = new SqlCommand(Query, connectionIdinet);
             SqlDataReader dr = createCommand.ExecuteReader();
             while (dr.Read())
