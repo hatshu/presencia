@@ -18,6 +18,7 @@ using System.Windows.Interactivity;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml;
 using System.IO;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.Office2013.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
@@ -806,22 +807,27 @@ namespace Presencia.ViewModel
             ListaAusenciasIDIdinet.Clear();
             connectionIdinet.Open();
             string Query =
-               "SELECT[tp_ID],[Comienzo],[Fin],[Tipo],[IdPersona],[Descripcion] FROM FUT_Calendario WHERE IdPersona ='"+idIdinet+"' AND Comienzo >='"+StartDate + "' AND Fin  <='" + EndDate + "' ";
+               "SELECT[IdProceso],[Comienzo],[Fin],[Tipo],[IdPersona],[Descripcion] FROM FUT_Calendario WHERE IdPersona ='"+idIdinet+"' AND Fin >='"+StartDate + "' AND Fin  <='" + EndDate + "' ";
          SqlCommand createCommand = new SqlCommand(Query, connectionIdinet);
             SqlDataReader dr = createCommand.ExecuteReader();
             while (dr.Read())
             {
                Ausencia ausencia  =  new Ausencia();
+               ausencia.proceso = dr[0].GetHashCode();
                ausencia.Tipo = dr[3].ToString();
                ausencia.FechaInicio = dr[1].ToString();
                ausencia.FechaFin = dr[2].ToString();
-               ListaAusenciasIDIdinet.Add(ausencia);
+               //COMPROBAR PROCESO NO ES CANCELADO
+               ausencia.cancelado = comprobarProceso(dr[0].GetHashCode());
+               if (!ausencia.cancelado)
+               {
+                  ListaAusenciasIDIdinet.Add(ausencia);
+               }
+
             }
             connectionIdinet.Close();
 
-            //TODO: tratamiento de esa lista de ausencias para meterla en la lista de elementos a mostrar. Tambien habrá de desglosar las ausencias de inicio y dia diferente en varios dias y comprobar que el proceso no ha sido cancelado
-
-
+            //TODO: tratamiento de esa lista de ausencias para meterla en la lista de elementos a mostrar. Tambien habrá de desglosar las ausencias de inicio y dia diferente en varios dias
 
          }
          catch (Exception e)
@@ -831,6 +837,34 @@ namespace Presencia.ViewModel
 
 
 
+      }
+
+      private bool comprobarProceso(int numProceso)
+      {
+         SqlConnection connectionIdinet = new SqlConnection(conexionStringIdinet);
+         string estado=string.Empty;
+         try
+         {
+            connectionIdinet.Open();
+            string Query =
+               "SELECT Tp_ID, Estado FROM FUT_Procesos WHERE Tp_ID = " + numProceso+"";
+            SqlCommand createCommand = new SqlCommand(Query, connectionIdinet);
+            SqlDataReader dr = createCommand.ExecuteReader();
+            while (dr.Read())
+            {
+               estado = dr[1].ToString();
+            }
+            connectionIdinet.Close();
+            if (estado.Equals("Cancelado"))
+            {
+               return true;
+            }
+         }
+         catch (Exception e)
+         {
+            MessageBox.Show(e.Message);
+         }
+         return false;
       }
 
       #endregion

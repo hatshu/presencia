@@ -9,6 +9,7 @@ namespace Presencia.Model
 {
    class Ausencia: INotifyPropertyChanged
    {
+      public int proceso { get; set; }
       public string usuario { get; set; }
       public string Tipo { get; set; }
       public string Dia { get; set; }
