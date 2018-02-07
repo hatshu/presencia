@@ -106,6 +106,8 @@ namespace Presencia.ViewModel
 
       public List<Ausencia> ListaAusenciasIDIdinet { get; set; }
 
+      public List<Ausencia> ListaAuxAusencias { get; set; }
+
 
       private ObservableCollection<string> _areasCentro = new ObservableCollection<string>();
 
@@ -183,6 +185,7 @@ namespace Presencia.ViewModel
          UsersIdAndNameList = new ObservableCollection<IdUser>();
          ListaFiltradaporArea = new ObservableCollection<IdUser>();
          ListaAusenciasIDIdinet = new List<Ausencia>();
+         ListaAuxAusencias = new List<Ausencia>();
          UserDataBrutoList = new ObservableCollection<UserData>();
          UserDataxDia = new ObservableCollection<UserData>();
          SAreaCentro = "";
@@ -292,7 +295,7 @@ namespace Presencia.ViewModel
       void ExportarCommand_Execute(object parameters)
       {
          //ElementoListaResumen.Clear();
-
+         //TODO: comprobar que hay elementos para exportar para que no de error
          DataSet ds = new DataSet();
          ds = CrearDataSet();
 
@@ -823,11 +826,11 @@ namespace Presencia.ViewModel
 
             //TODO: tratamiento de esa lista de ausencias para meterla en la lista de elementos a mostrar. Tambien habrá de desglosar las ausencias de inicio y dia diferente en varios dias
             desglosarFechasdeAusenciasVariosDias();
-            //addAusenciasAListadeElementosAmostrar();
+            addAusenciasAListadeElementosAmostrar();
          }
          catch (Exception e)
          {
-            //MessageBox.Show(e.Message);
+            MessageBox.Show(e.Message);
          }
 
 
@@ -852,7 +855,7 @@ namespace Presencia.ViewModel
                {
                   diasDiferencia = totalDeDias;
                }
-               for (int i = 0; i < diasDiferencia; i++)
+               for (int i = 0; i <= diasDiferencia; i++)
                {
                   var itemAux = new Ausencia();
                   itemAux.Dia = itemAusencia.FechaInicio;
@@ -861,14 +864,27 @@ namespace Presencia.ViewModel
                   itemAux.Tipo = itemAusencia.Tipo;
                   itemAux.FechaInicio = itemAusencia.FechaInicio;
                   itemAux.FechaFin = itemAusencia.FechaFin;
-                  if (i!=0)
-                  {
-                     ListaAusenciasIDIdinet.Add(itemAux);
-                  }
+                  ListaAuxAusencias.Add(itemAux);
+
 
                }
+             
             }
-
+            else
+            {
+               //TODO: si las ausencias son de un solo dia
+               foreach (var itemAuAux in ListaAuxAusencias)
+               {
+                  var itemAux = new Ausencia();
+                  itemAux.Dia = itemAuAux.FechaInicio;
+                  itemAux.Comentarios = string.Empty;
+                  itemAux.Tipo = itemAuAux.Tipo;
+                  itemAux.FechaInicio = itemAuAux.FechaInicio;
+                  itemAux.FechaFin = itemAuAux.FechaFin;
+                  ListaAuxAusencias.Add(itemAux);
+               }
+            }
+            //TODO: añadir ausencias a la lista de elementos a mostrar
          }
       }
 
