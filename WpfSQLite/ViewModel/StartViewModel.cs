@@ -673,6 +673,9 @@ namespace Presencia.ViewModel
 
             ElementoListaResumen.Add(elementoLista);
          }
+         //TODO: probar si va bien aqui
+         addAusenciasAListadeElementosAmostrar();
+
       }
       #endregion
 
@@ -868,21 +871,20 @@ namespace Presencia.ViewModel
 
 
                }
-             
+
             }
             else
             {
                //TODO: si las ausencias son de un solo dia
-               foreach (var itemAuAux in ListaAuxAusencias)
-               {
+
                   var itemAux = new Ausencia();
-                  itemAux.Dia = itemAuAux.FechaInicio;
+                  itemAux.Dia = itemAusencia.FechaInicio;
                   itemAux.Comentarios = string.Empty;
-                  itemAux.Tipo = itemAuAux.Tipo;
-                  itemAux.FechaInicio = itemAuAux.FechaInicio;
-                  itemAux.FechaFin = itemAuAux.FechaFin;
+                  itemAux.Tipo = itemAusencia.Tipo;
+                  itemAux.FechaInicio = itemAusencia.FechaInicio;
+                  itemAux.FechaFin = itemAusencia.FechaFin;
                   ListaAuxAusencias.Add(itemAux);
-               }
+
             }
             //TODO: añadir ausencias a la lista de elementos a mostrar
          }
@@ -899,13 +901,18 @@ namespace Presencia.ViewModel
 
       private void addAusenciasAListadeElementosAmostrar()
       {
-         //foreach (var itemAusencias in ListaAusenciasIDIdinet)
-         //{
-         //   foreach (var itemListaResumen in ElementoListaResumen)
-         //   {
-
-         //   }
-         //}
+         foreach (var itemAusencias in ListaAuxAusencias)
+         {
+            foreach (var itemListaResumen in ElementoListaResumen)
+            {
+               if (itemListaResumen.Dia.Substring(0,10).Equals(itemAusencias.Dia.Substring(0,10)))
+               {
+                  itemListaResumen.Ausencia = itemAusencias.Tipo;
+                  itemListaResumen.Aus_Entrada = "entrada";
+                  itemListaResumen.Aus_Salida = "salida";
+               }
+            }
+         }
       }
 
       private bool comprobarProceso(int numProceso)
