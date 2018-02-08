@@ -307,6 +307,12 @@ namespace Presencia.ViewModel
       {
          //ElementoListaResumen.Clear();
          //TODO: comprobar que hay elementos para exportar para que no de error
+
+         if (ElementoListaResumenFinal.Count==0)
+         {
+            MessageBox.Show("No hay elementos a exportar.");
+            return;
+         }
          DataSet ds = new DataSet();
          ds = CrearDataSet();
 
@@ -373,20 +379,21 @@ namespace Presencia.ViewModel
          dt.Columns.Add("Ausencia");
          dt.Columns.Add("Entrada Ausencia");
          dt.Columns.Add("Salida Ausencia");
+         dt.Columns.Add("Comentarios");
          dt.Columns.Add("Horas en el centro");
 
-         var registro = from r in ElementoListaResumen
-                        select new { r.Nombre, r.Dia, r.Entrada, r.Salida, r.Ausencia, r.Aus_Entrada, r.Aus_Salida, r.HorasEnCentro };
+         var registro = from r in ElementoListaResumenFinal
+                        select new { r.Nombre, r.Dia, r.Entrada, r.Salida, r.Ausencia, r.Aus_Entrada, r.Aus_Salida ,r.Comentarios, r.HorasEnCentro };
          foreach (var itemRegistro in registro)
          {
-            dt.Rows.Add(itemRegistro.Nombre, itemRegistro.Dia, itemRegistro.Entrada, itemRegistro.Salida, itemRegistro.Ausencia, itemRegistro.Aus_Entrada, itemRegistro.Aus_Salida, itemRegistro.HorasEnCentro);
+            dt.Rows.Add(itemRegistro.Nombre, itemRegistro.Dia, itemRegistro.Entrada, itemRegistro.Salida, itemRegistro.Ausencia, itemRegistro.Aus_Entrada, itemRegistro.Aus_Salida, itemRegistro.Comentarios, itemRegistro.HorasEnCentro);
          }
          ds.Namespace = SActiveUser;
          ds.Tables.Add(dt);
          //create a new row from table
          var dataRow = dt.NewRow();
-         dataRow[6] = "Horas en centro";
-         dataRow[7] = TotalConjuntoHoras[0].ToString();
+         dataRow[7] = "Horas en centro";
+         dataRow[8] = TotalConjuntoHoras[0].ToString();
          dt.Rows.Add(dataRow);
 
 
@@ -609,7 +616,7 @@ namespace Presencia.ViewModel
                      data.FechaEvento = subitemData.FechaEvento.Substring(0, 10);
                      data.Salida = DateTime.Parse(subitemData.FechaEvento);
                      data.Entrada = DateTime.Parse(subitemData.FechaEvento);
-                     data.Ausencia = "No lanzada";
+                     data.Ausencia = " ";
                      ListaFinal.Add(data);
                   }
                   else
@@ -877,7 +884,6 @@ namespace Presencia.ViewModel
                   var itemAux = new Ausencia();
                   itemAux.Dia = itemAusencia.FechaInicio;
                   itemAux.Dia = DateTime.Parse(itemAux.Dia).AddDays(i).ToShortDateString();
-                  itemAux.Comentarios = i.ToString();
                   itemAux.Tipo = itemAusencia.Tipo;
                   itemAux.FechaInicio = itemAusencia.FechaInicio;
                   itemAux.FechaFin = itemAusencia.FechaFin;
@@ -894,7 +900,6 @@ namespace Presencia.ViewModel
 
                var itemAux = new Ausencia();
                itemAux.Dia = itemAusencia.FechaInicio;
-               itemAux.Comentarios = string.Empty;
                itemAux.Tipo = itemAusencia.Tipo;
                itemAux.FechaInicio = itemAusencia.FechaInicio;
                itemAux.FechaFin = itemAusencia.FechaFin;
@@ -928,7 +933,8 @@ namespace Presencia.ViewModel
                   //TODO: pillar la hora real
                   itemListaResumen.Aus_Entrada = itemAusencias.FechaInicio.Substring(10, 8);
                   //TOPO: pillar salida real
-                  itemListaResumen.Aus_Salida = itemAusencias.FechaFin.Substring(10, 8); ;
+                  itemListaResumen.Aus_Salida = itemAusencias.FechaFin.Substring(10, 8);
+                  itemListaResumen.Comentarios = itemAusencias.Comentarios;
                   itemAusencias.localizadoEnSalto = true;
                }
             }
@@ -944,7 +950,7 @@ namespace Presencia.ViewModel
                itemAux.Ausencia = itemAusencia.Tipo;
                itemAux.Aus_Entrada = itemAusencia.FechaInicio.Substring(10, 8);
                itemAux.Aus_Salida = itemAusencia.FechaFin.Substring(10, 8);
-               itemAux.Comentarios = "Proceso: "+itemAusencia.proceso.ToString();
+               itemAux.Comentarios = itemAusencia.Comentarios;
                ElementoListaResumen.Add(itemAux);
 
             }
@@ -965,7 +971,7 @@ namespace Presencia.ViewModel
             element.Aus_Salida = itemLista.Aus_Salida;
             element.Comentarios = itemLista.Comentarios;
             element.HorasEnCentro = itemLista.HorasEnCentro;
-             
+
 
             ElementoListaResumenFinal.Add(element);
          }
