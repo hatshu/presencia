@@ -159,6 +159,17 @@ namespace Presencia.ViewModel
          }
       }
 
+      private ObservableCollection<ElementoListaResumenFinal> _elementoListaResumenFinal = new ObservableCollection<ElementoListaResumenFinal>();
+
+      public ObservableCollection<ElementoListaResumenFinal> ElementoListaResumenFinal
+      {
+         get { return _elementoListaResumenFinal; }
+         set
+         {
+            _elementoListaResumenFinal = value;
+            NotifyPropertyChanged("ElementoListaResumenFinal");
+         }
+      }
 
       private ObservableCollection<string> _totalConjuntoHoras;
 
@@ -502,7 +513,9 @@ namespace Presencia.ViewModel
          UserDataBrutoList.Clear();
          UserDataxDia.Clear();
          ListaFinal.Clear();
+
          ElementoListaResumen.Clear();
+         ElementoListaResumenFinal.Clear();
          try
          {
             connSalto.Open();
@@ -624,7 +637,7 @@ namespace Presencia.ViewModel
                         data.CardCode = subitemData.CardCode;
                         data.FechaEvento = subitemData.FechaEvento.Substring(0, 10);
                         data.Salida = DateTime.Parse(subitemData.FechaEvento);
-                        data.Ausencia = "No lanzada";
+                        data.Ausencia = " ";
                         ListaFinal.Add(data);
                      }
                   }
@@ -652,7 +665,7 @@ namespace Presencia.ViewModel
          {
             ElementoListaResumen elementoLista = new ElementoListaResumen();
             elementoLista.Nombre = itemData.Nombre;
-            elementoLista.Dia = itemData.FechaEvento;
+            elementoLista.Dia = DateTime.Parse(itemData.FechaEvento);
             elementoLista.Ausencia = itemData.Ausencia;
             elementoLista.Aus_Entrada = itemData.AusenciaEntrada.Hour.ToString() + ":" +
                                         itemData.AusenciaEntrada.Minute.ToString() + ":" +
@@ -804,6 +817,7 @@ namespace Presencia.ViewModel
          try
          {
             ListaAusenciasIDIdinet.Clear();
+            ListaAuxAusencias.Clear();
             connectionIdinet.Open();
             string Query =
                "SELECT[IdProceso],[Comienzo],[Fin],[Tipo],[IdPersona],[Descripcion] FROM FUT_Calendario WHERE IdPersona ='" + idIdinet + "' AND Fin >='" + StartDate + "' AND Fin  <='" + EndDate + "' ";
@@ -843,11 +857,11 @@ namespace Presencia.ViewModel
       private void desglosarFechasdeAusenciasVariosDias()
       {
          int diasDiferencia;
-         int totalDeDias=calculardiasDeDiferencia(StartDate.ToShortDateString().Substring(0,10),EndDate.ToShortDateString().Substring(0,10));
+         int totalDeDias = calculardiasDeDiferencia(StartDate.ToShortDateString().Substring(0, 10), EndDate.ToShortDateString().Substring(0, 10));
 
          foreach (var itemAusencia in ListaAusenciasIDIdinet)
          {
-            if (itemAusencia.FechaInicio.Substring(0,10) != itemAusencia.FechaFin.Substring(0,10))
+            if (itemAusencia.FechaInicio.Substring(0, 10) != itemAusencia.FechaFin.Substring(0, 10))
             {
                if (DateTime.Parse(itemAusencia.FechaInicio) < StartDate)
                {
@@ -867,8 +881,9 @@ namespace Presencia.ViewModel
                   itemAux.Tipo = itemAusencia.Tipo;
                   itemAux.FechaInicio = itemAusencia.FechaInicio;
                   itemAux.FechaFin = itemAusencia.FechaFin;
+                  itemAux.Comentarios = "Proceso: " + itemAusencia.proceso.ToString();
                   ListaAuxAusencias.Add(itemAux);
-
+                  UpdateUI();
 
                }
 
@@ -877,16 +892,16 @@ namespace Presencia.ViewModel
             {
                //TODO: si las ausencias son de un solo dia
 
-                  var itemAux = new Ausencia();
-                  itemAux.Dia = itemAusencia.FechaInicio;
-                  itemAux.Comentarios = string.Empty;
-                  itemAux.Tipo = itemAusencia.Tipo;
-                  itemAux.FechaInicio = itemAusencia.FechaInicio;
-                  itemAux.FechaFin = itemAusencia.FechaFin;
-                  ListaAuxAusencias.Add(itemAux);
-
+               var itemAux = new Ausencia();
+               itemAux.Dia = itemAusencia.FechaInicio;
+               itemAux.Comentarios = string.Empty;
+               itemAux.Tipo = itemAusencia.Tipo;
+               itemAux.FechaInicio = itemAusencia.FechaInicio;
+               itemAux.FechaFin = itemAusencia.FechaFin;
+               itemAux.Comentarios = "Proceso: "+itemAusencia.proceso.ToString();
+               ListaAuxAusencias.Add(itemAux);
+               UpdateUI();
             }
-            //TODO: añadir ausencias a la lista de elementos a mostrar
          }
       }
 
@@ -901,18 +916,61 @@ namespace Presencia.ViewModel
 
       private void addAusenciasAListadeElementosAmostrar()
       {
+         bool localizado = false;
+         //TODO: modificar esto para comprobar si el dia no existe en la lista de elementos a mostrar y añadir elemento
          foreach (var itemAusencias in ListaAuxAusencias)
          {
             foreach (var itemListaResumen in ElementoListaResumen)
             {
-               if (itemListaResumen.Dia.Substring(0,10).Equals(itemAusencias.Dia.Substring(0,10)))
+               if (itemListaResumen.Dia.Date.ToShortDateString().Equals(itemAusencias.Dia.Substring(0, 10)))
                {
                   itemListaResumen.Ausencia = itemAusencias.Tipo;
-                  itemListaResumen.Aus_Entrada = "entrada";
-                  itemListaResumen.Aus_Salida = "salida";
+                  //TODO: pillar la hora real
+                  itemListaResumen.Aus_Entrada = itemAusencias.FechaInicio.Substring(10, 8);
+                  //TOPO: pillar salida real
+                  itemListaResumen.Aus_Salida = itemAusencias.FechaFin.Substring(10, 8); ;
+                  itemAusencias.localizadoEnSalto = true;
                }
             }
          }
+         //TODO: añadir los que tienen a false localizado en salto / cambiar orden y eliminar duplicados como la ausencia de mherrera del 29/1/2018
+         foreach (var itemAusencia in ListaAuxAusencias)
+         {
+            if (itemAusencia.localizadoEnSalto == false)
+            {
+               var itemAux = new ElementoListaResumen();
+               itemAux.Nombre = SActiveUser;
+               itemAux.Dia = DateTime.Parse(itemAusencia.Dia.Substring(0, 10));
+               itemAux.Ausencia = itemAusencia.Tipo;
+               itemAux.Aus_Entrada = itemAusencia.FechaInicio.Substring(10, 8);
+               itemAux.Aus_Salida = itemAusencia.FechaFin.Substring(10, 8);
+               itemAux.Comentarios = "Proceso: "+itemAusencia.proceso.ToString();
+               ElementoListaResumen.Add(itemAux);
+
+            }
+         }
+
+         //TODO: ORDENAR LISTA
+         var listaOrdenada = ElementoListaResumen.OrderBy(x => x.Dia).ToList();
+
+         foreach (var itemLista in listaOrdenada)
+         {
+            ElementoListaResumenFinal element = new ElementoListaResumenFinal();
+            element.Nombre = itemLista.Nombre;
+            element.Dia = itemLista.Dia.ToShortDateString().Substring(0, 10);
+            element.Entrada = itemLista.Entrada;
+            element.Salida = itemLista.Salida;
+            element.Ausencia = itemLista.Ausencia;
+            element.Aus_Entrada = itemLista.Aus_Entrada;
+            element.Aus_Salida = itemLista.Aus_Salida;
+            element.Comentarios = itemLista.Comentarios;
+            element.HorasEnCentro = itemLista.HorasEnCentro;
+             
+
+            ElementoListaResumenFinal.Add(element);
+         }
+
+
       }
 
       private bool comprobarProceso(int numProceso)
@@ -945,12 +1003,12 @@ namespace Presencia.ViewModel
 
       #endregion
 
-      //public void UpdateUI()
-      //{
-      //   //Here update your label, button or any string related object.
-      //   //Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Background, new ThreadStart(delegate { }));
-      //   Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new ThreadStart(delegate { }));
-      //}
+      public void UpdateUI()
+      {
+         //Here update your label, button or any string related object.
+         //Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Background, new ThreadStart(delegate { }));
+         Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new ThreadStart(delegate { }));
+      }
 
 
    }
