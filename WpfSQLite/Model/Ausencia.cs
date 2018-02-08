@@ -17,6 +17,7 @@ namespace Presencia.Model
       public string FechaFin { get; set; }
       public bool cancelado { get; set; }
       public string Comentarios { get; set; }
+      public bool localizadoEnSalto { get; set; }
 
       
    }
