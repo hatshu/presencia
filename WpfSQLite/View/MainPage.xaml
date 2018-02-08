@@ -31,13 +31,13 @@
          </Grid.RowDefinitions>
 
          <Viewbox Grid.Row="0"  Margin="10,10,10,10">
-            <Button x:Name="start"  Style="{StaticResource MetroButton}"  Content="Start" MaxHeight="20" MinWidth="50" Click="Start_OnClick"/>
+            <Button x:Name="start"  Style="{StaticResource MetroButton}"  Content="Por Usuario" MaxHeight="20" MinWidth="50" Click="Start_OnClick"/>
          </Viewbox>
          <Viewbox Grid.Row="1" Margin="10,10,10,10">
-            <Button x:Name="help" Style="{StaticResource MetroButton}" Content="Help" MaxHeight="20" MinWidth="50" Click="help_Click" />
+            <Button x:Name="help" Style="{StaticResource MetroButton}" Content="Por División" MaxHeight="20" MinWidth="50" Click="help_Click" />
          </Viewbox>
          <Viewbox Grid.Row="2"  Margin="10,10,10,10" >
-            <Button x:Name="exit" Style="{StaticResource MetroButton}" Content="Exit" MaxHeight="20"  MinWidth="50" Click="Exit_OnClick" />
+            <Button x:Name="exit" Style="{StaticResource MetroButton}" Content="       Exit       " MaxHeight="20"  MinWidth="50" Click="Exit_OnClick" />
          </Viewbox>
 
       </Grid>
