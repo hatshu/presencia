@@ -87,10 +87,10 @@
                <DatePicker Name="DatePickerFin" SelectedDate="{Binding EndDate, Mode=TwoWay}" BorderThickness="0" Margin=" 3 3 3 3"  MaxWidth="200"   MinWidth="100"/>
             </Viewbox>
             <Viewbox Grid.Row="1" Grid.Column="5"  >
-               <Button Content="Buscar" Style="{StaticResource MetroButton}" Command="{Binding SearchCommand}" MaxHeight="30" MinWidth="70" Margin="1 1 1 1"></Button>
+               <Button Content="Buscar" Style="{StaticResource MetroButton}" Command="{Binding SearchCommand}" MaxHeight="30" MinWidth="90" Margin="1 1 1 1"></Button>
             </Viewbox>
             <Viewbox Grid.Row="2" Grid.Column="5"  >
-               <Button Content="Exportar" Style="{StaticResource MetroButton}"  Command="{Binding ExportarCommand}" MaxHeight="30" MinWidth="70" Margin="1 1 1 1"></Button>
+               <Button Content="Exportar" Style="{StaticResource MetroButton}"  Command="{Binding ExportarCommand}" MaxHeight="30" MinWidth="90" Margin="1 1 1 1"></Button>
             </Viewbox>
 
 
@@ -132,7 +132,7 @@
          </Grid.ColumnDefinitions>
 
          <Viewbox Grid.Row="0" Grid.Column="1" >
-            <Button Name="back" Content="Back" Style="{StaticResource MetroButton}"  MaxHeight="20" MinWidth="50" Click="Back_OnClick"></Button>
+            <Button Name="back" Content="Back" Style="{StaticResource MetroButton}"   MinWidth="45" Click="Back_OnClick"></Button>
          </Viewbox>
          <Viewbox Grid.Row="0" Grid.Column="3" >
             <Label Style="{StaticResource whiteLabel}"  Content="Total de horas:" ></Label>
