@@ -163,10 +163,13 @@
     <Resource Include="Resources\catecLogo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\fondo.png" />
+    <Resource Include="Resources\Mainbg.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Mainbg.png" />
+    <Resource Include="Resources\fondoPrincipal.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\fondo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
