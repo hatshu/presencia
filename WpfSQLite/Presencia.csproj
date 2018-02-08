@@ -76,6 +76,7 @@
     </ApplicationDefinition>
     <Compile Include="Model\Ausencia.cs" />
     <Compile Include="Model\ElementoListaResumen.cs" />
+    <Compile Include="Model\ElementoListaResumenFinal.cs" />
     <Compile Include="Model\LockAuditTrail.cs" />
     <Compile Include="Model\SearchItem.cs" />
     <Compile Include="Model\IdUser.cs" />
