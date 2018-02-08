@@ -939,7 +939,7 @@ namespace Presencia.ViewModel
                }
             }
          }
-         //TODO: añadir los que tienen a false localizado en salto / cambiar orden y eliminar duplicados como la ausencia de mherrera del 29/1/2018
+         //TODO: añadir los que tienen a false localizado en salto /
          foreach (var itemAusencia in ListaAuxAusencias)
          {
             if (itemAusencia.localizadoEnSalto == false)
@@ -956,7 +956,12 @@ namespace Presencia.ViewModel
             }
          }
 
-         //TODO: ORDENAR LISTA
+         //TODO: meter festivos
+         añadirFestivosDelRangoFechas();
+
+
+
+         // ORDENAR LISTA
          var listaOrdenada = ElementoListaResumen.OrderBy(x => x.Dia).ToList();
 
          foreach (var itemLista in listaOrdenada)
@@ -977,6 +982,37 @@ namespace Presencia.ViewModel
          }
 
 
+      }
+
+      private void añadirFestivosDelRangoFechas()
+      {
+         SqlConnection connectionIdinet = new SqlConnection(conexionStringIdinet);
+         List<string> fiestas = new List<string>();
+         try
+         {
+            connectionIdinet.Open();
+            string Query =
+               "SELECT * FROM  FUT_Calendario WHERE  Tipo='Festivo'  AND Fin >='" + StartDate + "' AND Fin  <='" + EndDate + "' ";
+            SqlCommand createCommand = new SqlCommand(Query, connectionIdinet);
+            SqlDataReader dr = createCommand.ExecuteReader();
+            while (dr.Read())
+            {
+               fiestas.Add(dr[3].ToString());
+            }
+            connectionIdinet.Close();
+            foreach (var itemfiesta in fiestas)
+            {
+               var itemAux = new ElementoListaResumen();
+               itemAux.Nombre = SActiveUser;
+               itemAux.Dia = DateTime.Parse(itemfiesta.Substring(0, 10));
+               itemAux.Ausencia = "Festivo";
+               ElementoListaResumen.Add(itemAux);
+            }
+         }
+         catch (Exception e)
+         {
+            MessageBox.Show(e.Message);
+         }
       }
 
       //TRUE ES QUE ESTA CANCELADO
@@ -1004,7 +1040,7 @@ namespace Presencia.ViewModel
             {
                return true;
             }
-            
+
          }
          catch (Exception e)
          {
