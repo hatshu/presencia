@@ -979,6 +979,7 @@ namespace Presencia.ViewModel
 
       }
 
+      //TRUE ES QUE ESTA CANCELADO
       private bool comprobarProceso(int numProceso)
       {
          SqlConnection connectionIdinet = new SqlConnection(conexionStringIdinet);
@@ -999,6 +1000,11 @@ namespace Presencia.ViewModel
             {
                return true;
             }
+            else if (estado.Equals( ""))
+            {
+               return true;
+            }
+            
          }
          catch (Exception e)
          {
