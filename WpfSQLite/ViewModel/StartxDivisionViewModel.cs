@@ -184,7 +184,7 @@ namespace Presencia.ViewModel
 
       }
 
-      public ObservableCollection<string> _listaPersonas = new ObservableCollection<string>();
+      private ObservableCollection<string> _listaPersonas = new ObservableCollection<string>();
       public ObservableCollection<string> ListaPersonas
       {
          get { return _listaPersonas; }
@@ -193,8 +193,22 @@ namespace Presencia.ViewModel
             _listaPersonas = value;
             NotifyPropertyChanged("ListaPersonas");
          }
-
       }
+
+
+      private ObservableCollection<Division> _tab = new ObservableCollection<Division>();
+
+      public ObservableCollection<Division> Tab
+      {
+         get { return _tab; }
+         set
+         {
+            _tab = value;
+            NotifyPropertyChanged("Tab");
+         }
+      }
+
+
 
       #endregion
 
@@ -249,28 +263,12 @@ namespace Presencia.ViewModel
          {
             if (SAreaCentro != null && StartDate <= EndDate && StartDate <= DateTime.Today.Date && EndDate <= DateTime.Today.Date)
             {
-               foreach (var itemDataUser in ListaFiltradaporArea)
+               ListaPersonas = ObtenerListadoPersonaldeArea();
+               foreach (var persona in ListaPersonas)
                {
-                  SActiveUser = itemDataUser.Nombre;
-                  SearchItem item = new SearchItem
-                  {
-                     Nombre = SActiveUser,
-                     Id = ObtenerIdUser(),
-                     CardCode = ObtenerCardCodeDeId(ObtenerIdUser()),
-                     FechaInicio = StartDate,
-                     FechaFin = EndDate.AddHours(23).AddMinutes(59)
-
-                  };
-                  //MessageBox.Show("Se ha seleccionado el usuario: " + item.Nombre + " Fecha inicio " + item.FechaInicio + " Fecha fin " + item.FechaFin);
-                  //TODO: aqui meter sacar listado de aausencias de esta persona?
-                  var idpersona = ObteneridIdinetDesdeNombreUsuario(SActiveUser);
-                  obtenerListadoDeAusencias(idpersona);
-
-                  consultaEventosSQLdeFechas(item);
-                  TotalConjuntoHoras.Clear();
-                  TotalConjuntoHoras.Add(calculoTotalHorasDeLista());
-                  //UpdateUI();
+                  Tab.Add(new Division { Header = persona, Content = obtainListaFinalParaUsuario(persona) });
                }
+
 
             }
             else
@@ -289,6 +287,30 @@ namespace Presencia.ViewModel
          }
       }
 
+      private IObservable<ElementoListaResumenFinal> obtainListaFinalParaUsuario(string persona)
+      {
+
+         SActiveUser = persona;
+         SearchItem item = new SearchItem
+         {
+            Nombre = SActiveUser,
+            Id = ObtenerIdUser(),
+            CardCode = ObtenerCardCodeDeId(ObtenerIdUser()),
+            FechaInicio = StartDate,
+            FechaFin = EndDate.AddHours(23).AddMinutes(59)
+
+         };
+         //MessageBox.Show("Se ha seleccionado el usuario: " + item.Nombre + " Fecha inicio " + item.FechaInicio + " Fecha fin " + item.FechaFin);
+         var idpersona = ObteneridIdinetDesdeNombreUsuario(SActiveUser);
+         obtenerListadoDeAusencias(idpersona);
+         consultaEventosSQLdeFechas(item);
+         //TotalConjuntoHoras.Clear();
+         //TotalConjuntoHoras.Add(calculoTotalHorasDeLista());
+         //UpdateUI();
+         //TODO: Cambiar el null por la lista de elmentosfinal;
+         return null;
+      }
+
       bool SearchCommand_CanExecute(object parameters)
       {
          return true;
@@ -302,13 +324,13 @@ namespace Presencia.ViewModel
       {
          if (!SAreaCentro.Equals(""))
          {
-            MessageBox.Show("area: " + SAreaCentro);
+            // MessageBox.Show("area: " + SAreaCentro);
 
             //Todo: obtener usuarios de cada area
             //MessageBox.Show(ListaFiltradaporArea[0].Nombre);
 
 
-             ListaPersonas=ObtenerListadoPersonaldeArea();
+
 
          }
 
@@ -414,7 +436,7 @@ namespace Presencia.ViewModel
          dt.Columns.Add("Horas en el centro");
 
          var registro = from r in ElementoListaResumenFinal
-            select new { r.Nombre, r.Dia, r.Entrada, r.Salida, r.Ausencia, r.Aus_Entrada, r.Aus_Salida, r.Comentarios, r.HorasEnCentro };
+                        select new { r.Nombre, r.Dia, r.Entrada, r.Salida, r.Ausencia, r.Aus_Entrada, r.Aus_Salida, r.Comentarios, r.HorasEnCentro };
          foreach (var itemRegistro in registro)
          {
             dt.Rows.Add(itemRegistro.Nombre, itemRegistro.Dia, itemRegistro.Entrada, itemRegistro.Salida, itemRegistro.Ausencia, itemRegistro.Aus_Entrada, itemRegistro.Aus_Salida, itemRegistro.Comentarios, itemRegistro.HorasEnCentro);

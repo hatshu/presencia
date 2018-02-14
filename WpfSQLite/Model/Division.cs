@@ -7,17 +7,13 @@ using System.Threading.Tasks;
 
 namespace Presencia.Model
 {
-   class ElementoListaResumenFinal : INotifyPropertyChanged
+   class Division : INotifyPropertyChanged
    {
-      public string Nombre { get; set; }
-      public string Dia { get; set; }
-      public string Entrada { get; set; }
-      public string Salida { get; set; }
-      public string Ausencia { get; set; }
-      public string Aus_Entrada { get; set; }
-      public string Aus_Salida { get; set; }
-      public string HorasEnCentro { get; set; }
-      public string Comentarios { get; set; }
+
+
+      public string Header { get; set; }
+      public IObservable<ElementoListaResumenFinal> Content { get; set; }
+      public float HorasTotales { get; set; }
 
       //Para que se detecte cuando se cambia cada elemento
       public event PropertyChangedEventHandler PropertyChanged;

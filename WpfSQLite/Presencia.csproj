@@ -75,6 +75,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\Ausencia.cs" />
+    <Compile Include="Model\Division.cs" />
     <Compile Include="Model\ElementoListaResumen.cs" />
     <Compile Include="Model\ElementoListaResumenFinal.cs" />
     <Compile Include="Model\LockAuditTrail.cs" />
