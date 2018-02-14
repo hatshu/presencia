@@ -133,7 +133,7 @@ namespace Presencia.ViewModel
 
       public List<List<UserData>> UserDataxDiaDefinitivo;
 
-      //Se peude quitar el NotifyPropertyChanged y poner normal ya que no se bindea esta lista
+      //Se peude quitar el NotifyPropertyChanged y poner normal ya que no se bindea esta ListaPersonas
 
       private ObservableCollection<UserData> _listaFinal = new ObservableCollection<UserData>();
 
@@ -554,7 +554,7 @@ namespace Presencia.ViewModel
                itemAuditTrail.CardCode = miCardCode;
             }
 
-            //creacion de lista con los datos del usuario seleccionado de los dias pertinentes
+            //creacion de ListaPersonas con los datos del usuario seleccionado de los dias pertinentes
             foreach (var itemEvent in LockAuditTrailList)
             {
                if (itemEvent.CardCode.Equals(item.CardCode))
@@ -699,7 +699,7 @@ namespace Presencia.ViewModel
       }
       #endregion
 
-      #region Obtener lista con nombres, id, cardCode y areas DE SALTO
+      #region Obtener ListaPersonas con nombres, id, cardCode y areas DE SALTO
 
 
       void ObtenerIdUserAndCardCode()
@@ -848,7 +848,7 @@ namespace Presencia.ViewModel
             }
             connectionIdinet.Close();
 
-            //TODO: tratamiento de esa lista de ausencias para meterla en la lista de elementos a mostrar. Tambien habrá de desglosar las ausencias de inicio y dia diferente en varios dias
+            //TODO: tratamiento de esa ListaPersonas de ausencias para meterla en la ListaPersonas de elementos a mostrar. Tambien habrá de desglosar las ausencias de inicio y dia diferente en varios dias
             desglosarFechasdeAusenciasVariosDias();
             addAusenciasAListadeElementosAmostrar();
          }
@@ -922,7 +922,7 @@ namespace Presencia.ViewModel
       private void addAusenciasAListadeElementosAmostrar()
       {
          bool localizado = false;
-         //TODO: modificar esto para comprobar si el dia no existe en la lista de elementos a mostrar y añadir elemento
+         //TODO: modificar esto para comprobar si el dia no existe en la ListaPersonas de elementos a mostrar y añadir elemento
          foreach (var itemAusencias in ListaAuxAusencias)
          {
             foreach (var itemListaResumen in ElementoListaResumen)

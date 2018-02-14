@@ -59,7 +59,7 @@
 
             </Viewbox>
             <Viewbox Grid.Row="2" Grid.Column="1"  MaxWidth="120" MinWidth="40" HorizontalAlignment="Right"   >
-               <Label Name="AREA"  Content="Area    :" Style="{StaticResource whiteLabel}"  />
+               <Label Name="AREA"  Content="División:" Style="{StaticResource whiteLabel}"  />
             </Viewbox>
 
             <!--<ComboBox Name="ComboBox" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" MaxHeight="35"></ComboBox>-->
@@ -114,7 +114,7 @@
                      </GridView>
                   </ListView.View>
                </ListView>-->
-            <DataGrid ItemsSource="{Binding ElementoListaResumenFinal}"  ColumnWidth="*" />
+            <DataGrid ItemsSource="{Binding ElementoListaResumenFinal}"  ColumnWidth="*" Margin="6,0,-6,0" />
          </Grid>
 
       </Grid>

@@ -133,7 +133,7 @@ namespace Presencia.ViewModel
 
       public List<List<UserData>> UserDataxDiaDefinitivo;
 
-      //Se peude quitar el NotifyPropertyChanged y poner normal ya que no se bindea esta lista
+      //Se peude quitar el NotifyPropertyChanged y poner normal ya que no se bindea esta ListaPersonas
 
       private ObservableCollection<UserData> _listaFinal = new ObservableCollection<UserData>();
 
@@ -184,7 +184,17 @@ namespace Presencia.ViewModel
 
       }
 
+      public ObservableCollection<string> _listaPersonas = new ObservableCollection<string>();
+      public ObservableCollection<string> ListaPersonas
+      {
+         get { return _listaPersonas; }
+         set
+         {
+            _listaPersonas = value;
+            NotifyPropertyChanged("ListaPersonas");
+         }
 
+      }
 
       #endregion
 
@@ -201,9 +211,7 @@ namespace Presencia.ViewModel
          UserDataxDia = new ObservableCollection<UserData>();
          SAreaCentro = "";
          UserDataxDiaDefinitivo = new List<List<UserData>>();
-
          ObtenerIdUserAndCardCode();
-         //TODO: por aqui
          //cargaCombobox();
          foreach (var item in UsersIdAndNameList)
          {
@@ -239,32 +247,37 @@ namespace Presencia.ViewModel
       {
          if (SearchCommand_CanExecute(parameters))
          {
-            if (SActiveUser != null && StartDate <= EndDate && StartDate <= DateTime.Today.Date && EndDate <= DateTime.Today.Date)
+            if (SAreaCentro != null && StartDate <= EndDate && StartDate <= DateTime.Today.Date && EndDate <= DateTime.Today.Date)
             {
-               SearchItem item = new SearchItem
+               foreach (var itemDataUser in ListaFiltradaporArea)
                {
-                  Nombre = SActiveUser,
-                  Id = ObtenerIdUser(),
-                  CardCode = ObtenerCardCodeDeId(ObtenerIdUser()),
-                  FechaInicio = StartDate,
-                  FechaFin = EndDate.AddHours(23).AddMinutes(59)
+                  SActiveUser = itemDataUser.Nombre;
+                  SearchItem item = new SearchItem
+                  {
+                     Nombre = SActiveUser,
+                     Id = ObtenerIdUser(),
+                     CardCode = ObtenerCardCodeDeId(ObtenerIdUser()),
+                     FechaInicio = StartDate,
+                     FechaFin = EndDate.AddHours(23).AddMinutes(59)
 
-               };
-               //MessageBox.Show("Se ha seleccionado el usuario: " + item.Nombre + " Fecha inicio " + item.FechaInicio + " Fecha fin " + item.FechaFin);
-               //TODO: aqui meter sacar listado de aausencias de esta persona?
-               var idpersona = ObteneridIdinetDesdeNombreUsuario(SActiveUser);
-               obtenerListadoDeAusencias(idpersona);
+                  };
+                  //MessageBox.Show("Se ha seleccionado el usuario: " + item.Nombre + " Fecha inicio " + item.FechaInicio + " Fecha fin " + item.FechaFin);
+                  //TODO: aqui meter sacar listado de aausencias de esta persona?
+                  var idpersona = ObteneridIdinetDesdeNombreUsuario(SActiveUser);
+                  obtenerListadoDeAusencias(idpersona);
 
-               consultaEventosSQLdeFechas(item);
-               TotalConjuntoHoras.Clear();
-               TotalConjuntoHoras.Add(calculoTotalHorasDeLista());
-               //UpdateUI();
+                  consultaEventosSQLdeFechas(item);
+                  TotalConjuntoHoras.Clear();
+                  TotalConjuntoHoras.Add(calculoTotalHorasDeLista());
+                  //UpdateUI();
+               }
+
             }
             else
             {
-               if (SActiveUser == null)
+               if (SAreaCentro == null)
                {
-                  MessageBox.Show("El campo usuario está vacio");
+                  MessageBox.Show("El campo división esta vacío");
 
                }
                else
@@ -289,11 +302,29 @@ namespace Presencia.ViewModel
       {
          if (!SAreaCentro.Equals(""))
          {
-            //MessageBox.Show("area: " + SAreaCentro);
+            MessageBox.Show("area: " + SAreaCentro);
+
+            //Todo: obtener usuarios de cada area
+            //MessageBox.Show(ListaFiltradaporArea[0].Nombre);
+
+
+             ListaPersonas=ObtenerListadoPersonaldeArea();
 
          }
 
       }
+
+      private ObservableCollection<string> ObtenerListadoPersonaldeArea()
+      {
+
+         foreach (var user in ListaFiltradaporArea)
+         {
+            ListaPersonas.Add(user.Nombre);
+         }
+         return ListaPersonas;
+
+      }
+
       bool SelectionChangedArea_CanExecute(object parameters)
       {
          return true;
@@ -554,7 +585,7 @@ namespace Presencia.ViewModel
                itemAuditTrail.CardCode = miCardCode;
             }
 
-            //creacion de lista con los datos del usuario seleccionado de los dias pertinentes
+            //creacion de ListaPersonas con los datos del usuario seleccionado de los dias pertinentes
             foreach (var itemEvent in LockAuditTrailList)
             {
                if (itemEvent.CardCode.Equals(item.CardCode))
@@ -699,7 +730,7 @@ namespace Presencia.ViewModel
       }
       #endregion
 
-      #region Obtener lista con nombres, id, cardCode y areas DE SALTO
+      #region Obtener ListaPersonas con nombres, id, cardCode y areas DE SALTO
 
 
       void ObtenerIdUserAndCardCode()
@@ -848,7 +879,7 @@ namespace Presencia.ViewModel
             }
             connectionIdinet.Close();
 
-            //TODO: tratamiento de esa lista de ausencias para meterla en la lista de elementos a mostrar. Tambien habrá de desglosar las ausencias de inicio y dia diferente en varios dias
+            //TODO: tratamiento de esa ListaPersonas de ausencias para meterla en la ListaPersonas de elementos a mostrar. Tambien habrá de desglosar las ausencias de inicio y dia diferente en varios dias
             desglosarFechasdeAusenciasVariosDias();
             addAusenciasAListadeElementosAmostrar();
          }
@@ -922,7 +953,7 @@ namespace Presencia.ViewModel
       private void addAusenciasAListadeElementosAmostrar()
       {
          bool localizado = false;
-         //TODO: modificar esto para comprobar si el dia no existe en la lista de elementos a mostrar y añadir elemento
+         //TODO: modificar esto para comprobar si el dia no existe en la ListaPersonas de elementos a mostrar y añadir elemento
          foreach (var itemAusencias in ListaAuxAusencias)
          {
             foreach (var itemListaResumen in ElementoListaResumen)
