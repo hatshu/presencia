@@ -25,7 +25,7 @@ namespace Presencia.View
 
       private void help_Click(object sender, RoutedEventArgs e)
       {
-
+         NavigationService?.Navigate(new StartxDivision());
       }
    }
 }

@@ -1,0 +1,147 @@
+﻿<Page x:Class="Presencia.View.StartxDivision"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Presencia.View"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      mc:Ignorable="d"
+      Style="{StaticResource GenericPageStyle}"
+      d:DesignWidth="{Binding Source={x:Static SystemParameters.FullPrimaryScreenWidth}}"
+      d:DesignHeight="{Binding Source={x:Static SystemParameters.FullPrimaryScreenHeight}}"
+      Title="StartxDivision">
+
+   <Grid>
+
+      <Grid.RowDefinitions>
+         <RowDefinition Height="100*"/>
+         <RowDefinition Height="10*"/>
+      </Grid.RowDefinitions>
+      <Grid Grid.Row="0">
+         <Grid.RowDefinitions>
+            <RowDefinition Height="24*"/>
+            <RowDefinition Height="194*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="770*"/>
+            <RowDefinition Height="33*"/>
+         </Grid.RowDefinitions>
+         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="100*"/>
+            <ColumnDefinition Width="1*"/>
+         </Grid.ColumnDefinitions>
+         <Rectangle Grid.Row="1" Grid.Column="1" Style="{StaticResource GenericRectangleStyle}" ></Rectangle>
+         <Rectangle Grid.Row="3" Grid.Column="1" Style="{StaticResource GenericRectangleStyle}" ></Rectangle>
+         <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+               <ColumnDefinition Width="337*"/>
+               <ColumnDefinition Width="168*"/>
+               <ColumnDefinition Width="238*"/>
+               <ColumnDefinition Width="164*"/>
+               <ColumnDefinition Width="616*"/>
+               <ColumnDefinition Width="286*"/>
+               <ColumnDefinition Width="73*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+               <RowDefinition Height="29*"/>
+               <RowDefinition Height="97*"/>
+               <RowDefinition Height="97*"/>
+               <RowDefinition Height="29*"/>
+            </Grid.RowDefinitions>
+            <Image x:Name="Logo" Source="/Presencia;component/Resources/catecLogo.png" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" MinHeight="100"  />
+            <Viewbox Grid.Row="1" Grid.Column="1"  MaxWidth="120" MinWidth="40" HorizontalAlignment="Right"   >
+               <Label Name="Nombre"  Content="Usuario:" Style="{StaticResource whiteLabel}"  />
+            </Viewbox>
+
+            <!--<ComboBox Name="ComboBox" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" MaxHeight="35"></ComboBox>-->
+            <Viewbox MaxHeight="55" MinHeight="20" Grid.Row="1" Grid.Column="2"  HorizontalAlignment="Left"   >
+               <ComboBox Name="ComboBox"  ItemsSource="{Binding Path=ListaFiltradaporArea}" DisplayMemberPath="Nombre" SelectedValue="{Binding Path=SActiveUser}" SelectedValuePath="Nombre" Margin="3,3,3,3" ></ComboBox>
+               <!--<ComboBox Name="ComboBox"  ItemsSource="{Binding Path=UsersIdAndNameList}" DisplayMemberPath="Nombre" SelectedValue="{Binding Path=SActiveUser}" SelectedValuePath="Nombre" Margin="3,3,3,3" ></ComboBox>-->
+
+            </Viewbox>
+            <Viewbox Grid.Row="2" Grid.Column="1"  MaxWidth="120" MinWidth="40" HorizontalAlignment="Right"   >
+               <Label Name="AREA"  Content="Area    :" Style="{StaticResource whiteLabel}"  />
+            </Viewbox>
+
+            <!--<ComboBox Name="ComboBox" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" MaxHeight="35"></ComboBox>-->
+            <Viewbox MaxHeight="55" MinHeight="20" Grid.Row="2" Grid.Column="2"  HorizontalAlignment="Left"   >
+               <ComboBox Name="ComboBoxArea"  ItemsSource="{Binding Path=AreasCentro,UpdateSourceTrigger=PropertyChanged}" SelectedValue="{Binding Path=SAreaCentro}" SelectedIndex="0"  Margin="3,3,3,3">
+                  <i:Interaction.Triggers>
+                     <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding SelectionChangedArea}"
+                                               CommandParameter="{Binding SAreaCentro}" />
+                     </i:EventTrigger>
+                  </i:Interaction.Triggers>
+               </ComboBox>
+            </Viewbox>
+
+            <Viewbox Grid.Row="1" Grid.Column="3" MaxWidth="120" MinWidth="40" HorizontalAlignment="Right" >
+               <Label Name="FechaInicio"  Content="Inicio:    " Style="{StaticResource whiteLabel}" />
+            </Viewbox>
+            <Viewbox Grid.Row="2" Grid.Column="3" MaxWidth="120" MinWidth="40" HorizontalAlignment="Right"  >
+               <Label Name="FechaFin"  Content="Fin:       " Style="{StaticResource whiteLabel}"/>
+            </Viewbox>
+            <Viewbox Grid.Column="4"  Grid.Row="1" HorizontalAlignment="Left"  >
+               <DatePicker Name="DatePickerInicio"  SelectedDate="{Binding StartDate, Mode=TwoWay}"  BorderThickness="0" Margin=" 3 3 3 3" MaxWidth="200"   MinWidth="100"/>
+            </Viewbox>
+            <Viewbox Grid.Column="4"  Grid.Row="2" HorizontalAlignment="Left"  >
+               <DatePicker Name="DatePickerFin" SelectedDate="{Binding EndDate, Mode=TwoWay}" BorderThickness="0" Margin=" 3 3 3 3"  MaxWidth="200"   MinWidth="100"/>
+            </Viewbox>
+            <Viewbox Grid.Row="1" Grid.Column="5"  >
+               <Button Content="Buscar" Style="{StaticResource MetroButton}" Command="{Binding SearchCommand}" MaxHeight="30" MinWidth="90" Margin="1 1 1 1"></Button>
+            </Viewbox>
+            <Viewbox Grid.Row="2" Grid.Column="5"  >
+               <Button Content="Exportar" Style="{StaticResource MetroButton}"  Command="{Binding ExportarCommand}" MaxHeight="30" MinWidth="90" Margin="1 1 1 1"></Button>
+            </Viewbox>
+
+
+         </Grid>
+         <Grid Grid.Row="3" Grid.Column="1">
+
+
+
+            <!--<ListView Name="ListView"  Background="Transparent"  Style="{StaticResource ListViewStyle}"   ItemsSource="{Binding ListaFinal}" ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2"    >
+
+               <ListView.View>
+                     <GridView  >
+                        <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Usuario"  DisplayMemberBinding="{Binding Nombre, Mode=TwoWay}" Width="Auto" ></GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Dia"  DisplayMemberBinding="{Binding FechaEvento, Mode=TwoWay,  StringFormat=dd:mm:yy}" Width="Auto"></GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Ausencia"  DisplayMemberBinding="{Binding Ausencia}"  Width="Auto"></GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Inicio Ausencia"  DisplayMemberBinding="{Binding AusenciaEntrada,  StringFormat=HH:mm}"  Width="Auto"></GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Fin Ausencia"  DisplayMemberBinding="{Binding AusenciaSalida,  StringFormat=HH:mm}"  Width="Auto"></GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Hora Entrada"  DisplayMemberBinding="{Binding Entrada, Mode=TwoWay,  StringFormat=HH:mm}" Width="Auto"></GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Hora Salida"  DisplayMemberBinding="{Binding Salida, Mode=TwoWay,  StringFormat=HH:mm}" Width="Auto"></GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource myHeaderStyle}"  Header="Total Horas"  DisplayMemberBinding="{Binding TotalHoras, StringFormat=HH:mm}"  Width="Auto"></GridViewColumn>
+                     </GridView>
+                  </ListView.View>
+               </ListView>-->
+            <DataGrid ItemsSource="{Binding ElementoListaResumenFinal}"  ColumnWidth="*" />
+         </Grid>
+
+      </Grid>
+      <Grid Row="1">
+         <Grid.RowDefinitions>
+            <RowDefinition Height="49*"/>
+            <RowDefinition Height="5*"/>
+         </Grid.RowDefinitions>
+         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="12*"/>
+            <ColumnDefinition Width="228*"/>
+            <ColumnDefinition Width="1039*"/>
+            <ColumnDefinition Width="392*"/>
+            <ColumnDefinition Width="249*"/>
+         </Grid.ColumnDefinitions>
+
+         <Viewbox Grid.Row="0" Grid.Column="1" >
+            <Button Name="back" Content="Back" Style="{StaticResource MetroButton}"   MinWidth="45" Click="Back_OnClick"></Button>
+         </Viewbox>
+         <Viewbox Grid.Row="0" Grid.Column="3" >
+            <Label Style="{StaticResource whiteLabel}"  Content="Total de horas:" ></Label>
+         </Viewbox>
+         <Viewbox Grid.Row="0" Grid.Column="4">
+            <TextBlock Name="LabelHorasTotales"  Text="{Binding TotalConjuntoHoras[0]}" Style="{StaticResource TextBlockGeneric}"  HorizontalAlignment="Left"></TextBlock>
+         </Viewbox>
+      </Grid>
+
+   </Grid>
+</Page>
