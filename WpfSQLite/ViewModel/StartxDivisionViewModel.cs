@@ -269,7 +269,12 @@ namespace Presencia.ViewModel
                ListaPersonas = ObtenerListadoPersonaldeArea();
                foreach (var persona in ListaPersonas)
                {
-                  Tab.Add(new Division { Header = persona, Content = obtainListaFinalParaUsuario(persona) });
+                  Tab.Add(new Division { Header = persona, Content = obtainListaFinalParaUsuario(persona)});
+               }
+
+               foreach (var tabitem in Tab)
+               {
+                  tabitem.HorasTotales = calculoTotalHorasDeListaParaCadaPersona(tabitem.Header);
                }
 
 
@@ -309,7 +314,7 @@ namespace Presencia.ViewModel
          consultaEventosSQLdeFechas(item);
 
          //TotalConjuntoHoras.Clear();
-         //TotalConjuntoHoras.Add(calculoTotalHorasDeLista());
+         //TotalConjuntoHoras.Add(calculoTotalHorasDeListaParaCadaPersona());
          //UpdateUI();
          //TODO: Cambiar el null por la lista de elmentosfinal;
          //var element = new ElementoListaResumenFinal
@@ -405,7 +410,7 @@ namespace Presencia.ViewModel
          }
          var ws = wb.Worksheet(1);
          ws.Name = SActiveUser;
-         wb.Cell(calculoTotalHorasDeLista());
+         //wb.Cell(calculoTotalHorasDeListaParaCadaPersona());
          wb.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
          wb.Style.Font.Bold = true;
          var file = Nombre + "_" + Fecha + ".xlsx";
@@ -537,21 +542,28 @@ namespace Presencia.ViewModel
 
       #region Horas Totales y conocer Tipos de Eventos DE SALTO
 
-      private string calculoTotalHorasDeLista()
+      private string calculoTotalHorasDeListaParaCadaPersona(string persona)
       {
          float horas = 0, min = 0, enminutos = 0, enhoras = 0;
          string hora = " ";
 
-         foreach (var itemData in ListaFinal)
+         foreach (var itemDivision in Tab)
          {
-            horas = itemData.TotalHoras.Hour + horas;
-            min = itemData.TotalHoras.Minute + min;
+            if (itemDivision.Header.Equals(persona))
+            {
+               foreach (var itemContent in itemDivision.Content)
+               {
+                  var horasArray=itemContent.HorasEnCentro.Split(':');
+                  horas = Convert.ToInt32(horasArray[0])  + horas;
+                  min = Convert.ToInt32(horasArray[1]) + min;
+               }
+               enminutos = (horas * 60) + min;
+               enhoras = enminutos / 60;
+               hora = enhoras.ToString(CultureInfo.InvariantCulture);
+               return hora;
+            }
          }
-         enminutos = (horas * 60) + min;
-         enhoras = enminutos / 60;
-         hora = enhoras.ToString(CultureInfo.InvariantCulture);
-
-         return hora;
+         return "No hay horas";
       }
 
       private string conocertipodeevento(LockAuditTrail itemEvent)
@@ -773,7 +785,7 @@ namespace Presencia.ViewModel
          //TODO: probar si va bien aqui
          addAusenciasAListadeElementosAmostrar();
 
-         
+
 
       }
    #endregion

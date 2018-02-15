@@ -14,7 +14,7 @@ namespace Presencia.Model
 
       public string Header { get; set; }
       public ObservableCollection<ElementoListaResumenFinal> Content { get; set; }
-      public float HorasTotales { get; set; }
+      public string HorasTotales { get; set; }
 
       //Para que se detecte cuando se cambia cada elemento
       public event PropertyChangedEventHandler PropertyChanged;

@@ -106,8 +106,15 @@
             <TabControl.ContentTemplate>
                <!-- this is the body of the TabItem template-->
                <DataTemplate>
+                  <StackPanel>
                   <DataGrid ItemsSource="{Binding Content}" ColumnWidth="*"/>
+                     
+                        <Label Style="{StaticResource whiteLabel}"  Content="Total de horas:" ></Label>
+                   
+                     <TextBlock Name="LabelHorasTotales"  Text="{Binding HorasTotales}" Style="{StaticResource TextBlockGeneric}"  HorizontalAlignment="Left"></TextBlock>
+                  </StackPanel>
                </DataTemplate>
+              
             </TabControl.ContentTemplate>
          </TabControl>
         
@@ -129,11 +136,9 @@
          <Viewbox Grid.Row="0" Grid.Column="1" >
             <Button Name="back" Content="Back" Style="{StaticResource MetroButton}"   MinWidth="45" Click="Back_OnClick"></Button>
          </Viewbox>
-         <Viewbox Grid.Row="0" Grid.Column="3" >
-            <Label Style="{StaticResource whiteLabel}"  Content="Total de horas:" ></Label>
-         </Viewbox>
+
          <Viewbox Grid.Row="0" Grid.Column="4">
-            <TextBlock Name="LabelHorasTotales"  Text="{Binding TotalConjuntoHoras[0]}" Style="{StaticResource TextBlockGeneric}"  HorizontalAlignment="Left"></TextBlock>
+            <!--<TextBlock Name="LabelHorasTotales"  Text="{Binding Tab.HorasTotales}" Style="{StaticResource TextBlockGeneric}"  HorizontalAlignment="Left"></TextBlock>-->
          </Viewbox>
       </Grid>
 
