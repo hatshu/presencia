@@ -259,6 +259,9 @@ namespace Presencia.ViewModel
 
       void SearchCommand_Execute(object parameters)
       {
+         Tab.Clear();
+         ElementoListaResumenFinal.Clear();
+         ListaPersonas.Clear();
          if (SearchCommand_CanExecute(parameters))
          {
             if (SAreaCentro != null && StartDate <= EndDate && StartDate <= DateTime.Today.Date && EndDate <= DateTime.Today.Date)
@@ -287,9 +290,9 @@ namespace Presencia.ViewModel
          }
       }
 
-      private IObservable<ElementoListaResumenFinal> obtainListaFinalParaUsuario(string persona)
+      private ObservableCollection<ElementoListaResumenFinal> obtainListaFinalParaUsuario(string persona)
       {
-
+         ObservableCollection<ElementoListaResumenFinal> listaParaPersonaConcreta = new ObservableCollection<ElementoListaResumenFinal>();
          SActiveUser = persona;
          SearchItem item = new SearchItem
          {
@@ -301,14 +304,42 @@ namespace Presencia.ViewModel
 
          };
          //MessageBox.Show("Se ha seleccionado el usuario: " + item.Nombre + " Fecha inicio " + item.FechaInicio + " Fecha fin " + item.FechaFin);
-         var idpersona = ObteneridIdinetDesdeNombreUsuario(SActiveUser);
+         var idpersona = ObteneridIdinetDesdeNombreUsuario(persona);
          obtenerListadoDeAusencias(idpersona);
          consultaEventosSQLdeFechas(item);
+
          //TotalConjuntoHoras.Clear();
          //TotalConjuntoHoras.Add(calculoTotalHorasDeLista());
          //UpdateUI();
          //TODO: Cambiar el null por la lista de elmentosfinal;
-         return null;
+         //var element = new ElementoListaResumenFinal
+         //{
+         //   Nombre = SActiveUser,
+         //   Comentarios = "Comentario"
+         //};
+         //var element2 = new ElementoListaResumenFinal
+         //{
+         //   Nombre = SActiveUser,
+         //   Comentarios = "Comentario2"
+         //};
+         //listaParaPersonaConcreta.Add(element);
+         //listaParaPersonaConcreta.Add(element2);
+         foreach (var itemListaPrincipal in ElementoListaResumenFinal)
+         {
+            var itemPersona = new ElementoListaResumenFinal
+            {
+               Nombre = itemListaPrincipal.Nombre,
+               Entrada = itemListaPrincipal.Entrada,
+               Salida = itemListaPrincipal.Salida,
+               Ausencia = itemListaPrincipal.Ausencia,
+               Aus_Entrada = itemListaPrincipal.Aus_Entrada,
+               Aus_Salida = itemListaPrincipal.Aus_Salida,
+               HorasEnCentro = itemListaPrincipal.HorasEnCentro,
+               Comentarios = itemListaPrincipal.Comentarios
+            };
+            listaParaPersonaConcreta.Add(itemPersona);
+         }
+         return listaParaPersonaConcreta;
       }
 
       bool SearchCommand_CanExecute(object parameters)
@@ -325,13 +356,8 @@ namespace Presencia.ViewModel
          if (!SAreaCentro.Equals(""))
          {
             // MessageBox.Show("area: " + SAreaCentro);
-
             //Todo: obtener usuarios de cada area
             //MessageBox.Show(ListaFiltradaporArea[0].Nombre);
-
-
-
-
          }
 
       }
@@ -359,7 +385,6 @@ namespace Presencia.ViewModel
       void ExportarCommand_Execute(object parameters)
       {
          //ElementoListaResumen.Clear();
-         //TODO: comprobar que hay elementos para exportar para que no de error
 
          if (ElementoListaResumenFinal.Count == 0)
          {
@@ -566,7 +591,6 @@ namespace Presencia.ViewModel
       //SACA LISTA DE ENTRADAS Y SALIDAS
       private void consultaEventosSQLdeFechas(SearchItem item)
       {
-
          //Hacer consulta sql de entradas y salidas de todos los cardode en las fechas seleccionadas
          SqlConnection connSalto = new SqlConnection(conexionStringSalto);
          LockAuditTrailList.Clear();
@@ -749,13 +773,15 @@ namespace Presencia.ViewModel
          //TODO: probar si va bien aqui
          addAusenciasAListadeElementosAmostrar();
 
+         
+
       }
-      #endregion
+   #endregion
 
-      #region Obtener ListaPersonas con nombres, id, cardCode y areas DE SALTO
+   #region Obtener ListaPersonas con nombres, id, cardCode y areas DE SALTO
 
 
-      void ObtenerIdUserAndCardCode()
+   void ObtenerIdUserAndCardCode()
       {
          //OBTENCION DE NOMBRE DE USUARIO E ID USER
          SqlConnection conn = new SqlConnection(conexionStringSalto);
@@ -985,7 +1011,7 @@ namespace Presencia.ViewModel
                   itemListaResumen.Ausencia = itemAusencias.Tipo;
                   //TODO: pillar la hora real
                   itemListaResumen.Aus_Entrada = itemAusencias.FechaInicio.Substring(10, 8);
-                  //TOPO: pillar salida real
+                  //TODO: pillar salida real
                   itemListaResumen.Aus_Salida = itemAusencias.FechaFin.Substring(10, 8);
                   itemListaResumen.Comentarios = itemAusencias.Comentarios;
                   itemAusencias.localizadoEnSalto = true;

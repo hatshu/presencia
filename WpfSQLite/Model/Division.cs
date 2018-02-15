@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace Presencia.Model
 
 
       public string Header { get; set; }
-      public IObservable<ElementoListaResumenFinal> Content { get; set; }
+      public ObservableCollection<ElementoListaResumenFinal> Content { get; set; }
       public float HorasTotales { get; set; }
 
       //Para que se detecte cuando se cambia cada elemento
