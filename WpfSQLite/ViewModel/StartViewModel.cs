@@ -827,7 +827,7 @@ namespace Presencia.ViewModel
             ListaAuxAusencias.Clear();
             connectionIdinet.Open();
             string Query =
-               "SELECT[IdProceso],[Comienzo],[Fin],[Tipo],[IdPersona],[Descripcion] FROM FUT_Calendario WHERE IdPersona ='" + idIdinet + "' AND Fin >='" + StartDate + "' AND Fin  <='" + EndDate + "' ";
+               "SELECT[IdProceso],[Comienzo],[Fin],[Tipo],[IdPersona],[Descripcion] FROM FUT_Calendario WHERE IdPersona ='" + idIdinet + "' AND Fin >='" + StartDate + "'";
             SqlCommand createCommand = new SqlCommand(Query, connectionIdinet);
             SqlDataReader dr = createCommand.ExecuteReader();
             while (dr.Read())

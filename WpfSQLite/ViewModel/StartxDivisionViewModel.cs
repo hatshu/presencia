@@ -276,6 +276,7 @@ namespace Presencia.ViewModel
                {
                   tabitem.HorasTotales = calculoTotalHorasDeListaParaCadaPersona(tabitem.Header);
                }
+               UpdateUI();
 
 
             }
@@ -334,6 +335,7 @@ namespace Presencia.ViewModel
             var itemPersona = new ElementoListaResumenFinal
             {
                Nombre = itemListaPrincipal.Nombre,
+               Dia = itemListaPrincipal.Dia,
                Entrada = itemListaPrincipal.Entrada,
                Salida = itemListaPrincipal.Salida,
                Ausencia = itemListaPrincipal.Ausencia,
@@ -344,7 +346,9 @@ namespace Presencia.ViewModel
             };
             listaParaPersonaConcreta.Add(itemPersona);
          }
+         UpdateUI();
          return listaParaPersonaConcreta;
+
       }
 
       bool SearchCommand_CanExecute(object parameters)
@@ -907,7 +911,7 @@ namespace Presencia.ViewModel
          }
          return result;
       }
-      //TODO: asuncias
+      //TODO: ausencias
       private void obtenerListadoDeAusencias(int idIdinet)
       {
 
@@ -918,7 +922,9 @@ namespace Presencia.ViewModel
             ListaAuxAusencias.Clear();
             connectionIdinet.Open();
             string Query =
-               "SELECT[IdProceso],[Comienzo],[Fin],[Tipo],[IdPersona],[Descripcion] FROM FUT_Calendario WHERE IdPersona ='" + idIdinet + "' AND Fin >='" + StartDate + "' AND Fin  <='" + EndDate + "' ";
+               "SELECT[IdProceso],[Comienzo],[Fin],[Tipo],[IdPersona],[Descripcion] FROM FUT_Calendario WHERE IdPersona ='" + idIdinet + "' AND Fin >='" + StartDate + "'";
+            //"SELECT[IdProceso],[Comienzo],[Fin],[Tipo],[IdPersona],[Descripcion] FROM FUT_Calendario WHERE IdPersona ='" + idIdinet + "' AND Fin >='" + StartDate + "' AND Fin  <='" + EndDate + "' ";
+
             SqlCommand createCommand = new SqlCommand(Query, connectionIdinet);
             SqlDataReader dr = createCommand.ExecuteReader();
             while (dr.Read())
