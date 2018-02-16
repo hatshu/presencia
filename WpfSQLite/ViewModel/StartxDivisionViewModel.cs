@@ -269,16 +269,13 @@ namespace Presencia.ViewModel
                ListaPersonas = ObtenerListadoPersonaldeArea();
                foreach (var persona in ListaPersonas)
                {
-                  Tab.Add(new Division { Header = persona, Content = obtainListaFinalParaUsuario(persona)});
+                  Tab.Add(new Division { Header = persona, Content = obtainListaFinalParaUsuario(persona) });
                }
 
                foreach (var tabitem in Tab)
                {
                   tabitem.HorasTotales = calculoTotalHorasDeListaParaCadaPersona(tabitem.Header);
                }
-               UpdateUI();
-
-
             }
             else
             {
@@ -553,12 +550,12 @@ namespace Presencia.ViewModel
 
          foreach (var itemDivision in Tab)
          {
-            if (itemDivision.Header.Equals(persona))
+            if (itemDivision.Header.Equals(persona) && itemDivision.Content != null)
             {
                foreach (var itemContent in itemDivision.Content)
                {
-                  var horasArray=itemContent.HorasEnCentro.Split(':');
-                  horas = Convert.ToInt32(horasArray[0])  + horas;
+                  var horasArray = itemContent.HorasEnCentro.Split(':');
+                  horas = Convert.ToInt32(horasArray[0]) + horas;
                   min = Convert.ToInt32(horasArray[1]) + min;
                }
                enminutos = (horas * 60) + min;
@@ -768,22 +765,16 @@ namespace Presencia.ViewModel
             elementoLista.Dia = DateTime.Parse(itemData.FechaEvento);
             elementoLista.Ausencia = itemData.Ausencia;
             elementoLista.Aus_Entrada = itemData.AusenciaEntrada.Hour.ToString() + ":" +
-                                        itemData.AusenciaEntrada.Minute.ToString() + ":" +
-                                        itemData.AusenciaEntrada.Second.ToString();
+                                        itemData.AusenciaEntrada.Minute.ToString();
             elementoLista.Aus_Salida = itemData.AusenciaSalida.Hour.ToString() + ":" +
-                                       itemData.AusenciaSalida.Minute.ToString() + ":" +
-                                       itemData.AusenciaSalida.Second.ToString();
+                                       itemData.AusenciaSalida.Minute.ToString();
             elementoLista.Entrada = itemData.Entrada.Hour.ToString() + ":" +
-                                    itemData.Entrada.Minute.ToString() + ":" +
-                                    itemData.Entrada.Second.ToString();
+                                    itemData.Entrada.Minute.ToString();
             elementoLista.Salida = itemData.Salida.Hour.ToString() + ":" +
-                                   itemData.Salida.Minute.ToString() + ":" +
-                                   itemData.Salida.Second.ToString();
+                                   itemData.Salida.Minute.ToString();
             elementoLista.HorasEnCentro = itemData.TotalHoras.Hour.ToString() + ":" +
-                                          itemData.TotalHoras.Minute.ToString() + ":" +
-                                          itemData.TotalHoras.Second.ToString();
+                                          itemData.TotalHoras.Minute.ToString();
             elementoLista.Comentarios = itemData.Comentarios;
-
             ElementoListaResumen.Add(elementoLista);
          }
          //TODO: probar si va bien aqui
@@ -792,12 +783,12 @@ namespace Presencia.ViewModel
 
 
       }
-   #endregion
+      #endregion
 
-   #region Obtener ListaPersonas con nombres, id, cardCode y areas DE SALTO
+      #region Obtener ListaPersonas con nombres, id, cardCode y areas DE SALTO
 
 
-   void ObtenerIdUserAndCardCode()
+      void ObtenerIdUserAndCardCode()
       {
          //OBTENCION DE NOMBRE DE USUARIO E ID USER
          SqlConnection conn = new SqlConnection(conexionStringSalto);
@@ -953,9 +944,6 @@ namespace Presencia.ViewModel
          {
             MessageBox.Show(e.Message);
          }
-
-
-
       }
 
       private void desglosarFechasdeAusenciasVariosDias()
@@ -965,6 +953,7 @@ namespace Presencia.ViewModel
 
          foreach (var itemAusencia in ListaAusenciasIDIdinet)
          {
+
             if (itemAusencia.FechaInicio.Substring(0, 10) != itemAusencia.FechaFin.Substring(0, 10))
             {
                if (DateTime.Parse(itemAusencia.FechaInicio) < StartDate)
@@ -985,8 +974,11 @@ namespace Presencia.ViewModel
                   itemAux.FechaInicio = itemAusencia.FechaInicio;
                   itemAux.FechaFin = itemAusencia.FechaFin;
                   itemAux.Comentarios = "Proceso: " + itemAusencia.proceso.ToString();
-                  ListaAuxAusencias.Add(itemAux);
-                  UpdateUI();
+                  if (DateTime.Parse(itemAux.Dia) < EndDate)
+                  {
+                     ListaAuxAusencias.Add(itemAux);
+                     UpdateUI();
+                  }
 
                }
 
@@ -1001,8 +993,12 @@ namespace Presencia.ViewModel
                itemAux.FechaInicio = itemAusencia.FechaInicio;
                itemAux.FechaFin = itemAusencia.FechaFin;
                itemAux.Comentarios = "Proceso: " + itemAusencia.proceso.ToString();
-               ListaAuxAusencias.Add(itemAux);
-               UpdateUI();
+               if (DateTime.Parse(itemAux.Dia) < EndDate)
+               {
+                  ListaAuxAusencias.Add(itemAux);
+                  UpdateUI();
+               }
+
             }
          }
       }
@@ -1019,12 +1015,14 @@ namespace Presencia.ViewModel
       private void addAusenciasAListadeElementosAmostrar()
       {
          bool localizado = false;
-         //TODO: modificar esto para comprobar si el dia no existe en la ListaPersonas de elementos a mostrar y añadir elemento
+         var fechafin = EndDate;
+
          foreach (var itemAusencias in ListaAuxAusencias)
          {
             foreach (var itemListaResumen in ElementoListaResumen)
             {
-               if (itemListaResumen.Dia.Date.ToShortDateString().Equals(itemAusencias.Dia.Substring(0, 10)))
+               var fechaFinDate = DateTime.Parse(itemAusencias.Dia);
+               if (itemListaResumen.Dia.Date.ToShortDateString().Equals(itemAusencias.Dia.Substring(0, 10)) && fechaFinDate < fechafin)
                {
                   itemListaResumen.Ausencia = itemAusencias.Tipo;
                   //TODO: pillar la hora real
@@ -1048,6 +1046,7 @@ namespace Presencia.ViewModel
                itemAux.Aus_Entrada = itemAusencia.FechaInicio.Substring(10, 8);
                itemAux.Aus_Salida = itemAusencia.FechaFin.Substring(10, 8);
                itemAux.Comentarios = itemAusencia.Comentarios;
+               itemAux.HorasEnCentro = "00:00";
                ElementoListaResumen.Add(itemAux);
 
             }
@@ -1073,8 +1072,6 @@ namespace Presencia.ViewModel
             element.Aus_Salida = itemLista.Aus_Salida;
             element.Comentarios = itemLista.Comentarios;
             element.HorasEnCentro = itemLista.HorasEnCentro;
-
-
             ElementoListaResumenFinal.Add(element);
          }
 
@@ -1103,6 +1100,7 @@ namespace Presencia.ViewModel
                itemAux.Nombre = SActiveUser;
                itemAux.Dia = DateTime.Parse(itemfiesta.Substring(0, 10));
                itemAux.Ausencia = "Festivo";
+               itemAux.HorasEnCentro = "00:00";
                ElementoListaResumen.Add(itemAux);
             }
          }

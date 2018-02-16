@@ -888,8 +888,11 @@ namespace Presencia.ViewModel
                   itemAux.FechaInicio = itemAusencia.FechaInicio;
                   itemAux.FechaFin = itemAusencia.FechaFin;
                   itemAux.Comentarios = "Proceso: " + itemAusencia.proceso.ToString();
-                  ListaAuxAusencias.Add(itemAux);
-                  UpdateUI();
+                  if (DateTime.Parse(itemAux.Dia) < EndDate)
+                  {
+                     ListaAuxAusencias.Add(itemAux);
+                     UpdateUI();
+                  }
 
                }
 
@@ -904,8 +907,11 @@ namespace Presencia.ViewModel
                itemAux.FechaInicio = itemAusencia.FechaInicio;
                itemAux.FechaFin = itemAusencia.FechaFin;
                itemAux.Comentarios = "Proceso: "+itemAusencia.proceso.ToString();
-               ListaAuxAusencias.Add(itemAux);
-               UpdateUI();
+               if (DateTime.Parse(itemAux.Dia) < EndDate)
+               {
+                  ListaAuxAusencias.Add(itemAux);
+                  UpdateUI();
+               }
             }
          }
       }
