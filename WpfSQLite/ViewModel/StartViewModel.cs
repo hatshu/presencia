@@ -170,6 +170,18 @@ namespace Presencia.ViewModel
             NotifyPropertyChanged("ElementoListaResumenFinal");
          }
       }
+      //TODO: por aqui . creado para que aparezcan los cambios sin tener que pulsar dos veces el raton
+      private ObservableCollection<ElementoListaResumenFinal> _elementoResumenFinal = new ObservableCollection<ElementoListaResumenFinal>();
+
+      public ObservableCollection<ElementoListaResumenFinal> ElementoResumenFinal
+      {
+         get { return _elementoResumenFinal; }
+         set
+         {
+            _elementoResumenFinal = value;
+            NotifyPropertyChanged("ElementoResumenFinal");
+         }
+      }
 
       private ObservableCollection<string> _totalConjuntoHoras;
 
@@ -201,7 +213,6 @@ namespace Presencia.ViewModel
          UserDataxDia = new ObservableCollection<UserData>();
          SAreaCentro = "";
          UserDataxDiaDefinitivo = new List<List<UserData>>();
-
          ObtenerIdUserAndCardCode();
          //TODO: por aqui
          //cargaCombobox();
@@ -675,20 +686,15 @@ namespace Presencia.ViewModel
             elementoLista.Dia = DateTime.Parse(itemData.FechaEvento);
             elementoLista.Ausencia = itemData.Ausencia;
             elementoLista.Aus_Entrada = itemData.AusenciaEntrada.Hour.ToString() + ":" +
-                                        itemData.AusenciaEntrada.Minute.ToString() + ":" +
-                                        itemData.AusenciaEntrada.Second.ToString();
+                                        itemData.AusenciaEntrada.Minute.ToString();
             elementoLista.Aus_Salida = itemData.AusenciaSalida.Hour.ToString() + ":" +
-                                       itemData.AusenciaSalida.Minute.ToString() + ":" +
-                                       itemData.AusenciaSalida.Second.ToString();
+                                       itemData.AusenciaSalida.Minute.ToString();
             elementoLista.Entrada = itemData.Entrada.Hour.ToString() + ":" +
-                                    itemData.Entrada.Minute.ToString() + ":" +
-                                    itemData.Entrada.Second.ToString();
+                                    itemData.Entrada.Minute.ToString();
             elementoLista.Salida = itemData.Salida.Hour.ToString() + ":" +
-                                   itemData.Salida.Minute.ToString() + ":" +
-                                   itemData.Salida.Second.ToString();
+                                   itemData.Salida.Minute.ToString();
             elementoLista.HorasEnCentro = itemData.TotalHoras.Hour.ToString() + ":" +
-                                          itemData.TotalHoras.Minute.ToString() + ":" +
-                                          itemData.TotalHoras.Second.ToString();
+                                          itemData.TotalHoras.Minute.ToString();
             elementoLista.Comentarios = itemData.Comentarios;
 
             ElementoListaResumen.Add(elementoLista);
@@ -858,7 +864,6 @@ namespace Presencia.ViewModel
          }
 
 
-
       }
 
       private void desglosarFechasdeAusenciasVariosDias()
@@ -888,7 +893,7 @@ namespace Presencia.ViewModel
                   itemAux.FechaInicio = itemAusencia.FechaInicio;
                   itemAux.FechaFin = itemAusencia.FechaFin;
                   itemAux.Comentarios = "Proceso: " + itemAusencia.proceso.ToString();
-                  if (DateTime.Parse(itemAux.Dia) < EndDate)
+                  if (DateTime.Parse(itemAux.Dia) <= EndDate)
                   {
                      ListaAuxAusencias.Add(itemAux);
                      UpdateUI();
@@ -982,8 +987,6 @@ namespace Presencia.ViewModel
             element.Aus_Salida = itemLista.Aus_Salida;
             element.Comentarios = itemLista.Comentarios;
             element.HorasEnCentro = itemLista.HorasEnCentro;
-
-
             ElementoListaResumenFinal.Add(element);
          }
 

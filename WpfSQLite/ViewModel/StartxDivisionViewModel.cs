@@ -77,10 +77,10 @@ namespace Presencia.ViewModel
       public DelegateCommand ExportarCommand { get; set; }
 
 
-      private ObservableCollection<IdUser> _usersIdAndNameList { get; set; }
+      private List<IdUser> _usersIdAndNameList { get; set; }
 
 
-      public ObservableCollection<IdUser> UsersIdAndNameList
+      public List<IdUser> UsersIdAndNameList
       {
          get { return _usersIdAndNameList; }
          set
@@ -171,18 +171,18 @@ namespace Presencia.ViewModel
          }
       }
 
-      private ObservableCollection<string> _totalConjuntoHoras;
+      //private ObservableCollection<string> _totalConjuntoHoras;
 
-      public ObservableCollection<string> TotalConjuntoHoras
-      {
-         get { return _totalConjuntoHoras; }
-         set
-         {
-            _totalConjuntoHoras = value;
-            NotifyPropertyChanged("TotalConjuntoHoras");
-         }
+      //public ObservableCollection<string> TotalConjuntoHoras
+      //{
+      //   get { return _totalConjuntoHoras; }
+      //   set
+      //   {
+      //      _totalConjuntoHoras = value;
+      //      NotifyPropertyChanged("TotalConjuntoHoras");
+      //   }
 
-      }
+      //}
 
       private ObservableCollection<string> _listaPersonas = new ObservableCollection<string>();
       public ObservableCollection<string> ListaPersonas
@@ -209,7 +209,6 @@ namespace Presencia.ViewModel
       }
 
 
-
       #endregion
 
       #region Constructor
@@ -217,7 +216,7 @@ namespace Presencia.ViewModel
       public StartxDivisionViewModel()
       {
          //ActiveUsers = new ObservableCollection<string>();
-         UsersIdAndNameList = new ObservableCollection<IdUser>();
+         UsersIdAndNameList = new List<IdUser>();
          ListaFiltradaporArea = new ObservableCollection<IdUser>();
          ListaAusenciasIDIdinet = new List<Ausencia>();
          ListaAuxAusencias = new List<Ausencia>();
@@ -238,7 +237,7 @@ namespace Presencia.ViewModel
          SearchCommand = new DelegateCommand(SearchCommand_Execute, SearchCommand_CanExecute);
          ExportarCommand = new DelegateCommand(ExportarCommand_Execute, ExportarCommand_CanExecute);
          SelectionChangedArea = new DelegateCommand(SelectionChangedArea_Execute, SelectionChangedArea_CanExecute);
-         TotalConjuntoHoras = new ObservableCollection<string>();
+         //TotalConjuntoHoras = new ObservableCollection<string>();
       }
 
       #endregion
@@ -477,7 +476,7 @@ namespace Presencia.ViewModel
          //create a new row from table
          var dataRow = dt.NewRow();
          dataRow[7] = "Horas en centro";
-         dataRow[8] = TotalConjuntoHoras[0].ToString();
+         //dataRow[8] = TotalConjuntoHoras[0].ToString();
          dt.Rows.Add(dataRow);
 
 
@@ -598,7 +597,7 @@ namespace Presencia.ViewModel
       }
 
 
-      #endregion DE SALTO
+
 
       #region Obtener Entradas y salidas DE BASE DE DATOS SALTO
       //SACA LISTA DE ENTRADAS Y SALIDAS
@@ -875,6 +874,8 @@ namespace Presencia.ViewModel
 
       #endregion
 
+      #endregion DE SALTO
+
       #region  IDINET
 
       private int ObteneridIdinetDesdeNombreUsuario(string nombre)
@@ -953,7 +954,6 @@ namespace Presencia.ViewModel
 
          foreach (var itemAusencia in ListaAusenciasIDIdinet)
          {
-
             if (itemAusencia.FechaInicio.Substring(0, 10) != itemAusencia.FechaFin.Substring(0, 10))
             {
                if (DateTime.Parse(itemAusencia.FechaInicio) < StartDate)
@@ -974,7 +974,7 @@ namespace Presencia.ViewModel
                   itemAux.FechaInicio = itemAusencia.FechaInicio;
                   itemAux.FechaFin = itemAusencia.FechaFin;
                   itemAux.Comentarios = "Proceso: " + itemAusencia.proceso.ToString();
-                  if (DateTime.Parse(itemAux.Dia) < EndDate)
+                  if (DateTime.Parse(itemAux.Dia) <= EndDate)
                   {
                      ListaAuxAusencias.Add(itemAux);
                      UpdateUI();
@@ -1011,7 +1011,7 @@ namespace Presencia.ViewModel
          diferenciadias = fechaFin - fechaInicio;
          return diferenciadias.Days;
       }
-
+      //TODO: elemento lista resumen tiene un fallo
       private void addAusenciasAListadeElementosAmostrar()
       {
          bool localizado = false;
@@ -1021,8 +1021,7 @@ namespace Presencia.ViewModel
          {
             foreach (var itemListaResumen in ElementoListaResumen)
             {
-               var fechaFinDate = DateTime.Parse(itemAusencias.Dia);
-               if (itemListaResumen.Dia.Date.ToShortDateString().Equals(itemAusencias.Dia.Substring(0, 10)) && fechaFinDate < fechafin)
+               if (itemListaResumen.Dia.Date.ToShortDateString().Equals(itemAusencias.Dia.Substring(0, 10)))
                {
                   itemListaResumen.Ausencia = itemAusencias.Tipo;
                   //TODO: pillar la hora real
@@ -1034,7 +1033,7 @@ namespace Presencia.ViewModel
                }
             }
          }
-         //TODO: añadir los que tienen a false localizado en salto /
+         //añadir los que tienen a false localizado en salto /
          foreach (var itemAusencia in ListaAuxAusencias)
          {
             if (itemAusencia.localizadoEnSalto == false)
@@ -1052,7 +1051,7 @@ namespace Presencia.ViewModel
             }
          }
 
-         //TODO: meter festivos
+         // meter festivos
          añadirFestivosDelRangoFechas();
 
 
@@ -1074,8 +1073,6 @@ namespace Presencia.ViewModel
             element.HorasEnCentro = itemLista.HorasEnCentro;
             ElementoListaResumenFinal.Add(element);
          }
-
-
       }
 
       private void añadirFestivosDelRangoFechas()
@@ -1152,6 +1149,7 @@ namespace Presencia.ViewModel
          //Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Background, new ThreadStart(delegate { }));
          Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new ThreadStart(delegate { }));
       }
+
 
 
    }
