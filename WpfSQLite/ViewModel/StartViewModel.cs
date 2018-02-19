@@ -319,7 +319,7 @@ namespace Presencia.ViewModel
          //ElementoListaResumen.Clear();
          //TODO: comprobar que hay elementos para exportar para que no de error
 
-         if (ElementoListaResumenFinal.Count==0)
+         if (ElementoResumenFinal.Count==0)
          {
             MessageBox.Show("No hay elementos a exportar.");
             return;
@@ -393,7 +393,7 @@ namespace Presencia.ViewModel
          dt.Columns.Add("Comentarios");
          dt.Columns.Add("Horas en el centro");
 
-         var registro = from r in ElementoListaResumenFinal
+         var registro = from r in ElementoResumenFinal
                         select new { r.Nombre, r.Dia, r.Entrada, r.Salida, r.Ausencia, r.Aus_Entrada, r.Aus_Salida ,r.Comentarios, r.HorasEnCentro };
          foreach (var itemRegistro in registro)
          {
@@ -518,7 +518,7 @@ namespace Presencia.ViewModel
       }
 
 
-      #endregion DE SALTO
+
 
       #region Obtener Entradas y salidas DE BASE DE DATOS SALTO
       //SACA LISTA DE ENTRADAS Y SALIDAS
@@ -531,9 +531,10 @@ namespace Presencia.ViewModel
          UserDataBrutoList.Clear();
          UserDataxDia.Clear();
          ListaFinal.Clear();
-
          ElementoListaResumen.Clear();
          ElementoListaResumenFinal.Clear();
+         ElementoResumenFinal.Clear();
+
          try
          {
             connSalto.Open();
@@ -788,12 +789,11 @@ namespace Presencia.ViewModel
 
       }
 
-
-
-
       #endregion
 
       #endregion
+
+      #endregion DE SALTO
 
       #region  IDINET
 
@@ -831,6 +831,7 @@ namespace Presencia.ViewModel
          {
             ListaAusenciasIDIdinet.Clear();
             ListaAuxAusencias.Clear();
+
             connectionIdinet.Open();
             string Query =
                "SELECT[IdProceso],[Comienzo],[Fin],[Tipo],[IdPersona],[Descripcion] FROM FUT_Calendario WHERE IdPersona ='" + idIdinet + "' AND Fin >='" + StartDate + "'";
@@ -896,7 +897,6 @@ namespace Presencia.ViewModel
                   if (DateTime.Parse(itemAux.Dia) <= EndDate)
                   {
                      ListaAuxAusencias.Add(itemAux);
-                     UpdateUI();
                   }
 
                }
@@ -912,10 +912,9 @@ namespace Presencia.ViewModel
                itemAux.FechaInicio = itemAusencia.FechaInicio;
                itemAux.FechaFin = itemAusencia.FechaFin;
                itemAux.Comentarios = "Proceso: "+itemAusencia.proceso.ToString();
-               if (DateTime.Parse(itemAux.Dia) < EndDate)
+               if (DateTime.Parse(itemAux.Dia) <= EndDate)
                {
                   ListaAuxAusencias.Add(itemAux);
-                  UpdateUI();
                }
             }
          }
@@ -990,6 +989,23 @@ namespace Presencia.ViewModel
             ElementoListaResumenFinal.Add(element);
          }
 
+
+         //TODO: pasar a una nueva lista para que no se tenga que refrescar la pantalla para reflejar cambios
+
+         foreach (var itemFinal in ElementoListaResumenFinal)
+         {
+            ElementoListaResumenFinal elementFinal = new ElementoListaResumenFinal();
+            elementFinal.Nombre = itemFinal.Nombre;
+            elementFinal.Dia = itemFinal.Dia;
+            elementFinal.Entrada = itemFinal.Entrada;
+            elementFinal.Salida = itemFinal.Salida;
+            elementFinal.Ausencia = itemFinal.Ausencia;
+            elementFinal.Aus_Entrada = itemFinal.Aus_Entrada;
+            elementFinal.Aus_Salida = itemFinal.Aus_Salida;
+            elementFinal.Comentarios = itemFinal.Comentarios;
+            elementFinal.HorasEnCentro = itemFinal.HorasEnCentro;
+            ElementoResumenFinal.Add(elementFinal);
+         }
 
       }
 

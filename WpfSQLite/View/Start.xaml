@@ -114,7 +114,7 @@
                      </GridView>
                   </ListView.View>
                </ListView>-->
-            <DataGrid ItemsSource="{Binding ElementoListaResumenFinal}"  ColumnWidth="*"  />
+            <DataGrid ItemsSource="{Binding ElementoResumenFinal}"  ColumnWidth="*"  />
          </Grid>
 
       </Grid>
