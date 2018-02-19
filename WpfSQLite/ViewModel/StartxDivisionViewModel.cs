@@ -294,6 +294,10 @@ namespace Presencia.ViewModel
 
       private ObservableCollection<ElementoListaResumenFinal> obtainListaFinalParaUsuario(string persona)
       {
+         ElementoListaResumenFinal.Clear();
+         ElementoListaResumen.Clear();
+         ListaAusenciasIDIdinet.Clear();
+         ListaAuxAusencias.Clear();
          ObservableCollection<ElementoListaResumenFinal> listaParaPersonaConcreta = new ObservableCollection<ElementoListaResumenFinal>();
          SActiveUser = persona;
          SearchItem item = new SearchItem
@@ -391,11 +395,13 @@ namespace Presencia.ViewModel
       {
          //ElementoListaResumen.Clear();
 
-         if (ElementoListaResumenFinal.Count == 0)
+         if (Tab.Count == 0)
          {
             MessageBox.Show("No hay elementos a exportar.");
             return;
          }
+
+         //TODO: CREAR VARIAS HOJAS UNA POR USUARIO
          DataSet ds = new DataSet();
          ds = CrearDataSet();
 
@@ -977,7 +983,6 @@ namespace Presencia.ViewModel
                   if (DateTime.Parse(itemAux.Dia) <= EndDate)
                   {
                      ListaAuxAusencias.Add(itemAux);
-                     UpdateUI();
                   }
 
                }
@@ -993,10 +998,9 @@ namespace Presencia.ViewModel
                itemAux.FechaInicio = itemAusencia.FechaInicio;
                itemAux.FechaFin = itemAusencia.FechaFin;
                itemAux.Comentarios = "Proceso: " + itemAusencia.proceso.ToString();
-               if (DateTime.Parse(itemAux.Dia) < EndDate)
+               if (DateTime.Parse(itemAux.Dia) <= EndDate)
                {
                   ListaAuxAusencias.Add(itemAux);
-                  UpdateUI();
                }
 
             }
