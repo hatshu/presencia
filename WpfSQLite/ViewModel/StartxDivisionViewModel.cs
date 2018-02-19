@@ -395,69 +395,88 @@ namespace Presencia.ViewModel
       {
          //ElementoListaResumen.Clear();
 
+
          if (Tab.Count == 0)
          {
             MessageBox.Show("No hay elementos a exportar.");
             return;
          }
 
-         //TODO: CREAR VARIAS HOJAS UNA POR USUARIO
-         DataSet ds = new DataSet();
-         ds = CrearDataSet();
-
-         var Nombre = ElementoListaResumen[0].Nombre;
-         var Fecha = StartDate.Date.ToShortDateString() + "_Al_" + EndDate.Date.ToShortDateString();
-         Fecha = Fecha.Replace("/", "_");
-         var wb = new XLWorkbook();
-
-         for (int i = 0; i < ds.Tables.Count; i++)
+         foreach (var itemTab in Tab)
          {
-            wb.Worksheets.Add(ds.Tables[i], ds.Tables[i].TableName);
-         }
-         var ws = wb.Worksheet(1);
-         ws.Name = SActiveUser;
-         //wb.Cell(calculoTotalHorasDeListaParaCadaPersona());
-         wb.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-         wb.Style.Font.Bold = true;
-         var file = Nombre + "_" + Fecha + ".xlsx";
-         if (File.Exists(file))
-         {
-            MessageBoxButton button = MessageBoxButton.OKCancel;
-            var result = MessageBox.Show("El archivo ya existe, pulse ACEPTAR para sobreescribirlo o CANCELAR la operación",
-               "ATENCION", button);
-            if (result == MessageBoxResult.OK)
+            //TODO: CREAR VARIAS HOJAS UNA POR USUARIO
+            DataSet ds = new DataSet();
+            ds = CrearDataSet(itemTab.Header, itemTab.Content, itemTab.HorasTotales);
+            var division = SAreaCentro;
+            var Fecha = StartDate.Date.ToShortDateString() + "_Al_" + EndDate.Date.ToShortDateString();
+            Fecha = Fecha.Replace("/", "_");
+            //var wb = new XLWorkbook();
+
+            //for (int i = 0; i < ds.Tables.Count; i++)
+            //{
+            //   wb.Worksheets.Add(ds.Tables[i], ds.Tables[i].TableName);
+            //}
+            //var ws = wb.Worksheet(1);
+
+            var workbook = new XLWorkbook();
+            foreach (var wsTab in Tab)
             {
-               try
+               var ws = workbook.Worksheets.Add("Horas " + wsTab.Header);
+               for (int i = 0; i < ds.Tables.Count; i++)
                {
+                  var wb = new XLWorkbook();
+                  wb.Worksheets.Add(ds.Tables[i], ds.Tables[i].TableName);
+               }
+            }
+
+            //ws.Name = itemTab.Header;
+            //wb.Cell(calculoTotalHorasDeListaParaCadaPersona());
+            //wb.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            //wb.Style.Font.Bold = true;
+            var file = division + "_" + Fecha + ".xlsx";
+            if (File.Exists(file))
+            {
+               MessageBoxButton button = MessageBoxButton.OKCancel;
+               var result = MessageBox.Show("El archivo ya existe, pulse ACEPTAR para sobreescribirlo o CANCELAR la operación",
+                  "ATENCION", button);
+               if (result == MessageBoxResult.OK)
+               {
+                  try
+                  {
 
 
-                  File.Delete(file);
-                  wb.SaveAs(file);
-                  MessageBox.Show("El fichero " + file + " a sido regenerado con exito.");
+                     File.Delete(file);
+                     //wb.SaveAs(file);
+                     workbook.SaveAs(file);
+                     MessageBox.Show("El fichero " + file + " a sido regenerado con exito.");
+
+                  }
+                  catch (Exception e)
+                  {
+                     //check here why it failed and ask user to retry if the file is in use.
+                     MessageBox.Show(e.Message);
+                  }
 
                }
-               catch (Exception e)
+               else
                {
-                  //check here why it failed and ask user to retry if the file is in use.
-                  MessageBox.Show(e.Message);
+                  return;
                }
 
             }
             else
             {
-               return;
+               //wb.SaveAs(file);
+               workbook.SaveAs(file);
+               MessageBox.Show("El fichero " + file + " a sido generado con exito.");
             }
 
-         }
-         else
-         {
-            wb.SaveAs(file);
-            MessageBox.Show("El fichero " + file + " a sido generado con exito.");
+
          }
 
       }
 
-      private DataSet CrearDataSet()
+      private DataSet CrearDataSet(string persona, ObservableCollection<ElementoListaResumenFinal> ListaElementos,string horasTotales)
       {
          DataSet ds = new DataSet();
          DataTable dt = new DataTable();
@@ -471,18 +490,18 @@ namespace Presencia.ViewModel
          dt.Columns.Add("Comentarios");
          dt.Columns.Add("Horas en el centro");
 
-         var registro = from r in ElementoListaResumenFinal
+         var registro = from r in ListaElementos
                         select new { r.Nombre, r.Dia, r.Entrada, r.Salida, r.Ausencia, r.Aus_Entrada, r.Aus_Salida, r.Comentarios, r.HorasEnCentro };
          foreach (var itemRegistro in registro)
          {
             dt.Rows.Add(itemRegistro.Nombre, itemRegistro.Dia, itemRegistro.Entrada, itemRegistro.Salida, itemRegistro.Ausencia, itemRegistro.Aus_Entrada, itemRegistro.Aus_Salida, itemRegistro.Comentarios, itemRegistro.HorasEnCentro);
          }
-         ds.Namespace = SActiveUser;
+         ds.Namespace = persona;
          ds.Tables.Add(dt);
          //create a new row from table
          var dataRow = dt.NewRow();
          dataRow[7] = "Horas en centro";
-         //dataRow[8] = TotalConjuntoHoras[0].ToString();
+         dataRow[8] = horasTotales;
          dt.Rows.Add(dataRow);
 
 
