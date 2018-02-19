@@ -286,9 +286,10 @@ namespace Presencia.ViewModel
 
          }
       }
-
+      //TODO: can execute de search
       bool SearchCommand_CanExecute(object parameters)
       {
+         ElementoListaResumen.Clear();
          return true;
       }
 
@@ -668,6 +669,7 @@ namespace Presencia.ViewModel
 
 
             //Pasar de ListaFinal a ElementoListaResumen
+            //TODO  COMPROBACIONES AQUI
             obteberElementoListaResumenFinal();
 
 
@@ -928,13 +930,14 @@ namespace Presencia.ViewModel
          diferenciadias = fechaFin - fechaInicio;
          return diferenciadias.Days;
       }
-
+      //TODO: revisar esto
       private void addAusenciasAListadeElementosAmostrar()
       {
          bool localizado = false;
          //TODO: modificar esto para comprobar si el dia no existe en la ListaPersonas de elementos a mostrar y añadir elemento
          foreach (var itemAusencias in ListaAuxAusencias)
          {
+            //TODO :LA segunda vez no tiene las ausencias: OJO
             foreach (var itemListaResumen in ElementoListaResumen)
             {
                if (itemListaResumen.Dia.Date.ToShortDateString().Equals(itemAusencias.Dia.Substring(0, 10)))
@@ -965,6 +968,9 @@ namespace Presencia.ViewModel
 
             }
          }
+
+
+
 
          //TODO: meter festivos
          añadirFestivosDelRangoFechas();
