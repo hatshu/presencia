@@ -893,7 +893,7 @@ namespace Presencia.ViewModel
 
             connectionIdinet.Open();
             string Query =
-               "SELECT UsuarioDominio, tp_ID FROM FUT_Personal Where UsuarioDominio LIKE '%" + nombre + "'";
+               "SELECT UsuarioDominio, tp_ID FROM FUT_Personal Where UsuarioDominio = 'CATEC\\" + nombre + "'";
             SqlCommand createCommand = new SqlCommand(Query, connectionIdinet);
             SqlDataReader dr = createCommand.ExecuteReader();
             while (dr.Read())

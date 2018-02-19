@@ -807,8 +807,9 @@ namespace Presencia.ViewModel
          {
 
             connectionIdinet.Open();
+            //TODO: localizado que a mgarcia lo confunde con mmgarcia y no saca la id correcta. cambiar sql
             string Query =
-               "SELECT UsuarioDominio, tp_ID FROM FUT_Personal Where UsuarioDominio LIKE '%" + nombre + "'";
+               "SELECT UsuarioDominio, tp_ID FROM FUT_Personal Where UsuarioDominio = 'CATEC\\" + nombre + "'";
             SqlCommand createCommand = new SqlCommand(Query, connectionIdinet);
             SqlDataReader dr = createCommand.ExecuteReader();
             while (dr.Read())
