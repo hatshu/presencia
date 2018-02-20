@@ -731,21 +731,48 @@
       <Setter Property="AlternationCount" Value="2" />
       <Setter Property="HeadersVisibility" Value="Column"></Setter>
       <Setter Property="Background" Value="Transparent"></Setter>
-
+      <Setter Property="IsReadOnly" Value="True"></Setter>
+      <Setter Property="FontSize" Value="17"></Setter>
    </Style>
 
    <Style TargetType="{x:Type DataGridRow}">
-      <Setter Property="FontSize" Value="19"></Setter>
+      <Setter Property="FontSize" Value="17"></Setter>
       <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
 
       <Style.Triggers>
          <Trigger Property="ItemsControl.AlternationIndex" Value="0">
-            <Setter Property="Background" Value="#CCC"></Setter>
+            <Setter Property="Background" Value="#FFFFFAFA"></Setter>
          </Trigger>
          <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-            <Setter Property="Background" Value="#EEE"></Setter>
+            <Setter Property="Background" Value="#FFFAFAD2"></Setter>
          </Trigger>
       </Style.Triggers>
+   </Style>
+
+   <!--TABITEM-->
+   <Style TargetType="{x:Type TabItem}">
+      <Setter Property="FontSize" Value="17"></Setter>
+      <Setter Property="Template">
+         <Setter.Value>
+            <ControlTemplate TargetType="TabItem">
+               <Border Name="Border" BorderThickness="1,1,1,0" BorderBrush="Gainsboro" CornerRadius="4,4,0,0" Margin="1,0">
+                  <ContentPresenter x:Name="ContentSite"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    ContentSource="Header"
+                                    Margin="10,2"/>
+               </Border>
+               <ControlTemplate.Triggers>
+                  <Trigger Property="IsSelected" Value="True">
+                     <Setter TargetName="Border" Property="Background" Value="LightSkyBlue" />
+                  </Trigger>
+                  <Trigger Property="IsSelected" Value="False">
+                     <Setter TargetName="Border" Property="Background" Value="GhostWhite" />
+                  </Trigger>
+               </ControlTemplate.Triggers>
+            </ControlTemplate>
+         </Setter.Value>
+      </Setter>
    </Style>
 
 </ResourceDictionary>

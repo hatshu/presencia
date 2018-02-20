@@ -1056,7 +1056,7 @@ namespace Presencia.ViewModel
                itemAux.Aus_Entrada = itemAusencia.FechaInicio.Substring(10, 8);
                itemAux.Aus_Salida = itemAusencia.FechaFin.Substring(10, 8);
                itemAux.Comentarios = itemAusencia.Comentarios;
-               itemAux.HorasEnCentro = "00:00";
+               itemAux.HorasEnCentro = "0:0";
                ElementoListaResumen.Add(itemAux);
 
             }
@@ -1108,7 +1108,7 @@ namespace Presencia.ViewModel
                itemAux.Nombre = SActiveUser;
                itemAux.Dia = DateTime.Parse(itemfiesta.Substring(0, 10));
                itemAux.Ausencia = "Festivo";
-               itemAux.HorasEnCentro = "00:00";
+               itemAux.HorasEnCentro = "0:0";
                ElementoListaResumen.Add(itemAux);
             }
          }

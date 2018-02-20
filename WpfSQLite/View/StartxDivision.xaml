@@ -108,10 +108,15 @@
                <DataTemplate>
                   <StackPanel>
                   <DataGrid ItemsSource="{Binding Content}" ColumnWidth="*"/>
+<Grid >
+   <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="87*"/>
+      <ColumnDefinition Width="10*"/>
+   </Grid.ColumnDefinitions>
+                        <Label Style="{StaticResource whiteLabel}"  Content="Total de horas:"  Grid.Column="0" HorizontalAlignment="Right"></Label>
+                        <TextBlock  Grid.Column="1"  Name="LabelHorasTotales"  Text="{Binding HorasTotales}" Style="{StaticResource TextBlockGeneric}"  HorizontalAlignment="Left"></TextBlock>
+                     </Grid>
 
-                        <Label Style="{StaticResource whiteLabel}"  Content="Total de horas:" ></Label>
-
-                     <TextBlock Name="LabelHorasTotales"  Text="{Binding HorasTotales}" Style="{StaticResource TextBlockGeneric}"  HorizontalAlignment="Left"></TextBlock>
                   </StackPanel>
                </DataTemplate>
 
