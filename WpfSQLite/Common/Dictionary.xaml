@@ -15,7 +15,7 @@
    <Style x:Key="GenericPageStyleInit" TargetType="{x:Type Page}">
       <Setter Property="Background">
          <Setter.Value>
-            <ImageBrush ImageSource="../Resources/fondoPrincipal.png"/>
+            <ImageBrush ImageSource="../Resources/fondoP.png"/>
          </Setter.Value>
       </Setter>
    </Style>
@@ -23,7 +23,7 @@
    <Style x:Key="GenericPageStyle" TargetType="{x:Type Page}">
       <Setter Property="Background">
          <Setter.Value>
-            <ImageBrush ImageSource="../Resources/fondo.png" />
+            <ImageBrush ImageSource="../Resources/fondoP.png" />
          </Setter.Value>
       </Setter>
    </Style>
@@ -32,7 +32,7 @@
    <Style x:Key="whiteLabel" TargetType="{x:Type Label}">
       <Setter Property="FontFamily" Value="Verdana"/>
       <Setter Property="FontSize" Value="19"/>
-      <Setter Property="Foreground" Value="#ff075e8c"/>
+      <Setter Property="Foreground" Value="#FF193651"/>
       <Setter Property="MaxHeight" Value="120"></Setter>
       <Setter Property="MinHeight" Value="40"></Setter>
    </Style>
@@ -76,7 +76,7 @@
                   <Border
                      x:Name="Border"
                      Background="#EEEEEEEE"
-                     BorderBrush="Gray"
+                     BorderBrush="#ff4e8dc2"
                      BorderThickness="1"
                      CornerRadius="4"/>
 

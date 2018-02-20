@@ -96,7 +96,7 @@
 
          </Grid>
          <Grid Grid.Row="3" Grid.Column="1">
-
+<Image Source="../Resources/busqueda.png" MaxWidth="400" Opacity="0.3" Margin="40,40,40,40"></Image>
 
 
             <!--<ListView Name="ListView"  Background="Transparent"  Style="{StaticResource ListViewStyle}"   ItemsSource="{Binding ListaFinal}" ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2"    >

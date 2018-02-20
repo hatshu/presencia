@@ -93,6 +93,36 @@ namespace Presencia.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap busqueda {
+            get {
+                object obj = ResourceManager.GetObject("busqueda", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap busquedaDivision {
+            get {
+                object obj = ResourceManager.GetObject("busquedaDivision", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap calendario {
+            get {
+                object obj = ResourceManager.GetObject("calendario", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap catecLogo {
             get {
                 object obj = ResourceManager.GetObject("catecLogo", resourceCulture);
@@ -133,6 +163,36 @@ namespace Presencia.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap fondog {
+            get {
+                object obj = ResourceManager.GetObject("fondog", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap fondoMenu {
+            get {
+                object obj = ResourceManager.GetObject("fondoMenu", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap fondoP {
+            get {
+                object obj = ResourceManager.GetObject("fondoP", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap fondoPrincipal {
             get {
                 object obj = ResourceManager.GetObject("fondoPrincipal", resourceCulture);
@@ -146,6 +206,16 @@ namespace Presencia.Properties {
         internal static System.Drawing.Bitmap Mainbg {
             get {
                 object obj = ResourceManager.GetObject("Mainbg", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap presencia {
+            get {
+                object obj = ResourceManager.GetObject("presencia", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

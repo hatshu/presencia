@@ -145,4 +145,25 @@
   <data name="fondoPrincipal" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\fondoPrincipal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="busqueda" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\busqueda.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="busquedaDivision" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\busquedaDivision.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="calendario" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\calendario.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="fondog" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\fondog.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="fondoMenu" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\fondoMenu.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="fondoP" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\fondoP.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="presencia" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\presencia.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

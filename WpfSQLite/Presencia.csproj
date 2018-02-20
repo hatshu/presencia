@@ -180,6 +180,27 @@
   <ItemGroup>
     <Resource Include="Resources\fondo.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\fondog.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\fondoMenu.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\busqueda.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\calendario.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\fondoP.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\presencia.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\busquedaDivision.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
