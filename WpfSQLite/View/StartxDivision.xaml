@@ -105,19 +105,21 @@
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
                <!-- this is the body of the TabItem template-->
-               <DataTemplate>
-                  <StackPanel>
-                  <DataGrid ItemsSource="{Binding Content}" ColumnWidth="*"/>
-<Grid >
-   <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="87*"/>
-      <ColumnDefinition Width="10*"/>
-   </Grid.ColumnDefinitions>
-                        <Label Style="{StaticResource whiteLabel}"  Content="Total de horas:"  Grid.Column="0" HorizontalAlignment="Right"></Label>
-                        <TextBlock  Grid.Column="1"  Name="LabelHorasTotales"  Text="{Binding HorasTotales}" Style="{StaticResource TextBlockGeneric}"  HorizontalAlignment="Left"></TextBlock>
-                     </Grid>
 
-                  </StackPanel>
+               <DataTemplate>
+                  <Grid>
+                     <Grid.RowDefinitions>
+                        <RowDefinition Height="100*"/>
+                        <RowDefinition Height="10*"/>
+                     </Grid.RowDefinitions>
+                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100*"/>
+                        <ColumnDefinition Width="10*"/>
+                     </Grid.ColumnDefinitions>
+                     <DataGrid ItemsSource="{Binding Content}" ColumnWidth="*" Grid.Row="0" Grid.ColumnSpan="2" />
+                     <Label Style="{StaticResource whiteLabel}"  Content="Total de horas:" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right"></Label>
+                     <TextBlock Grid.Row="1" Grid.Column="1"  Name="LabelHorasTotales"  Text="{Binding HorasTotales}" Style="{StaticResource TextBlockGeneric}"  HorizontalAlignment="Left"></TextBlock>
+                  </Grid>
                </DataTemplate>
 
             </TabControl.ContentTemplate>
@@ -149,3 +151,4 @@
 
    </Grid>
 </Page>
+
