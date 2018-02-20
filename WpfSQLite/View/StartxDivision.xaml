@@ -62,11 +62,11 @@
 
             </Viewbox>-->
 
-            <Viewbox Grid.Row="1" Grid.Column="1"  MaxWidth="120" MinWidth="40" HorizontalAlignment="Right"   >
+            <Viewbox Grid.Row="1" Grid.Column="1"  MaxWidth="120" MinWidth="40" HorizontalAlignment="Right"  Grid.RowSpan="2" >
                <Label Name="AREA"  Content="División:" Style="{StaticResource whiteLabel}"  />
             </Viewbox>
 
-            <Viewbox MaxHeight="55" MinHeight="20" Grid.Row="1" Grid.Column="2"  HorizontalAlignment="Left"   >
+            <Viewbox MaxHeight="55" MinHeight="20" Grid.Row="1" Grid.Column="2"  HorizontalAlignment="Left"   Grid.RowSpan="2" >
                <ComboBox Name="ComboBoxArea"  ItemsSource="{Binding Path=AreasCentro,UpdateSourceTrigger=PropertyChanged}" SelectedValue="{Binding Path=SAreaCentro}" SelectedIndex="0"  Margin="3,3,3,3">
                   <i:Interaction.Triggers>
                      <i:EventTrigger EventName="SelectionChanged">
