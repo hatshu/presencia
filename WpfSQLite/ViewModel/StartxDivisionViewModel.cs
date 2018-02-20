@@ -401,77 +401,67 @@ namespace Presencia.ViewModel
             MessageBox.Show("No hay elementos a exportar.");
             return;
          }
-
+         var workbook = new XLWorkbook();
+         var division = SAreaCentro;
+         var Fecha = StartDate.Date.ToShortDateString() + "_Al_" + EndDate.Date.ToShortDateString();
+         var z = 1;
          foreach (var itemTab in Tab)
          {
+
             //TODO: CREAR VARIAS HOJAS UNA POR USUARIO
             DataSet ds = new DataSet();
             ds = CrearDataSet(itemTab.Header, itemTab.Content, itemTab.HorasTotales);
-            var division = SAreaCentro;
-            var Fecha = StartDate.Date.ToShortDateString() + "_Al_" + EndDate.Date.ToShortDateString();
             Fecha = Fecha.Replace("/", "_");
             //var wb = new XLWorkbook();
 
-            //for (int i = 0; i < ds.Tables.Count; i++)
-            //{
-            //   wb.Worksheets.Add(ds.Tables[i], ds.Tables[i].TableName);
-            //}
-            //var ws = wb.Worksheet(1);
-
-            var workbook = new XLWorkbook();
-            foreach (var wsTab in Tab)
+            for (int i = 0; i < ds.Tables.Count; i++)
             {
-               var ws = workbook.Worksheets.Add("Horas " + wsTab.Header);
-               for (int i = 0; i < ds.Tables.Count; i++)
-               {
-                  var wb = new XLWorkbook();
-                  wb.Worksheets.Add(ds.Tables[i], ds.Tables[i].TableName);
-               }
+               workbook.Worksheets.Add(ds.Tables[i], ds.Tables[i].TableName);
             }
 
-            //ws.Name = itemTab.Header;
-            //wb.Cell(calculoTotalHorasDeListaParaCadaPersona());
-            //wb.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-            //wb.Style.Font.Bold = true;
-            var file = division + "_" + Fecha + ".xlsx";
-            if (File.Exists(file))
+            var ws = workbook.Worksheet(z);
+            ws.Name = itemTab.Header;
+            //workbook.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            //workbook.Style.Font.Bold = true;
+            z++;
+         }
+         var file = division + "_" + Fecha + ".xlsx";
+         if (File.Exists(file))
+         {
+            MessageBoxButton button = MessageBoxButton.OKCancel;
+            var result = MessageBox.Show(
+               "El archivo ya existe, pulse ACEPTAR para sobreescribirlo o CANCELAR la operación",
+               "ATENCION", button);
+            if (result == MessageBoxResult.OK)
             {
-               MessageBoxButton button = MessageBoxButton.OKCancel;
-               var result = MessageBox.Show("El archivo ya existe, pulse ACEPTAR para sobreescribirlo o CANCELAR la operación",
-                  "ATENCION", button);
-               if (result == MessageBoxResult.OK)
+               try
                {
-                  try
-                  {
 
 
-                     File.Delete(file);
-                     //wb.SaveAs(file);
-                     workbook.SaveAs(file);
-                     MessageBox.Show("El fichero " + file + " a sido regenerado con exito.");
-
-                  }
-                  catch (Exception e)
-                  {
-                     //check here why it failed and ask user to retry if the file is in use.
-                     MessageBox.Show(e.Message);
-                  }
+                  File.Delete(file);
+                  //wb.SaveAs(file);
+                  workbook.SaveAs(file);
+                  MessageBox.Show("El fichero " + file + " a sido regenerado con exito.");
 
                }
-               else
+               catch (Exception e)
                {
-                  return;
+                  //check here why it failed and ask user to retry if the file is in use.
+                  MessageBox.Show(e.Message);
                }
 
             }
             else
             {
-               //wb.SaveAs(file);
-               workbook.SaveAs(file);
-               MessageBox.Show("El fichero " + file + " a sido generado con exito.");
+               return;
             }
 
-
+         }
+         else
+         {
+            //wb.SaveAs(file);
+            workbook.SaveAs(file);
+            MessageBox.Show("El fichero " + file + " a sido generado con exito.");
          }
 
       }
@@ -503,8 +493,6 @@ namespace Presencia.ViewModel
          dataRow[7] = "Horas en centro";
          dataRow[8] = horasTotales;
          dt.Rows.Add(dataRow);
-
-
          return (ds);
 
       }
