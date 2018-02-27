@@ -280,11 +280,11 @@ namespace Presencia.ViewModel
 
 
                //TODO: añadir resumen al principio
-               Tab.Add(new Division { Header = "Resumen", Resumen = obtenerListaResumen(SAreaCentro)});
+               Tab.Add(new Division { Header = "Resumen", Resumen = obtenerListaResumen(SAreaCentro) });
 
                foreach (var persona in ListaPersonas)
                {
-                  Tab.Add(new Division { Header = persona, Content = obtainListaFinalParaUsuario(persona)});
+                  Tab.Add(new Division { Header = persona, Content = obtainListaFinalParaUsuario(persona) });
                }
 
                foreach (var tabitem in Tab)
@@ -320,12 +320,34 @@ namespace Presencia.ViewModel
             newItem.Nombre = itemUser.Nombre;
             newItem.RangoFechas = StartDate.ToShortDateString() + " - " + EndDate.ToShortDateString();
             //TODO: arreglar calculo de horas totales antes de poner las pestañas
-            newItem.HorasEnCentro = calculoTotalHorasDeListaParaCadaPersona(itemUser.Nombre);
+            obtainListaFinalParaUsuario(newItem.Nombre);
+            newItem.HorasEnCentro = calculoHorasResumen(itemUser.Nombre);
             ListaResumenDivision.Add(newItem);
          }
          return ListaResumenDivision;
       }
 
+
+      private string calculoHorasResumen(string persona)
+      {
+
+         float horas = 0, min = 0, enminutos = 0, enhoras = 0;
+         string hora = " ";
+
+         foreach (var itemFinal in ElementoListaResumenFinal)
+         {
+            if (itemFinal != null)
+            {
+               var horasArray = itemFinal.HorasEnCentro.Split(':');
+               horas = Convert.ToInt32(horasArray[0]) + horas;
+               min = Convert.ToInt32(horasArray[1]) + min;
+               enminutos = (horas * 60) + min;
+               enhoras = enminutos / 60;
+               hora = enhoras.ToString(CultureInfo.InvariantCulture);
+            }
+         }
+         return hora;
+      }
 
       private ObservableCollection<ElementoListaResumenFinal> obtainListaFinalParaUsuario(string persona)
       {
@@ -486,7 +508,7 @@ namespace Presencia.ViewModel
 
       }
 
-      private DataSet CrearDataSet(string persona, ObservableCollection<ElementoListaResumenFinal> ListaElementos,string horasTotales)
+      private DataSet CrearDataSet(string persona, ObservableCollection<ElementoListaResumenFinal> ListaElementos, string horasTotales)
       {
          DataSet ds = new DataSet();
          DataTable dt = new DataTable();
@@ -577,6 +599,7 @@ namespace Presencia.ViewModel
 
       private string calculoTotalHorasDeListaParaCadaPersona(string persona)
       {
+
          float horas = 0, min = 0, enminutos = 0, enhoras = 0;
          string hora = " ";
 
