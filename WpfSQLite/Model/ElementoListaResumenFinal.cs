@@ -18,7 +18,7 @@ namespace Presencia.Model
       public string Aus_Salida { get; set; }
       public string HorasEnCentro { get; set; }
       public string Comentarios { get; set; }
-      public string RangoFechas { get; set; }
+      //public string RangoFechas { get; set; }
 
       //Para que se detecte cuando se cambia cada elemento
       public event PropertyChangedEventHandler PropertyChanged;

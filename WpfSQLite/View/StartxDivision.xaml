@@ -124,6 +124,7 @@
 
 
                      <DataGrid ItemsSource="{Binding Content}" ColumnWidth="*" Grid.Row="0" Grid.ColumnSpan="2" />
+                     <DataGrid ItemsSource="{Binding Resumen}" ColumnWidth="*" Grid.Row="0" Grid.ColumnSpan="2" />
                      <Label Style="{StaticResource whiteLabel}"  Content="Total de horas:" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right"></Label>
                      <TextBlock Grid.Row="1" Grid.Column="1"  Name="LabelHorasTotales"  Text="{Binding HorasTotales}" Style="{StaticResource TextBlockGeneric}"  HorizontalAlignment="Left"></TextBlock>
                   </Grid>

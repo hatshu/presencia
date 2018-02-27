@@ -208,9 +208,9 @@ namespace Presencia.ViewModel
          }
       }
 
-      private ObservableCollection<ElementoListaResumenFinal> _listaResumenDivision = new ObservableCollection<ElementoListaResumenFinal>();
+      private ObservableCollection<ResumenDivision> _listaResumenDivision = new ObservableCollection<ResumenDivision>();
 
-      public ObservableCollection<ElementoListaResumenFinal> ListaResumenDivision
+      public ObservableCollection<ResumenDivision> ListaResumenDivision
       {
          get { return _listaResumenDivision; }
          set
@@ -280,7 +280,7 @@ namespace Presencia.ViewModel
 
 
                //TODO: añadir resumen al principio
-               Tab.Add(new Division { Header = "Resumen", Content = obtenerListaResumen(SAreaCentro)});
+               Tab.Add(new Division { Header = "Resumen", Resumen = obtenerListaResumen(SAreaCentro)});
 
                foreach (var persona in ListaPersonas)
                {
@@ -309,14 +309,21 @@ namespace Presencia.ViewModel
       }
 
 
-      //TODO: obtener resumen de gente de area
-      private ObservableCollection<ElementoListaResumenFinal> obtenerListaResumen(string area)
+      //obtener resumen de gente de area
+      private ObservableCollection<ResumenDivision> obtenerListaResumen(string area)
       {
-         //TODO crear un objeto con persona y horas totales
 
-
-
-         return null;
+         //crear un objeto con persona y horas totales
+         foreach (var itemUser in ListaFiltradaporArea)
+         {
+            var newItem = new ResumenDivision();
+            newItem.Nombre = itemUser.Nombre;
+            newItem.RangoFechas = StartDate.ToShortDateString() + " - " + EndDate.ToShortDateString();
+            //TODO: arreglar calculo de horas totales antes de poner las pestañas
+            newItem.HorasEnCentro = calculoTotalHorasDeListaParaCadaPersona(itemUser.Nombre);
+            ListaResumenDivision.Add(newItem);
+         }
+         return ListaResumenDivision;
       }
 
 
@@ -342,22 +349,7 @@ namespace Presencia.ViewModel
          obtenerListadoDeAusencias(idpersona);
          consultaEventosSQLdeFechas(item);
 
-         //TotalConjuntoHoras.Clear();
-         //TotalConjuntoHoras.Add(calculoTotalHorasDeListaParaCadaPersona());
-         //UpdateUI();
-         //TODO: Cambiar el null por la lista de elmentosfinal;
-         //var element = new ElementoListaResumenFinal
-         //{
-         //   Nombre = SActiveUser,
-         //   Comentarios = "Comentario"
-         //};
-         //var element2 = new ElementoListaResumenFinal
-         //{
-         //   Nombre = SActiveUser,
-         //   Comentarios = "Comentario2"
-         //};
-         //listaParaPersonaConcreta.Add(element);
-         //listaParaPersonaConcreta.Add(element2);
+
          foreach (var itemListaPrincipal in ElementoListaResumenFinal)
          {
             var itemPersona = new ElementoListaResumenFinal
@@ -436,7 +428,7 @@ namespace Presencia.ViewModel
          foreach (var itemTab in Tab)
          {
 
-            //TODO: CREAR VARIAS HOJAS UNA POR USUARIO
+            //CREAR VARIAS HOJAS UNA POR USUARIO
             DataSet ds = new DataSet();
             ds = CrearDataSet(itemTab.Header, itemTab.Content, itemTab.HorasTotales);
             Fecha = Fecha.Replace("/", "_");

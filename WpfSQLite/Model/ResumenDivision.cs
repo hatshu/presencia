@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -8,14 +7,11 @@ using System.Threading.Tasks;
 
 namespace Presencia.Model
 {
-   class Division : INotifyPropertyChanged
+   class ResumenDivision : INotifyPropertyChanged
    {
-
-
-      public string Header { get; set; }
-      public ObservableCollection<ElementoListaResumenFinal> Content { get; set; }
-      public ObservableCollection<ResumenDivision> Resumen { get; set; }
-      public string HorasTotales { get; set; }
+      public string Nombre { get; set; }
+      public string RangoFechas { get; set; }
+      public string HorasEnCentro { get; set; }
 
       //Para que se detecte cuando se cambia cada elemento
       public event PropertyChangedEventHandler PropertyChanged;

@@ -82,6 +82,7 @@
     <Compile Include="Model\ElementoListaResumen.cs" />
     <Compile Include="Model\ElementoListaResumenFinal.cs" />
     <Compile Include="Model\LockAuditTrail.cs" />
+    <Compile Include="Model\ResumenDivision.cs" />
     <Compile Include="Model\SearchItem.cs" />
     <Compile Include="Model\IdUser.cs" />
     <Compile Include="Model\UserData.cs" />
