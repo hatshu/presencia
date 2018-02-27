@@ -313,7 +313,7 @@ namespace Presencia.ViewModel
       //obtener resumen de gente de area
       private ObservableCollection<ResumenDivision> obtenerListaResumen(string area)
       {
-         
+
          //crear un objeto con persona y horas totales
          foreach (var itemUser in ListaFiltradaporArea)
          {
@@ -794,7 +794,7 @@ namespace Presencia.ViewModel
                   if (itemData.Count == 1 && !subitemData.FechaEvento.Substring(0, 10).Equals(DateTime.Today.ToShortDateString().Substring(0, 10)))
                   {
                      data.TotalHoras = entradaHoraAux;
-                     data.Comentarios = "No pasó tarjeta correctamente";
+                     data.Comentarios = "No fichó";
                      data.Nombre = subitemData.Nombre;
                      data.CardCode = subitemData.CardCode;
                      data.FechaEvento = subitemData.FechaEvento.Substring(0, 10);
