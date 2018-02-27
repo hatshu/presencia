@@ -510,33 +510,71 @@ namespace Presencia.ViewModel
 
       private DataSet CrearDataSet(string persona, ObservableCollection<ElementoListaResumenFinal> ListaElementos, string horasTotales)
       {
-         DataSet ds = new DataSet();
-         DataTable dt = new DataTable();
-         dt.Columns.Add("Usuario");
-         dt.Columns.Add("Dia");
-         dt.Columns.Add("Entrada");
-         dt.Columns.Add("Salida");
-         dt.Columns.Add("Ausencia");
-         dt.Columns.Add("Entrada Ausencia");
-         dt.Columns.Add("Salida Ausencia");
-         dt.Columns.Add("Comentarios");
-         dt.Columns.Add("Horas en el centro");
-
-         var registro = from r in ListaElementos
-                        select new { r.Nombre, r.Dia, r.Entrada, r.Salida, r.Ausencia, r.Aus_Entrada, r.Aus_Salida, r.Comentarios, r.HorasEnCentro };
-         foreach (var itemRegistro in registro)
+         if (!persona.Equals("Resumen"))
          {
-            dt.Rows.Add(itemRegistro.Nombre, itemRegistro.Dia, itemRegistro.Entrada, itemRegistro.Salida, itemRegistro.Ausencia, itemRegistro.Aus_Entrada, itemRegistro.Aus_Salida, itemRegistro.Comentarios, itemRegistro.HorasEnCentro);
-         }
-         ds.Namespace = persona;
-         ds.Tables.Add(dt);
-         //create a new row from table
-         var dataRow = dt.NewRow();
-         dataRow[7] = "Horas en centro";
-         dataRow[8] = horasTotales;
-         dt.Rows.Add(dataRow);
-         return (ds);
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            dt.Columns.Add("Usuario");
+            dt.Columns.Add("Dia");
+            dt.Columns.Add("Entrada");
+            dt.Columns.Add("Salida");
+            dt.Columns.Add("Ausencia");
+            dt.Columns.Add("Entrada Ausencia");
+            dt.Columns.Add("Salida Ausencia");
+            dt.Columns.Add("Comentarios");
+            dt.Columns.Add("Horas en el centro");
 
+            var registro = from r in ListaElementos
+               select new
+               {
+                  r.Nombre,
+                  r.Dia,
+                  r.Entrada,
+                  r.Salida,
+                  r.Ausencia,
+                  r.Aus_Entrada,
+                  r.Aus_Salida,
+                  r.Comentarios,
+                  r.HorasEnCentro
+               };
+            foreach (var itemRegistro in registro)
+            {
+               dt.Rows.Add(itemRegistro.Nombre, itemRegistro.Dia, itemRegistro.Entrada, itemRegistro.Salida,
+                  itemRegistro.Ausencia, itemRegistro.Aus_Entrada, itemRegistro.Aus_Salida, itemRegistro.Comentarios,
+                  itemRegistro.HorasEnCentro);
+            }
+            ds.Namespace = persona;
+            ds.Tables.Add(dt);
+            //create a new row from table
+            var dataRow = dt.NewRow();
+            dataRow[7] = "Horas en centro";
+            dataRow[8] = horasTotales;
+            dt.Rows.Add(dataRow);
+            return (ds);
+         }
+         else
+         {
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            dt.Columns.Add("Usuario");
+            dt.Columns.Add("Rango Fechas");
+            dt.Columns.Add("Horas en el centro");
+
+            var registro = from r in ListaResumenDivision
+               select new
+               {
+                  r.Nombre,
+                  r.RangoFechas,
+                  r.HorasEnCentro
+               };
+            foreach (var itemRegistro in registro)
+            {
+               dt.Rows.Add(itemRegistro.Nombre,itemRegistro.RangoFechas,itemRegistro.HorasEnCentro);
+            }
+            ds.Namespace = persona;
+            ds.Tables.Add(dt);
+            return (ds);
+         }
       }
 
       bool ExportarCommand_CanExecute(object parameters)
