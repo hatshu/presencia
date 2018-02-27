@@ -208,6 +208,17 @@ namespace Presencia.ViewModel
          }
       }
 
+      private ObservableCollection<ElementoListaResumenFinal> _listaResumenDivision = new ObservableCollection<ElementoListaResumenFinal>();
+
+      public ObservableCollection<ElementoListaResumenFinal> ListaResumenDivision
+      {
+         get { return _listaResumenDivision; }
+         set
+         {
+            _listaResumenDivision = value;
+            NotifyPropertyChanged("ListaResumenDivision");
+         }
+      }
 
       #endregion
 
@@ -266,9 +277,14 @@ namespace Presencia.ViewModel
             if (SAreaCentro != null && StartDate <= EndDate && StartDate <= DateTime.Today.Date && EndDate <= DateTime.Today.Date)
             {
                ListaPersonas = ObtenerListadoPersonaldeArea();
+
+
+               //TODO: añadir resumen al principio
+               Tab.Add(new Division { Header = "Resumen", Content = obtenerListaResumen(SAreaCentro)});
+
                foreach (var persona in ListaPersonas)
                {
-                  Tab.Add(new Division { Header = persona, Content = obtainListaFinalParaUsuario(persona) });
+                  Tab.Add(new Division { Header = persona, Content = obtainListaFinalParaUsuario(persona)});
                }
 
                foreach (var tabitem in Tab)
@@ -291,6 +307,18 @@ namespace Presencia.ViewModel
 
          }
       }
+
+
+      //TODO: obtener resumen de gente de area
+      private ObservableCollection<ElementoListaResumenFinal> obtenerListaResumen(string area)
+      {
+         //TODO crear un objeto con persona y horas totales
+
+
+
+         return null;
+      }
+
 
       private ObservableCollection<ElementoListaResumenFinal> obtainListaFinalParaUsuario(string persona)
       {
@@ -576,7 +604,7 @@ namespace Presencia.ViewModel
                return hora;
             }
          }
-         return "No hay horas";
+         return "N/A";
       }
 
       private string conocertipodeevento(LockAuditTrail itemEvent)
@@ -712,7 +740,7 @@ namespace Presencia.ViewModel
                   if (itemData.Count == 1 && !subitemData.FechaEvento.Substring(0, 10).Equals(DateTime.Today.ToShortDateString().Substring(0, 10)))
                   {
                      data.TotalHoras = entradaHoraAux;
-                     data.Comentarios = "Error al pasar la tarjeta";
+                     data.Comentarios = "No pasó tarjeta correctamente";
                      data.Nombre = subitemData.Nombre;
                      data.CardCode = subitemData.CardCode;
                      data.FechaEvento = subitemData.FechaEvento.Substring(0, 10);
