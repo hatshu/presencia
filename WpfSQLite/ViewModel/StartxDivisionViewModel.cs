@@ -272,6 +272,7 @@ namespace Presencia.ViewModel
          Tab.Clear();
          ElementoListaResumenFinal.Clear();
          ListaPersonas.Clear();
+         ListaResumenDivision.Clear();
          if (SearchCommand_CanExecute(parameters))
          {
             if (SAreaCentro != null && StartDate <= EndDate && StartDate <= DateTime.Today.Date && EndDate <= DateTime.Today.Date)
@@ -312,7 +313,7 @@ namespace Presencia.ViewModel
       //obtener resumen de gente de area
       private ObservableCollection<ResumenDivision> obtenerListaResumen(string area)
       {
-
+         
          //crear un objeto con persona y horas totales
          foreach (var itemUser in ListaFiltradaporArea)
          {
