@@ -612,7 +612,6 @@ namespace Presencia.ViewModel
                   UserDataxDia.Add(itemData.Last());
                }
             }
-
             UserDataxDiaDefinitivo = UserDataxDia.GroupBy(d => DateTime.Parse(d.FechaEvento).Date).Select(g => g.ToList()).ToList();
             foreach (var itemData in UserDataxDiaDefinitivo)
             {
@@ -623,7 +622,7 @@ namespace Presencia.ViewModel
                   if (itemData.Count == 1 && !subitemData.FechaEvento.Substring(0, 10).Equals(DateTime.Today.ToShortDateString().Substring(0, 10)))
                   {
                      data.TotalHoras = entradaHoraAux;
-                     data.Comentarios = "Error al pasar la tarjeta";
+                     data.Comentarios = obtenerFalloFichaje(subitemData.TipoEvento);
                      data.Nombre = subitemData.Nombre;
                      data.CardCode = subitemData.CardCode;
                      data.FechaEvento = subitemData.FechaEvento.Substring(0, 10);
@@ -677,6 +676,18 @@ namespace Presencia.ViewModel
          catch (Exception e)
          {
             MessageBox.Show(e.Message);
+         }
+      }
+
+      private string obtenerFalloFichaje(string subitemDataTipoEvento)
+      {
+         if (subitemDataTipoEvento.Equals("SALIDA"))
+         {
+            return "NO HA FICHADO ENTRADA";
+         }
+         else
+         {
+            return "NO HA FICHADO SALIDA";
          }
       }
 
