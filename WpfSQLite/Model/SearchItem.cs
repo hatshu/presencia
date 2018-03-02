@@ -14,6 +14,7 @@ namespace Presencia.Model
       public string Nombre { get; set; }
       public int Id { get; set; }
       public int CardCode { get; set; }
+      public List<int> AllCardCodes { get; set; }
       public DateTime FechaInicio { get; set; }
       public DateTime FechaFin { get; set; }
 

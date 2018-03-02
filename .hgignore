@@ -13,3 +13,6 @@ WPFSQLite/bin/Release/*
 WPFSQLite/View/Start.xaml.orig
 WPFSQLite/ViewModel/StartViewModel.cs.orig
 imagenes para ps/*
+WPFSQLite/Model/*.orig
+WPFSQLite/View/StartxDivision.xaml.orig
+WPFSQLite/ViewModel/StartxDivisionViewModel.cs.orig

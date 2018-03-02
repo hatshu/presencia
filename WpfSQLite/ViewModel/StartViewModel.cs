@@ -256,7 +256,7 @@ namespace Presencia.ViewModel
                {
                   Nombre = SActiveUser,
                   Id = ObtenerIdUser(),
-                  CardCode = ObtenerCardCodeDeId(ObtenerIdUser()),
+                  AllCardCodes = ObtenerCardCodeDeId(ObtenerIdUser()),
                   FechaInicio = StartDate,
                   FechaFin = EndDate.AddHours(23).AddMinutes(59)
 
@@ -438,17 +438,18 @@ namespace Presencia.ViewModel
          return 0;
       }
 
-      private int ObtenerCardCodeDeId(int id)
+
+      //TODO: aqui devuelve uno , tenemos que pasar a devolverlos todos
+      private List<int> ObtenerCardCodeDeId(int id)
       {
-         var value = 0;
          foreach (var itemUser in UsersIdAndNameList)
          {
             if (itemUser.Id.Equals(id))
             {
-               return itemUser.CardCode;
+                return itemUser.AllCardCodes;
             }
          }
-         return 0;
+         return null;
       }
 
       #endregion
@@ -568,15 +569,17 @@ namespace Presencia.ViewModel
             }
 
             //creacion de ListaPersonas con los datos del usuario seleccionado de los dias pertinentes
+
             foreach (var itemEvent in LockAuditTrailList)
             {
-               if (itemEvent.CardCode.Equals(item.CardCode))
+               //SI EL CARDCODE SE ENCUENTRA EN LA LISTA DE ALL CARCODES
+               if (item.AllCardCodes.Contains(itemEvent.CardCode))
                {
                   var userDataFind = new UserData
                   {
                      Nombre = item.Nombre,
                      Id = item.Id,
-                     CardCode = item.CardCode,
+                     CardCode = itemEvent.CardCode,
                      Entrada = StartDate,
                      Salida = EndDate,
                      FechaEvento = itemEvent.Dt_Audit,
@@ -584,6 +587,8 @@ namespace Presencia.ViewModel
                   };
                   UserDataBrutoList.Add(userDataFind);
                }
+
+
             }
 
 
@@ -781,7 +786,11 @@ namespace Presencia.ViewModel
             {
                if (itemToCompare.Id.Equals(item.Id))
                {
-                  item.CardCode = itemToCompare.CardCode;
+                  if (item.AllCardCodes == null)
+                  {
+                     item.AllCardCodes = new List<int>();
+                  }
+                  item.AllCardCodes?.Add(itemToCompare.CardCode);
                }
             }
          }

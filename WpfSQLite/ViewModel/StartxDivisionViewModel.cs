@@ -930,6 +930,7 @@ namespace Presencia.ViewModel
             SqlDataReader dr = createCommand.ExecuteReader();
             while (dr.Read())
             {
+               //TODO tenemos que contemplar cardcodes antiguos
                var userItem = new IdUser();
                userItem.Id = dr[0].GetHashCode();
                userItem.CardCode = dr[1].GetHashCode();
