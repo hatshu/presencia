@@ -362,7 +362,7 @@ namespace Presencia.ViewModel
          {
             Nombre = SActiveUser,
             Id = ObtenerIdUser(),
-            CardCode = ObtenerCardCodeDeId(ObtenerIdUser()),
+            AllCardCodes = ObtenerCardCodeDeId(ObtenerIdUser()),
             FechaInicio = StartDate,
             FechaFin = EndDate.AddHours(23).AddMinutes(59)
 
@@ -526,18 +526,18 @@ namespace Presencia.ViewModel
             dt.Columns.Add("Horas en el centro");
 
             var registro = from r in ListaElementos
-               select new
-               {
-                  r.Nombre,
-                  r.Dia,
-                  r.Entrada,
-                  r.Salida,
-                  r.Ausencia,
-                  r.Aus_Entrada,
-                  r.Aus_Salida,
-                  r.Comentarios,
-                  r.HorasEnCentro
-               };
+                           select new
+                           {
+                              r.Nombre,
+                              r.Dia,
+                              r.Entrada,
+                              r.Salida,
+                              r.Ausencia,
+                              r.Aus_Entrada,
+                              r.Aus_Salida,
+                              r.Comentarios,
+                              r.HorasEnCentro
+                           };
             foreach (var itemRegistro in registro)
             {
                dt.Rows.Add(itemRegistro.Nombre, itemRegistro.Dia, itemRegistro.Entrada, itemRegistro.Salida,
@@ -562,15 +562,15 @@ namespace Presencia.ViewModel
             dt.Columns.Add("Horas en el centro");
 
             var registro = from r in ListaResumenDivision
-               select new
-               {
-                  r.Nombre,
-                  r.RangoFechas,
-                  r.HorasEnCentro
-               };
+                           select new
+                           {
+                              r.Nombre,
+                              r.RangoFechas,
+                              r.HorasEnCentro
+                           };
             foreach (var itemRegistro in registro)
             {
-               dt.Rows.Add(itemRegistro.Nombre,itemRegistro.RangoFechas,itemRegistro.HorasEnCentro);
+               dt.Rows.Add(itemRegistro.Nombre, itemRegistro.RangoFechas, itemRegistro.HorasEnCentro);
             }
             ds.Namespace = persona;
             ds.Tables.Add(dt);
@@ -603,17 +603,16 @@ namespace Presencia.ViewModel
          return 0;
       }
 
-      private int ObtenerCardCodeDeId(int id)
+      private List<int> ObtenerCardCodeDeId(int id)
       {
-         var value = 0;
          foreach (var itemUser in UsersIdAndNameList)
          {
             if (itemUser.Id.Equals(id))
             {
-               return itemUser.CardCode;
+               return itemUser.AllCardCodes;
             }
          }
-         return 0;
+         return null;
       }
 
       #endregion
@@ -741,13 +740,13 @@ namespace Presencia.ViewModel
             //creacion de ListaPersonas con los datos del usuario seleccionado de los dias pertinentes
             foreach (var itemEvent in LockAuditTrailList)
             {
-               if (itemEvent.CardCode.Equals(item.CardCode))
+               if (item.AllCardCodes.Contains(itemEvent.CardCode))
                {
                   var userDataFind = new UserData
                   {
                      Nombre = item.Nombre,
                      Id = item.Id,
-                     CardCode = item.CardCode,
+                     CardCode = itemEvent.CardCode,
                      Entrada = StartDate,
                      Salida = EndDate,
                      FechaEvento = itemEvent.Dt_Audit,
@@ -954,7 +953,11 @@ namespace Presencia.ViewModel
             {
                if (itemToCompare.Id.Equals(item.Id))
                {
-                  item.CardCode = itemToCompare.CardCode;
+                  if (item.AllCardCodes == null)
+                  {
+                     item.AllCardCodes = new List<int>();
+                  }
+                  item.AllCardCodes?.Add(itemToCompare.CardCode);
                }
             }
          }
