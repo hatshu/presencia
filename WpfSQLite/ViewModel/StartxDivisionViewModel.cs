@@ -669,7 +669,7 @@ namespace Presencia.ViewModel
                   redondearMin = Convert.ToInt32(convertHorasEnMin);
                }
 
-               hora = hora + " horas " + redondearMin.ToString() + " minutos";
+               hora = subhora[0] + " horas " + redondearMin.ToString() + " minutos";
                return hora;
             }
          }
