@@ -640,6 +640,10 @@ namespace Presencia.ViewModel
 
          float horas = 0, min = 0, enminutos = 0, enhoras = 0;
          string hora = " ";
+         string[] subhora = null;
+         string  submin = "";
+         float convertHorasEnMin = 0;
+         int redondearMin = 0;
 
          foreach (var itemDivision in Tab)
          {
@@ -654,6 +658,19 @@ namespace Presencia.ViewModel
                enminutos = (horas * 60) + min;
                enhoras = enminutos / 60;
                hora = enhoras.ToString(CultureInfo.InvariantCulture);
+
+               // redondear y pasar a minutos el resultado de horas
+               subhora=hora.Split('.');
+               hora = subhora[0];
+               if (subhora.Length > 1)
+               {
+                  submin = "0," +subhora[1];
+                  var minutosReales = Convert.ToSingle(submin);
+                  convertHorasEnMin = minutosReales * 60;
+                  redondearMin = Convert.ToInt32(convertHorasEnMin);
+               }
+
+               hora = hora + " horas " + redondearMin.ToString() + " minutos";
                return hora;
             }
          }

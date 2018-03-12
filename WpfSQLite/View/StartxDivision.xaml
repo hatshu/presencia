@@ -118,12 +118,12 @@
                         <RowDefinition Height="10*"/>
                      </Grid.RowDefinitions>
                      <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100*"/>
+                        <ColumnDefinition Width="45*"/>
                         <ColumnDefinition Width="10*"/>
                      </Grid.ColumnDefinitions>
                      <DataGrid VerticalScrollBarVisibility="Auto" Grid.Row="0" ItemsSource="{Binding Resumen}" ColumnWidth="*" Grid.ColumnSpan="2" Grid.Column="0"/>
                      <DataGrid  Grid.Column="0" VerticalScrollBarVisibility="Auto" Grid.Row="0" ItemsSource="{Binding Content}" ColumnWidth="*" Grid.ColumnSpan="2"/>
-                     <Label Style="{StaticResource whiteLabel}"  Content="Total de horas:" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right"/>
+                     <Label Style="{StaticResource whiteLabel}"  Content="Tiempo:" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right"/>
                      <TextBlock Grid.Row="1" Grid.Column="1"  x:Name="LabelHorasTotales"  Text="{Binding HorasTotales}" Style="{StaticResource TextBlockGeneric}"  HorizontalAlignment="Left"/>
                   </Grid>
                </DataTemplate>
