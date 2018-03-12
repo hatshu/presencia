@@ -282,7 +282,7 @@ namespace Presencia.ViewModel
 
                //TODO: añadir resumen al principio
                Tab.Add(new Division { Header = "Resumen", Resumen = obtenerListaResumen(SAreaCentro) });
-
+               //TODO: corregir si se pulsa muy rapido search dos veces seguidas o mas
                foreach (var persona in ListaPersonas)
                {
                   Tab.Add(new Division { Header = persona, Content = obtainListaFinalParaUsuario(persona) });
