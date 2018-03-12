@@ -323,17 +323,27 @@ namespace Presencia.ViewModel
             //TODO: arreglar calculo de horas totales antes de poner las pestañas
             obtainListaFinalParaUsuario(newItem.Nombre);
             newItem.HorasEnCentro = calculoHorasResumen(itemUser.Nombre);
+
             ListaResumenDivision.Add(newItem);
          }
          return ListaResumenDivision;
       }
 
-      //TODO: hacer lo mismo que para horas totales
+      //TODO: hacer lo mismo que para horas totales (VER SI SE BORRA)
+      //TODO: xxxxxxxxxxxxxxxxxxxxxxxx
+      //TODO: xxxxxxxxxxxxxxxxxxxxxxxx
+      //TODO: xxxxxxxxxxxxxxxxxxxxxxxx
+      //TODO: xxxxxxxxxxxxxxxxxxxxxxxx
       private string calculoHorasResumen(string persona)
       {
 
          float horas = 0, min = 0, enminutos = 0, enhoras = 0;
          string hora = " ";
+         string[] subhora = null;
+         string submin = "";
+         float convertHorasEnMin = 0;
+         int redondearMin = 0;
+
 
          foreach (var itemFinal in ElementoListaResumenFinal)
          {
@@ -345,8 +355,18 @@ namespace Presencia.ViewModel
                enminutos = (horas * 60) + min;
                enhoras = enminutos / 60;
                hora = enhoras.ToString(CultureInfo.InvariantCulture);
+               // redondear y pasar a minutos el resultado de horas
+               subhora = hora.Split('.');
+               if (subhora.Length > 1)
+               {
+                  submin = "0," + subhora[1];
+                  var minutosReales = Convert.ToSingle(submin);
+                  convertHorasEnMin = minutosReales * 60;
+                  redondearMin = Convert.ToInt32(convertHorasEnMin);
+               }
             }
          }
+         if (subhora != null) hora = subhora[0] + " horas " + redondearMin.ToString() + " minutos";
          return hora;
       }
 
@@ -634,6 +654,13 @@ namespace Presencia.ViewModel
       #endregion
 
       #region Horas Totales y conocer Tipos de Eventos DE SALTO
+
+      //TODO: XXXXXXXXXXXXXXXXXXXXXXX
+      //TODO: XXXXXXXXXXXXXXXXXXXXXXX
+      //TODO: XXXXXXXXXXXXXXXXXXXXXXX
+      //TODO: XXXXXXXXXXXXXXXXXXXXXXX
+      //TODO: XXXXXXXXXXXXXXXXXXXXXXX
+      //TODO: XXXXXXXXXXXXXXXXXXXXXXX
 
       private string calculoTotalHorasDeListaParaCadaPersona(string persona)
       {
@@ -1170,7 +1197,7 @@ namespace Presencia.ViewModel
                itemAux.Aus_Entrada = itemAusencia.FechaInicio.Substring(10, 8);
                itemAux.Aus_Salida = itemAusencia.FechaFin.Substring(10, 8);
                itemAux.Comentarios = itemAusencia.Comentarios;
-               itemAux.HorasEnCentro = "0:0";
+               itemAux.HorasEnCentro = "00:00";
                ElementoListaResumen.Add(itemAux);
 
             }
