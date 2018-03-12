@@ -404,7 +404,7 @@ namespace Presencia.ViewModel
          ds.Tables.Add(dt);
          //create a new row from table
          var dataRow = dt.NewRow();
-         dataRow[7] = "Horas en centro";
+         dataRow[7] = "Tiempo total:";
          dataRow[8] = TotalConjuntoHoras[0].ToString();
          dt.Rows.Add(dataRow);
 
@@ -476,7 +476,11 @@ namespace Presencia.ViewModel
       {
          float horas = 0, min = 0, enminutos = 0, enhoras = 0;
          string hora = " ";
-
+         string[] subhora = null;
+         string submin = "";
+         float convertHorasEnMin = 0;
+         int redondearMin = 0;
+         string horasCadena = "";
          foreach (var itemData in ListaFinal)
          {
             horas = itemData.TotalHoras.Hour + horas;
@@ -485,7 +489,18 @@ namespace Presencia.ViewModel
          enminutos = (horas * 60) + min;
          enhoras = enminutos / 60;
          hora = enhoras.ToString(CultureInfo.InvariantCulture);
+         // redondear y pasar a minutos el resultado de horas
+         subhora = hora.Split('.');
+         horasCadena = subhora[0];
+         if (subhora.Length > 1)
+         {
+            submin = "0," + subhora[1];
+            var minutosReales = Convert.ToSingle(submin);
+            convertHorasEnMin = minutosReales * 60;
+            redondearMin = Convert.ToInt32(convertHorasEnMin);
+         }
 
+         hora = horasCadena + " horas " + redondearMin.ToString() + " minutos";
          return hora;
       }
 

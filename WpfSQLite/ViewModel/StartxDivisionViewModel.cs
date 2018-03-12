@@ -328,7 +328,7 @@ namespace Presencia.ViewModel
          return ListaResumenDivision;
       }
 
-
+      //TODO: hacer lo mismo que para horas totales
       private string calculoHorasResumen(string persona)
       {
 
@@ -661,7 +661,6 @@ namespace Presencia.ViewModel
 
                // redondear y pasar a minutos el resultado de horas
                subhora=hora.Split('.');
-               hora = subhora[0];
                if (subhora.Length > 1)
                {
                   submin = "0," +subhora[1];
