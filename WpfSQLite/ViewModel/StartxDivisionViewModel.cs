@@ -277,11 +277,14 @@ namespace Presencia.ViewModel
          {
             if (SAreaCentro != null && StartDate <= EndDate && StartDate <= DateTime.Today.Date && EndDate <= DateTime.Today.Date)
             {
+               Thread.Sleep(1000);
                ListaPersonas = ObtenerListadoPersonaldeArea();
 
 
                //TODO: añadir resumen al principio
+              
                Tab.Add(new Division { Header = "Resumen", Resumen = obtenerListaResumen(SAreaCentro) });
+
                //TODO: corregir si se pulsa muy rapido search dos veces seguidas o mas
                foreach (var persona in ListaPersonas)
                {
@@ -1197,7 +1200,7 @@ namespace Presencia.ViewModel
                itemAux.Aus_Entrada = itemAusencia.FechaInicio.Substring(10, 8);
                itemAux.Aus_Salida = itemAusencia.FechaFin.Substring(10, 8);
                itemAux.Comentarios = itemAusencia.Comentarios;
-               itemAux.HorasEnCentro = "00:00";
+               itemAux.HorasEnCentro = "0:0";
                ElementoListaResumen.Add(itemAux);
 
             }

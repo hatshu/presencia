@@ -90,7 +90,7 @@
                <DatePicker Name="DatePickerFin" SelectedDate="{Binding EndDate, Mode=TwoWay}" BorderThickness="0" Margin=" 3 3 3 3"  MaxWidth="200"   MinWidth="100"/>
             </Viewbox>
             <Viewbox Grid.Row="1" Grid.Column="5"  >
-               <Button Content="Buscar" Style="{StaticResource MetroButton}" Command="{Binding SearchCommand}" MaxHeight="30" MinWidth="90" Margin="1 1 1 1"></Button>
+               <Button Content="Buscar" Style="{StaticResource MetroButton}" Command="{Binding SearchCommand, Mode=TwoWay}" MaxHeight="30" MinWidth="90" Margin="1 1 1 1"></Button>
             </Viewbox>
             <Viewbox Grid.Row="2" Grid.Column="5"  >
                <Button Content="Exportar" Style="{StaticResource MetroButton}"  Command="{Binding ExportarCommand}" MaxHeight="30" MinWidth="90" Margin="1 1 1 1"></Button>
@@ -98,7 +98,7 @@
 
 
          </Grid>
-         <TabControl Grid.Row="3" Grid.Column="1" ItemsSource="{Binding Tab}" IsSynchronizedWithCurrentItem="True" Background="Transparent">
+         <TabControl Grid.Row="3" Grid.Column="1" ItemsSource="{Binding Tab}"  Background="Transparent">
             <TabControl.ItemTemplate>
                <!-- this is the header template-->
                <DataTemplate>
@@ -111,7 +111,7 @@
 
                <DataTemplate>
 
-                  <Grid ShowGridLines="True">
+                  <Grid ShowGridLines="False">
 
                      <Grid.RowDefinitions>
                         <RowDefinition Height="80*"/>
@@ -121,10 +121,12 @@
                         <ColumnDefinition Width="45*"/>
                         <ColumnDefinition Width="10*"/>
                      </Grid.ColumnDefinitions>
-                     <DataGrid ItemsSource="{Binding Content}" ColumnWidth="*" Grid.Row="0" Grid.ColumnSpan="2" />
-                     <DataGrid ItemsSource="{Binding Resumen}" ColumnWidth="*" Grid.Row="0" Grid.ColumnSpan="2"
-                               Grid.Column="0" />
-                     <Viewbox Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right">
+                     <Grid Name="Content"  Row="0" Column="0" ShowGridLines="True" Grid.ColumnSpan="2" >
+                        <DataGrid ItemsSource="{Binding Content, Mode=TwoWay}" ColumnWidth="*" AutoGenerateColumns="True"/>
+                        <DataGrid ItemsSource="{Binding Resumen, Mode=TwoWay}" ColumnWidth="*" AutoGenerateColumns="True"/>
+                     </Grid>
+
+                           <Viewbox Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right">
                         <Label Style="{StaticResource whiteLabel}"  Content="Tiempo:"  />
                      </Viewbox>
                      <Viewbox Grid.Row="1" Grid.Column="1"  HorizontalAlignment="Left">
