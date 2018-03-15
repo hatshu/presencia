@@ -16,3 +16,4 @@ imagenes para ps/*
 WPFSQLite/Model/*.orig
 WPFSQLite/View/StartxDivision.xaml.orig
 WPFSQLite/ViewModel/StartxDivisionViewModel.cs.orig
+WPFSQLite/View/StartxDivision.xaml.cs.orig
