@@ -34,5 +34,11 @@ namespace Presencia.View
       {
          NavigationService?.GoBack();
       }
+
+      private void DataGrid_Loaded(object sender, RoutedEventArgs e)
+      {
+         DataGrid dataGrid = sender as DataGrid;
+         dataGrid?.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+      }
    }
 }

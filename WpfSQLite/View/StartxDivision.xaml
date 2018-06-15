@@ -122,7 +122,7 @@
                         <ColumnDefinition Width="10*"/>
                      </Grid.ColumnDefinitions>
                      <Grid Name="Content"  Row="0" Column="0" ShowGridLines="True" Grid.ColumnSpan="2" >
-                        <DataGrid ItemsSource="{Binding Content, Mode=TwoWay}" ColumnWidth="*" AutoGenerateColumns="True"/>
+                        <DataGrid ItemsSource="{Binding Content, Mode=TwoWay}" ColumnWidth="*" AutoGenerateColumns="True" SelectedIndex="0"  Loaded="DataGrid_Loaded"/>
                         <DataGrid ItemsSource="{Binding Resumen, Mode=TwoWay}" ColumnWidth="*" AutoGenerateColumns="True"/>
                      </Grid>
 
