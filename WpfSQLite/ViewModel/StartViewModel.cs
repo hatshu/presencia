@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -10,19 +9,11 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Threading;
 using Presencia.Model;
-using System.Windows.Interactivity;
 using ClosedXML.Excel;
-using DocumentFormat.OpenXml;
 using System.IO;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
-using DocumentFormat.OpenXml.Office2013.Excel;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Wordprocessing;
-using Item = DocumentFormat.OpenXml.Office.CustomUI.Item;
+using NLog;
 
 namespace Presencia.ViewModel
 {
@@ -196,7 +187,7 @@ namespace Presencia.ViewModel
 
       }
 
-
+      private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
       #endregion
 
@@ -745,6 +736,7 @@ namespace Presencia.ViewModel
       void ObtenerIdUserAndCardCode()
       {
          //OBTENCION DE NOMBRE DE USUARIO E ID USER
+         logger.Log(LogLevel.Info, "Antes de conectar con servidor sql");
          SqlConnection conn = new SqlConnection(conexionStringSalto);
          try
          {
@@ -762,11 +754,16 @@ namespace Presencia.ViewModel
                UsersIdAndNameList.Add(userItem);
 
             }
+            logger.Log(LogLevel.Info, "Conexion OK con la base de datos para obtener toda la lista de nombre");
+
             conn.Close();
          }
          catch (Exception e)
          {
             MessageBox.Show(e.Message);
+            logger.Log(LogLevel.Info, "Error de conexion sql DB SALTO");
+            logger.Error(e, e.Message);
+            throw;
          }
 
          //OBTENCION DEL CARDCODE
@@ -786,11 +783,16 @@ namespace Presencia.ViewModel
                   CardCodeAndUserIdList.Add(userItem);
                }
             }
+            logger.Log(LogLevel.Info, "Conexion OK con la base de datos para obtener cardcodes");
+
             conn.Close();
          }
          catch (Exception e)
          {
             MessageBox.Show(e.Message);
+            logger.Log(LogLevel.Info, "Error de conexion sql DB SALTO");
+            logger.Error(e, e.Message);
+            throw;
          }
 
          //UNIR CARDCODE Y  USER ID
@@ -809,6 +811,8 @@ namespace Presencia.ViewModel
                }
             }
          }
+         logger.Log(LogLevel.Info, "Union realizada entre cardcode y userid");
+
 
          //OBTENCION DE AREAS
 
@@ -823,6 +827,7 @@ namespace Presencia.ViewModel
 
 
          AreasCentro = new ObservableCollection<string>(areasAux.Distinct());
+         logger.Log(LogLevel.Info, "Obtencion de areas");
 
       }
 
@@ -836,6 +841,8 @@ namespace Presencia.ViewModel
 
       private int ObteneridIdinetDesdeNombreUsuario(string nombre)
       {
+         logger.Log(LogLevel.Info, "Antes de conectar a base de datos IDINET");
+
          SqlConnection connectionIdinet = new SqlConnection(conexionStringIdinet);
          var result = 0;
          try
@@ -852,15 +859,19 @@ namespace Presencia.ViewModel
                result = dr[1].GetHashCode();
             }
             connectionIdinet.Close();
+            logger.Log(LogLevel.Info, "Conexion OK a base de datos IDINET");
 
          }
          catch (Exception e)
          {
             MessageBox.Show(e.Message);
+            logger.Log(LogLevel.Info, "Error de conexion sql DB SALTO");
+            logger.Error(e, e.Message);
+            throw;
          }
          return result;
       }
-      //TODO: asuncias
+      //TODO: ausencias POR AQUIpppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp
       private void obtenerListadoDeAusencias(int idIdinet)
       {
 
