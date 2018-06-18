@@ -354,6 +354,8 @@ namespace Presencia.ViewModel
                {
                   //check here why it failed and ask user to retry if the file is in use.
                   MessageBox.Show(e.Message);
+                  logger.Log(LogLevel.Info, "Error generando fichero");
+                  logger.Error(e, e.Message);
                }
 
             }
@@ -687,6 +689,8 @@ namespace Presencia.ViewModel
          catch (Exception e)
          {
             MessageBox.Show(e.Message);
+            logger.Log(LogLevel.Info, "Error de conexion sql DB SALTO");
+            logger.Error(e, e.Message);
          }
       }
 
@@ -736,7 +740,7 @@ namespace Presencia.ViewModel
       void ObtenerIdUserAndCardCode()
       {
          //OBTENCION DE NOMBRE DE USUARIO E ID USER
-         logger.Log(LogLevel.Info, "Antes de conectar con servidor sql");
+         //logger.Log(LogLevel.Info, "Antes de conectar con servidor sql");
          SqlConnection conn = new SqlConnection(conexionStringSalto);
          try
          {
@@ -754,7 +758,7 @@ namespace Presencia.ViewModel
                UsersIdAndNameList.Add(userItem);
 
             }
-            logger.Log(LogLevel.Info, "Conexion OK con la base de datos para obtener toda la lista de nombre");
+            //logger.Log(LogLevel.Info, "Conexion OK con la base de datos para obtener toda la lista de nombre");
 
             conn.Close();
          }
@@ -763,7 +767,6 @@ namespace Presencia.ViewModel
             MessageBox.Show(e.Message);
             logger.Log(LogLevel.Info, "Error de conexion sql DB SALTO");
             logger.Error(e, e.Message);
-            throw;
          }
 
          //OBTENCION DEL CARDCODE
@@ -783,7 +786,7 @@ namespace Presencia.ViewModel
                   CardCodeAndUserIdList.Add(userItem);
                }
             }
-            logger.Log(LogLevel.Info, "Conexion OK con la base de datos para obtener cardcodes");
+            //logger.Log(LogLevel.Info, "Conexion OK con la base de datos para obtener cardcodes");
 
             conn.Close();
          }
@@ -792,7 +795,6 @@ namespace Presencia.ViewModel
             MessageBox.Show(e.Message);
             logger.Log(LogLevel.Info, "Error de conexion sql DB SALTO");
             logger.Error(e, e.Message);
-            throw;
          }
 
          //UNIR CARDCODE Y  USER ID
@@ -811,7 +813,7 @@ namespace Presencia.ViewModel
                }
             }
          }
-         logger.Log(LogLevel.Info, "Union realizada entre cardcode y userid");
+         //logger.Log(LogLevel.Info, "Union realizada entre cardcode y userid");
 
 
          //OBTENCION DE AREAS
@@ -827,7 +829,7 @@ namespace Presencia.ViewModel
 
 
          AreasCentro = new ObservableCollection<string>(areasAux.Distinct());
-         logger.Log(LogLevel.Info, "Obtencion de areas");
+         //logger.Log(LogLevel.Info, "Obtencion de areas");
 
       }
 
@@ -841,7 +843,7 @@ namespace Presencia.ViewModel
 
       private int ObteneridIdinetDesdeNombreUsuario(string nombre)
       {
-         logger.Log(LogLevel.Info, "Antes de conectar a base de datos IDINET");
+         //logger.Log(LogLevel.Info, "Antes de conectar a base de datos IDINET");
 
          SqlConnection connectionIdinet = new SqlConnection(conexionStringIdinet);
          var result = 0;
@@ -859,7 +861,7 @@ namespace Presencia.ViewModel
                result = dr[1].GetHashCode();
             }
             connectionIdinet.Close();
-            logger.Log(LogLevel.Info, "Conexion OK a base de datos IDINET");
+            //logger.Log(LogLevel.Info, "Conexion OK a base de datos IDINET");
 
          }
          catch (Exception e)
@@ -867,11 +869,10 @@ namespace Presencia.ViewModel
             MessageBox.Show(e.Message);
             logger.Log(LogLevel.Info, "Error de conexion sql DB SALTO");
             logger.Error(e, e.Message);
-            throw;
          }
          return result;
       }
-      //TODO: ausencias POR AQUIpppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp
+      //TODO: ausencias
       private void obtenerListadoDeAusencias(int idIdinet)
       {
 
@@ -903,6 +904,7 @@ namespace Presencia.ViewModel
 
             }
             connectionIdinet.Close();
+            //logger.Log(LogLevel.Info, "Obtenido listado de ausencias OK");
 
             //TODO: tratamiento de esa ListaPersonas de ausencias para meterla en la ListaPersonas de elementos a mostrar. Tambien habrá de desglosar las ausencias de inicio y dia diferente en varios dias
             desglosarFechasdeAusenciasVariosDias();
@@ -911,6 +913,8 @@ namespace Presencia.ViewModel
          catch (Exception e)
          {
             MessageBox.Show(e.Message);
+            logger.Log(LogLevel.Info, "Error de conexion sql DB IDINET");
+            logger.Error(e, e.Message);
          }
 
 
@@ -949,7 +953,7 @@ namespace Presencia.ViewModel
                   }
 
                }
-
+               //logger.Log(LogLevel.Info, "Desglosadas ausencias de mas de un dia");
             }
             else
             {
@@ -965,6 +969,8 @@ namespace Presencia.ViewModel
                {
                   ListaAuxAusencias.Add(itemAux);
                }
+               //logger.Log(LogLevel.Info, "Ausencia de un solo dia");
+
             }
          }
       }
@@ -975,6 +981,7 @@ namespace Presencia.ViewModel
          DateTime fechaFin = DateTime.Parse(itemFechaFin);
          TimeSpan diferenciadias;
          diferenciadias = fechaFin - fechaInicio;
+         //logger.Log(LogLevel.Info, "Calculo de dias de diferencia");
          return diferenciadias.Days;
       }
       //TODO: revisar esto
@@ -1059,6 +1066,8 @@ namespace Presencia.ViewModel
             elementFinal.HorasEnCentro = itemFinal.HorasEnCentro;
             ElementoResumenFinal.Add(elementFinal);
          }
+         //logger.Log(LogLevel.Info, "Añadidas ausencias a la lista de dias seleccionados");
+
 
       }
 
@@ -1066,8 +1075,11 @@ namespace Presencia.ViewModel
       {
          SqlConnection connectionIdinet = new SqlConnection(conexionStringIdinet);
          List<string> fiestas = new List<string>();
+         //logger.Log(LogLevel.Info, "Añadir festivos al rango de fechas");
+
          try
          {
+
             connectionIdinet.Open();
             string Query =
                "SELECT * FROM  FUT_Calendario WHERE  Tipo='Festivo'  AND Fin >='" + StartDate + "' AND Fin  <='" + EndDate + "' ";
@@ -1086,10 +1098,13 @@ namespace Presencia.ViewModel
                itemAux.Ausencia = "Festivo";
                ElementoListaResumen.Add(itemAux);
             }
+            //logger.Log(LogLevel.Info, "conexion con BD IDINET para sacar festivos");
          }
          catch (Exception e)
          {
             MessageBox.Show(e.Message);
+            logger.Log(LogLevel.Info, "Error de conexion sql DB IDINET");
+            logger.Error(e, e.Message);
          }
       }
 
@@ -1118,11 +1133,14 @@ namespace Presencia.ViewModel
             {
                return true;
             }
+            //logger.Log(LogLevel.Info, "Comprobacion de estado del proceso");
 
          }
          catch (Exception e)
          {
             MessageBox.Show(e.Message);
+            logger.Log(LogLevel.Info, "Error de conexion sql DB IDINET");
+            logger.Error(e, e.Message);
          }
          return false;
       }

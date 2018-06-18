@@ -23,6 +23,7 @@ using DocumentFormat.OpenXml.Office2013.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Item = DocumentFormat.OpenXml.Office.CustomUI.Item;
+using NLog;
 
 namespace Presencia.ViewModel
 {
@@ -219,6 +220,9 @@ namespace Presencia.ViewModel
             NotifyPropertyChanged("ListaResumenDivision");
          }
       }
+
+      private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
 
       #endregion
 
@@ -514,6 +518,8 @@ namespace Presencia.ViewModel
                {
                   //check here why it failed and ask user to retry if the file is in use.
                   MessageBox.Show(e.Message);
+                  logger.Log(LogLevel.Info, "Error generando fichero");
+                  logger.Error(e, e.Message);
                }
 
             }
@@ -892,6 +898,8 @@ namespace Presencia.ViewModel
          catch (Exception e)
          {
             MessageBox.Show(e.Message);
+            logger.Log(LogLevel.Info, "Error conexión a base de datos de SALTO");
+            logger.Error(e, e.Message);
          }
       }
 
@@ -964,6 +972,8 @@ namespace Presencia.ViewModel
          catch (Exception e)
          {
             MessageBox.Show(e.Message);
+            logger.Log(LogLevel.Info, "Error conexión a base de datos de SALTO");
+            logger.Error(e, e.Message);
          }
 
          //OBTENCION DEL CARDCODE
@@ -989,6 +999,8 @@ namespace Presencia.ViewModel
          catch (Exception e)
          {
             MessageBox.Show(e.Message);
+            logger.Log(LogLevel.Info, "Error conexión a base de datos de SALTO");
+            logger.Error(e, e.Message);
          }
 
          //UNIR CARDCODE Y  USER ID
@@ -1057,6 +1069,8 @@ namespace Presencia.ViewModel
          catch (Exception e)
          {
             MessageBox.Show(e.Message);
+            logger.Log(LogLevel.Info, "Error conexión a base de datos de IDINET");
+            logger.Error(e, e.Message);
          }
          return result;
       }
@@ -1101,6 +1115,8 @@ namespace Presencia.ViewModel
          catch (Exception e)
          {
             MessageBox.Show(e.Message);
+            logger.Log(LogLevel.Info, "Error conexión a base de datos de IDINET");
+            logger.Error(e, e.Message);
          }
       }
 
@@ -1259,6 +1275,8 @@ namespace Presencia.ViewModel
          catch (Exception e)
          {
             MessageBox.Show(e.Message);
+            logger.Log(LogLevel.Info, "Error conexión a base de datos de IDINET");
+            logger.Error(e, e.Message);
          }
       }
 
@@ -1292,6 +1310,8 @@ namespace Presencia.ViewModel
          catch (Exception e)
          {
             MessageBox.Show(e.Message);
+            logger.Log(LogLevel.Info, "Error conexión a base de datos de IDINET");
+            logger.Error(e, e.Message);
          }
          return false;
       }
